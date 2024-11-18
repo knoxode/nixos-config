@@ -5,7 +5,7 @@
   home.homeDirectory = "/home/shaiikura";
   imports = [
     inputs.nvchad4nix.homeManagerModule
-    ./sh.nix
+    ../../modules/home-manager/sh.nix
   ];
 
   home.sessionVariables = {

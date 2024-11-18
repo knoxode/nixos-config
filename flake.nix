@@ -29,14 +29,14 @@
     nixosConfigurations.nomad = lib.nixosSystem {
       inherit system specialArgs;
       modules = [
-        ./configuration.nix
+        ./hosts/nomad/configuration.nix
         home-manager.nixosModules.home-manager
         {
           home-manager = {
             inherit extraSpecialArgs;
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.shaiikura = import ./home.nix;
+            users.shaiikura = import ./hosts/nomad/shaiikura.nix;
           };
         }
       ];

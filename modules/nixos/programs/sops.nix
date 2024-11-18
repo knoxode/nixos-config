@@ -10,7 +10,7 @@
   ];
 
   sops = {
-    defaultSopsFile = ./../../secrets/secrets.yaml;
+    defaultSopsFile = ./../../../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
     age = {
       keyFile = "/home/shaiikura/.config/sops/age/keys.txt";
@@ -18,7 +18,6 @@
     secrets = {
       "syncthing/nomad/key" = {};
       "syncthing/nomad/cert" = {};
-      "syncthing/nomad/gui_pass" = {};
     };
   };
 }
