@@ -91,7 +91,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfRPyTbfUwQ/3V94NfCQ+dNzr9N4MQaRkxsXIqSXp1z powerskater3@gmail.com"
     ];
     packages = with pkgs; [
-    #  thunderbird
+      git
     ];
   };
 
