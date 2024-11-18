@@ -1,0 +1,45 @@
+{
+  description = "A simple NixOS flake";
+
+  inputs = {
+    # NixOS official package source, using the nixos-23.11 branch here
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.11" ;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nvchad4nix = {
+      url = "github:nix-community/nix4nvchad";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };  
+  };
+
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    let
+      system = "x86_64-linux";
+      lib = nixpkgs.lib;
+      pkgs = import nixpkgs { inherit system; };
+      extraSpecialArgs = { inherit system; inherit inputs; };
+      specialArgs = { inherit system; inherit inputs; };
+    in { 
+    nixosConfigurations.nomad = lib.nixosSystem {
+      inherit system specialArgs;
+      modules = [
+        ./configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            inherit extraSpecialArgs;
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.shaiikura = import ./home.nix;
+          };
+        }
+      ];
+    };
+  };
+}
