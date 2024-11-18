@@ -18,16 +18,17 @@
       ./../../modules/nixos/services/syncthing-defaults.nix
       ./../../modules/nixos/services/common-xserver.nix
       ./../../modules/nixos/services/pipewire.nix
+      ./../../modules/nixos/services/hyprland.nix
 
       # Programs imports
       ./../../modules/nixos/programs/starship.nix
       ./../../modules/nixos/programs/firefox.nix
       ./../../modules/nixos/programs/sops.nix
+      ./../../modules/nixos/programs/rstudio.nix
   ];
 
   system.stateVersion = "24.05"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
   
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.shaiikura = {
@@ -45,8 +46,9 @@
   environment.systemPackages = with pkgs; [
       git
       starship
-      kitty
       jetbrains-mono
+      tree
+      google-chrome
   ];
 
   environment.variables = {
@@ -94,7 +96,4 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
-
-
-
 }

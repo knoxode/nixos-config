@@ -15,19 +15,21 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };  
+    };
+    nur.url = "github:nix-community/NUR";
+    hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; overlays = [ nur.overlay ]; };
       extraSpecialArgs = { inherit system; inherit inputs; };
       specialArgs = { inherit system; inherit inputs; };
     in { 
     nixosConfigurations.nomad = lib.nixosSystem {
-      inherit system specialArgs;
+      inherit system pkgs specialArgs;
       modules = [
         ./hosts/nomad/configuration.nix
         home-manager.nixosModules.home-manager
