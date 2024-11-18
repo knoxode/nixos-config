@@ -5,6 +5,7 @@
   home.homeDirectory = "/home/shaiikura";
   imports = [
     inputs.nvchad4nix.homeManagerModule
+    ./sh.nix
   ];
 
   home.sessionVariables = {
@@ -19,6 +20,7 @@
 
   programs.nvchad = {
     enable = true;
+    backup = false;
   };
 
   home.stateVersion = "24.05";

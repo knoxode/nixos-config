@@ -7,9 +7,9 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./syncthing.nix
       ./hardware-configuration.nix
-      ./sops.nix
+      ./nixos/programs/sops.nix
+      ./nixos/programs/syncthing.nix
     ];
 
   # Bootloader.
@@ -92,11 +92,23 @@
     ];
     packages = with pkgs; [
       git
+      starship
+      kitty
+      jetbrains-mono
     ];
   };
 
   # Install firefox.
   programs.firefox.enable = true;
+
+
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = false;
+    };
+    presets = [ "pastel-powerline" ];
+  };
 
   nixpkgs = {
     # overlays = [
