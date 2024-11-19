@@ -18,6 +18,10 @@
     secrets = {
       "syncthing/nomad/key" = {};
       "syncthing/nomad/cert" = {};
+      "syncthing/reuby/key" = {};
+      "syncthing/reuby/cert" = {};
+      # "syncthing/node/key" = {};
+      # "syncthing/node/cert" = {};
     };
   };
 }

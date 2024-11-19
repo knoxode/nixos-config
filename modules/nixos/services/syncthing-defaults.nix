@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
 
@@ -6,7 +6,7 @@
     syncthing
   ];
 
-  services.syncthing = {
+  services.syncthing = lib.mkDefault {
     enable = true;
     dataDir = "/home/shaiikura";
     user = "shaiikura";

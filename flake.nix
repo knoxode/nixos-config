@@ -43,5 +43,20 @@
         }
       ];
     };
+    nixosConfigurations.reuby = lib.nixosSystem {
+      inherit system pkgs specialArgs;
+      modules = [
+        ./hosts/reuby/configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            inherit extraSpecialArgs;
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.shaiikura = import ./hosts/reuby/shaiikura.nix;
+          };
+        }
+      ];
+    };
   };
 }
