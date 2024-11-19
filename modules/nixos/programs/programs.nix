@@ -1,0 +1,11 @@
+{ config, pkgs, ... }:
+
+{
+  imports = [
+    # Programs imports
+    ./starship.nix
+    ./firefox.nix
+    ./sops.nix
+    ./rstudio.nix
+  ];
+}

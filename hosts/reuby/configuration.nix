@@ -10,61 +10,28 @@
       ./hardware-configuration.nix
 
       # host-specific overrides
-      ./../../hosts/reuby/services/syncthing.nix
+      # ./../nomad/syncthing.nix
 
       # Services imports
-      ./../../modules/nixos/services/openssh.nix
-      ./../../modules/nixos/services/printing.nix
-      ./../../modules/nixos/services/syncthing-defaults.nix
-      ./../../modules/nixos/services/common-xserver.nix
-      ./../../modules/nixos/services/pipewire.nix
-      ./../../modules/nixos/services/hyprland.nix
+      ./../../modules/nixos/services/services.nix
 
       # Programs imports
-      ./../../modules/nixos/programs/starship.nix
-      ./../../modules/nixos/programs/firefox.nix
-      ./../../modules/nixos/programs/sops.nix
-      ./../../modules/nixos/programs/rstudio.nix
+      ./../../modules/nixos/programs/programs.nix
+
+      # User imports
+      ./../../modules/nixos/users/users.nix
+ 
+      # Package imports
+      ./../../modules/nixos/packages/packages.nix
   ];
 
   system.stateVersion = "24.05"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.shaiikura = {
-    isNormalUser = true;
-    description = "Alex Ryder";
-    extraGroups = [ "networkmanager" "wheel" ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfRPyTbfUwQ/3V94NfCQ+dNzr9N4MQaRkxsXIqSXp1z powerskater3@gmail.com"
-    ];
-    packages = with pkgs; [
-      starship
-    ];
-  };
-
-  environment.systemPackages = with pkgs; [
-      git
-      starship
-      jetbrains-mono
-      tree
-      google-chrome
-      ags
-      brightnessctl
-      fastfetch
-      os-prober
-  ];
-
-  environment.variables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-  };
-
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
     enable = true;
-    # efiSupport = true;
     devices = [ "/dev/vda" ];
     useOSProber = true;
   };
