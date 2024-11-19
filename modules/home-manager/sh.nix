@@ -8,8 +8,13 @@
       ll = "ls -la";
     };
     initExtra = ''
-      # export TERM=xterm-256color
+      # Initialize Starship prompt
       eval "$(starship init bash)"
+      
+      # Ensure AGS is initialized
+      if [ -x "$(command -v ags)" ]; then
+        ags --init
+      fi
     '';
   };
 }

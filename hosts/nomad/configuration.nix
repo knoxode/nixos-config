@@ -49,6 +49,7 @@
       jetbrains-mono
       tree
       google-chrome
+      ags
   ];
 
   environment.variables = {
