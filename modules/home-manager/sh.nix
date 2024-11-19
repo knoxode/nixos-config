@@ -10,11 +10,7 @@
     initExtra = ''
       # Initialize Starship prompt
       eval "$(starship init bash)"
-      
-      # Ensure AGS is initialized
-      if [ -x "$(command -v ags)" ]; then
-        ags --init
-      fi
+      fastfetch
     '';
   };
 }

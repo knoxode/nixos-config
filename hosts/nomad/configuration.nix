@@ -50,6 +50,9 @@
       tree
       google-chrome
       ags
+      brightnessctl
+      fastfetch
+      os-prober
   ];
 
   environment.variables = {
@@ -58,8 +61,13 @@
   };
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = true;
+    devices = [ "nodev" ];
+    useOSProber = true;
+  };
 
   networking.networkmanager.enable = true;
   networking.hostName = "nomad"; # Define your hostname.

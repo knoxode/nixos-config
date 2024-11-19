@@ -27,4 +27,5 @@ const Bar = (/** @type {number} */ monitor) => Widget.Window({
 
 App.config({
     windows: [Bar(0)],
+    style: './style.css',
 })
