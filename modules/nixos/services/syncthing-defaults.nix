@@ -30,6 +30,10 @@
           id = "Whole House Sharing";
           path = "/home/shaiikura/Documents/syncthing/whs";
         };
+        "Obsidian" = {
+          id = "Obsidian";
+          path = "/home/shaiikura/Documents/syncthing/obsidian";
+        };
       };
     };
   };

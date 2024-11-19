@@ -38,7 +38,7 @@
             inherit extraSpecialArgs;
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.shaiikura = import ./hosts/nomad/shaiikura.nix;
+            users.shaiikura = import ./modules/home-manager/shaiikura.nix;
           };
         }
       ];
@@ -53,7 +53,7 @@
             inherit extraSpecialArgs;
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.shaiikura = import ./hosts/reuby/shaiikura.nix;
+            users.shaiikura = import ./modules/home-manager/shaiikura.nix;
           };
         }
       ];
