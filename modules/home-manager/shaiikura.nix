@@ -24,6 +24,8 @@
    wl-clipboard
    # rstudio
    kitty
+   spotify
+   spicetify-cli
   ];
 
   programs.nvchad = {
