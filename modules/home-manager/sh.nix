@@ -6,6 +6,8 @@
     shellAliases = {
       ls = "ls --color=auto";
       ll = "ls -la";
+      man-nixos = "man configuration.nix";
+      man-hm = "man home-configuration.nix";
     };
     initExtra = ''
       # Initialize Starship prompt

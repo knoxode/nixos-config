@@ -31,6 +31,9 @@
   programs.nvchad = {
     enable = true;
     backup = false;
+    extraPackages = with pkgs; [
+      nil
+    ];
   };
 
   home.stateVersion = "24.05";
