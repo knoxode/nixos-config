@@ -32,8 +32,12 @@
     enable = true;
     backup = false;
     extraPackages = with pkgs; [
+      nodePackages.bash-language-server
       nil
+      nixpkgs-fmt
     ];
+    chadrcConfig = builtins.readFile ./../../preferences/nvim/chadrc.lua;
+    extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;
   };
 
   home.stateVersion = "24.05";
