@@ -1,6 +1,7 @@
 {
   imports = [
     # Services imports
+    # ./cosmic.nix
     ./openssh.nix
     ./printing.nix
     ./syncthing-defaults.nix

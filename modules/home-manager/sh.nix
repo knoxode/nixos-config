@@ -4,6 +4,7 @@
     shellAliases = {
       ls = "ls --color=auto";
       ll = "ls -la";
+      logout = "loginctl terminate-user shaiikura";
       man-nixos = "man configuration.nix";
       man-hm = "man home-configuration.nix";
     };

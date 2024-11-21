@@ -5,6 +5,7 @@
   home.homeDirectory = "/home/shaiikura";
   imports = [
     inputs.nvchad4nix.homeManagerModule
+    ./ags.nix
     ./sh.nix
     ./firefox.nix
     ./hyprland.nix
@@ -42,5 +43,4 @@
 
   home.stateVersion = "24.05";
   programs.home-manager.enable = true;
-
 }

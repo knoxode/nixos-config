@@ -18,20 +18,18 @@
     };
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
+
+    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; overlays = [ nur.overlay ]; };
       extraSpecialArgs = { inherit system; inherit inputs; };
       specialArgs = { inherit system; inherit inputs; };
-    in { 
-    nixosConfigurations.nomad = lib.nixosSystem {
-      inherit system pkgs specialArgs;
-      modules = [
-        ./hosts/nomad/configuration.nix
+      common-modules = [
         home-manager.nixosModules.home-manager
         {
           home-manager = {
@@ -41,21 +39,26 @@
             users.shaiikura = import ./modules/home-manager/shaiikura.nix;
           };
         }
+        {
+          nix.settings = {
+            substituters = [ "https://cosmic.cachix.org/" ];
+            trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+          };
+        }
+        nixos-cosmic.nixosModules.default
+      ];
+    in { 
+    nixosConfigurations.nomad = lib.nixosSystem {
+      inherit system pkgs specialArgs;
+      inherit common-modules;
+      modules = common-modules ++ [
+        ./hosts/nomad/configuration.nix
       ];
     };
     nixosConfigurations.reuby = lib.nixosSystem {
       inherit system pkgs specialArgs;
-      modules = [
+      modules = common-modules ++ [
         ./hosts/reuby/configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-            inherit extraSpecialArgs;
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users.shaiikura = import ./modules/home-manager/shaiikura.nix;
-          };
-        }
       ];
     };
   };

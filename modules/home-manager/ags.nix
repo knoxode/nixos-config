@@ -1,3 +1,3 @@
 {
-  home.file.".config/ags/config.js".source = ./dotfiles/ags/config.js;
+  home.file.".config/ags".source = ./../../dotfiles/ags;
 }
