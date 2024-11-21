@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -11,5 +11,9 @@
       brightnessctl
       fastfetch
       os-prober
+      rustc
+      cargo
+      unzip
+      powertop
   ];
 }

@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   imports = [
     # Programs imports
