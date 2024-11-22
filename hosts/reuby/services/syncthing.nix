@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   services.syncthing = {
       key = "/run/secrets/syncthing/reuby/key";
