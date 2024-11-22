@@ -14,7 +14,7 @@
       
       #Desktop-related
       google-chrome
-      ags
+      # ags
       brightnessctl
       fastfetch
       os-prober
@@ -24,6 +24,13 @@
       gimp
       inkscape
       libreoffice
+
+      #Compiling(?)
+      # autoconf
+      # automake
+      # libtool
+      # pkg-config
+      # m4
 
   ];
 }

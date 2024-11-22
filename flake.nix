@@ -20,6 +20,8 @@
     hyprland.url = "github:hyprwm/Hyprland";
 
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
+
+    ags.url = "github:aylur/ags";
   };
 
   outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, ... }@inputs:
@@ -50,7 +52,6 @@
     in { 
     nixosConfigurations.nomad = lib.nixosSystem {
       inherit system pkgs specialArgs;
-      inherit common-modules;
       modules = common-modules ++ [
         ./hosts/nomad/configuration.nix
       ];

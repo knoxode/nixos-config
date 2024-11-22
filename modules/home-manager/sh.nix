@@ -4,7 +4,7 @@
     shellAliases = {
       ls = "ls --color=auto";
       ll = "ls -la";
-      logout = "loginctl terminate-user shaiikura";
+      logout = "SESSION_ID=$(loginctl | head -n 1 | awk '{print $1}') ; loginctl terminate-session $SESSION_ID";
       man-nixos = "man configuration.nix";
       man-hm = "man home-configuration.nix";
     };
