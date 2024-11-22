@@ -9,6 +9,8 @@
     ./sh.nix
     ./firefox.nix
     ./hyprland.nix
+    ./fastfetch.nix
+    ./kitty.nix
   ];
 
   home.file.".config/hypr/hyprland.conf".source = ./../../dotfiles/hypr/hyprland.conf;
