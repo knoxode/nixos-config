@@ -5,7 +5,7 @@
   home.homeDirectory = "/home/shaiikura";
   imports = [
     inputs.nvchad4nix.homeManagerModule
-    ./ags.nix
+    # ./ags.nix
     ./sh.nix
     ./firefox.nix
     ./hyprland.nix
@@ -34,10 +34,21 @@
   programs.nvchad = {
     enable = true;
     backup = false;
+    extraPlugins =''
+    return {
+      {"nvimtools/none-ls.nvim", lazy=true, dependencies = { "nvimtools/none-ls-extras.nvim", }},
+      {"stsewd/isort.nvim", lazy=true},
+    } 
+    '';
     extraPackages = with pkgs; [
       nodePackages.bash-language-server
       nil
       nixpkgs-fmt
+      pyright
+      isort
+      black
+      nodePackages_latest.prettier
+      nodePackages.eslint_d
     ];
     chadrcConfig = builtins.readFile ./../../preferences/nvim/chadrc.lua;
     extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;

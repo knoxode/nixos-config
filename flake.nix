@@ -2,10 +2,10 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    # NixOS official package source, using the nixos-23.11 branch here
+    # NixOS official package source, using the nixos-24.11 branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11" ;
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvchad4nix = {
@@ -49,18 +49,23 @@
         }
         nixos-cosmic.nixosModules.default
       ];
+      agsConfig = import ./ags-devshell.nix { inherit pkgs system inputs; };
     in { 
-    nixosConfigurations.nomad = lib.nixosSystem {
-      inherit system pkgs specialArgs;
-      modules = common-modules ++ [
-        ./hosts/nomad/configuration.nix
-      ];
+      nixosConfigurations.nomad = lib.nixosSystem {
+        inherit system pkgs specialArgs;
+        modules = common-modules ++ [
+          ./hosts/nomad/configuration.nix
+        ];
+      };
+      nixosConfigurations.reuby = lib.nixosSystem {
+        inherit system pkgs specialArgs;
+        modules = common-modules ++ [
+          ./hosts/reuby/configuration.nix
+        ];
+      };
+
+      # Include AGS-specific devShells
+      devShells = agsConfig.devShells;
     };
-    nixosConfigurations.reuby = lib.nixosSystem {
-      inherit system pkgs specialArgs;
-      modules = common-modules ++ [
-        ./hosts/reuby/configuration.nix
-      ];
-    };
-  };
 }
+
