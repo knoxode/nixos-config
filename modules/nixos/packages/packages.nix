@@ -32,5 +32,9 @@
       # pkg-config
       # m4
 
+      #Development environments
+      direnv
+      nix-direnv
+
   ];
 }

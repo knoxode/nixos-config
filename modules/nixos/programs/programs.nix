@@ -5,5 +5,6 @@
     ./firefox.nix
     ./sops.nix
     ./rstudio.nix
+    ./direnv.nix
   ];
 }
