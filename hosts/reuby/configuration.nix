@@ -1,20 +1,23 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
+{ pkgs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
       # host-specific overrides
-      # ./../nomad/syncthing.nix
+      ./services/syncthing.nix
 
       # Services imports
       ./../../modules/nixos/services/services.nix
 
       # Programs imports
       ./../../modules/nixos/programs/programs.nix
+
+      # environment imports
+      ./../../modules/nixos/environment/environment.nix
 
       # User imports
       ./../../modules/nixos/users/users.nix
@@ -26,11 +29,12 @@
   system.stateVersion = "24.05"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
     enable = true;
-    devices = [ "/dev/vda" ];
+    devices = [ "nodev" ];
     useOSProber = true;
   };
 

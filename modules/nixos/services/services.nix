@@ -8,5 +8,6 @@
     ./common-xserver.nix
     ./pipewire.nix
     ./hyprland.nix
+    ./garbage_collection.nix
   ];
 }

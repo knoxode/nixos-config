@@ -39,6 +39,7 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             users.shaiikura = import ./modules/home-manager/shaiikura.nix;
+            backupFileExtension = "backup";
           };
         }
         {

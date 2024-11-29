@@ -10,7 +10,7 @@
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         dashlane
         ublock-origin
-        enhancer-for-youtube
+        # enhancer-for-youtube
       ];
     };
   };
