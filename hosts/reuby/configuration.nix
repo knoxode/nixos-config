@@ -26,17 +26,24 @@
       ./../../modules/nixos/packages/packages.nix
   ];
 
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  # Bootloader
-  boot.loader.efi.canTouchEfiVariables = true;
+# Use the systemd-boot EFI boot loader.
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
     devices = [ "nodev" ];
     useOSProber = true;
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.initrd.luks.devices = {
+    luks-root = {
+      device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
+      preLVM = true;
+    };
   };
 
   networking.networkmanager.enable = true;
