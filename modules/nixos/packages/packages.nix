@@ -36,5 +36,8 @@
       direnv
       nix-direnv
 
+      #Organisation related
+      obsidian
+
   ];
 }
