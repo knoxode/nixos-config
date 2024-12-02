@@ -9,7 +9,7 @@
       ./hardware-configuration.nix
 
       # host-specific overrides
-      # ./../nomad/syncthing.nix
+      ./services/syncthing.nix
 
       # Services imports
       ./../../modules/nixos/services/services.nix
