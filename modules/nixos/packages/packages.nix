@@ -14,6 +14,8 @@
       
       #Desktop-related
       google-chrome
+      flatpak
+
       # ags
       brightnessctl
       fastfetch
@@ -39,5 +41,21 @@
       #Organisation related
       obsidian
 
+      #hyprland-related
+      hyprpanel
+      rofi
+      swww
+      waypaper
+      grim
+      grimblast
+      hyprpicker
+      slurp
+      swappy
+      wlogout
+
+  ];
+
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
   ];
 }

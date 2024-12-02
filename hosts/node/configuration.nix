@@ -9,7 +9,7 @@
 
       # host-specific overrides
       ./services/syncthing.nix
-      ./hypr/override.nix
+
       # Services imports
       ./../../modules/nixos/services/services.nix
 

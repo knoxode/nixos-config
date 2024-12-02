@@ -22,9 +22,13 @@
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
 
     ags.url = "github:aylur/ags";
+
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, nix-flatpak, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
@@ -48,7 +52,12 @@
             trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
           };
         }
+        {
+          nixpkgs.overlays = [inputs.hyprpanel.overlay];
+        }
         nixos-cosmic.nixosModules.default
+        nix-flatpak.nixosModules.nix-flatpak
+
       ];
       agsConfig = import ./ags-devshell.nix { inherit pkgs system inputs; };
     in { 
