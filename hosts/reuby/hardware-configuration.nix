@@ -8,26 +8,26 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" "i915" ];
+  boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/4cf8803e-e6a3-45c3-a076-d941f1515b38";
+    { device = "/dev/disk/by-uuid/7fc878e8-45a7-4a28-a45c-d25304df59b3";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-8cd6fd97-5d3b-428e-9630-0339027d754e".device = "/dev/disk/by-uuid/8cd6fd97-5d3b-428e-9630-0339027d754e";
+  boot.initrd.luks.devices."luks-d924ab72-4c01-4d2e-a35c-7d1c6690ee50".device = "/dev/disk/by-uuid/d924ab72-4c01-4d2e-a35c-7d1c6690ee50";
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/6376-2C99";
+    { device = "/dev/disk/by-uuid/2BD3-B087";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/743ee726-59d6-4020-91dc-3081769fe661"; }
+    [ { device = "/dev/disk/by-uuid/726db028-d8c9-4b30-9bfb-49bbe2a2b14f"; }
     ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
@@ -35,16 +35,9 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp0s13f0u4u4.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp0s31f6.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp0s20f3.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [ 
-      #vulkan-intel
-    ];
-  };
 }

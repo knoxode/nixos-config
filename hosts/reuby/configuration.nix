@@ -30,10 +30,11 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  # Bootloader.
+  # Bootloader
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
     enable = true;
+    efiSupport = true;
     devices = [ "nodev" ];
     useOSProber = true;
   };
