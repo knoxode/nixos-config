@@ -52,7 +52,7 @@
       slurp
       swappy
       wlogout
-
+  
   ];
 
   fonts.packages = with pkgs; [
