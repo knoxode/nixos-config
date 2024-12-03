@@ -22,6 +22,10 @@
       "syncthing/reuby/cert" = {};
       "syncthing/node/key" = {};
       "syncthing/node/cert" = {};
+
+      #wireguard-related keys
+      "wireguard/reuby/privatekey" = {};
+      "wireguard/reuby/presharedkey" = {};
     };
   };
 }

@@ -1,4 +1,4 @@
 {
-  home.file.".config/kitty/".source = ./../../dotfiles/kitty;
+  home.file.".config/fastfetch".source = ./../../dotfiles/fastfetch;
 }
 
