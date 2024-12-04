@@ -1,8 +1,14 @@
 { lib, ... }:
 
 {
+  home.file.".config/hypr/scripts/" = lib.mkDefault {
+    source = ./../../dotfiles/hypr/scripts;
+  };
   home.file.".config/hypr/hyprland.conf" = lib.mkDefault {
     source = ./../../dotfiles/hypr/hyprland.conf;
+  };
+  home.file.".config/hypr/hyprlock.conf.template" = lib.mkDefault {
+    source = ./../../dotfiles/hypr/hyprlock.conf.template;
   };
   home.file.".config/hypr/execs.conf" = lib.mkDefault {
     source = ./../../dotfiles/hypr/execs.conf;

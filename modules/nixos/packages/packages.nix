@@ -44,6 +44,7 @@
       hyprpicker
       slurp
       swappy
+      hyprlock
       wlogout
       jq
 
