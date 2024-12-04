@@ -50,3 +50,46 @@ null_ls.setup {
   vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
 
 }
+
+local nvimtree = require("nvim-tree")
+
+-- Load the default configuration
+local config = {
+  filters = { dotfiles = false },
+  disable_netrw = true,
+  hijack_cursor = true,
+  sync_root_with_cwd = true,
+  update_focused_file = {
+    enable = true,
+    update_root = false,
+  },
+  view = {
+    width = 30,
+    preserve_window_proportions = true,
+  },
+  renderer = {
+    root_folder_label = false,
+    highlight_git = true,
+    indent_markers = { enable = true },
+    icons = {
+      glyphs = {
+        default = "󰈚",
+        folder = {
+          default = "",
+          empty = "",
+          empty_open = "",
+          open = "",
+          symlink = "",
+        },
+        git = { unmerged = "" },
+      },
+    },
+  },
+}
+
+-- Override the specific setting
+config.filters.git_ignored = false -- Show files ignored by .gitignore
+
+-- Apply the configuration
+nvimtree.setup(config)
+

@@ -12,7 +12,6 @@
     initExtra = ''
       # Initialize Starship prompt
       eval "$(starship init bash)"
-      fastfetch
       export MANPAGER='nvim +Man!'
       eval "$(direnv hook bash)"
 
