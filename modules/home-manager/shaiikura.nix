@@ -32,6 +32,7 @@
    wl-clipboard
    # rstudio
    kitty
+   mendeley
   ];
 
   programs.nvchad = {
