@@ -26,9 +26,14 @@
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, nix-flatpak, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, nix-flatpak, spicetify-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;

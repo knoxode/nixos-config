@@ -5,6 +5,7 @@
   home.homeDirectory = "/home/shaiikura";
   imports = [
     inputs.nvchad4nix.homeManagerModule
+    inputs.spicetify-nix.homeManagerModules.default
     # ./ags.nix
     ./sh.nix
     ./firefox.nix
@@ -14,6 +15,7 @@
     ./waypaper.nix
     ./grim.nix
     ./wlogout.nix
+    ./spicetify.nix
   ];
 
   home.file.".config/hypr/hyprland.conf".source = ./../../dotfiles/hypr/hyprland.conf;
@@ -30,8 +32,6 @@
    wl-clipboard
    # rstudio
    kitty
-   spotify
-   spicetify-cli
   ];
 
   programs.nvchad = {
