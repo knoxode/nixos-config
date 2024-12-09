@@ -47,6 +47,7 @@
       hyprlock
       wlogout
       jq
+      socat
 
       #wireguard
       networkmanagerapplet
