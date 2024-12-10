@@ -11,6 +11,7 @@
       starship
       jetbrains-mono
       tree
+      tmux
 
       #Desktop-related
       google-chrome

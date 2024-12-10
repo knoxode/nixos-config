@@ -58,6 +58,13 @@
     extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;
   };
 
+  programs.tmux = {
+    enable = true;
+    plugins = with pkgs; [
+      tmuxPlugins.better-mouse-mode
+    ];
+  };
+
   home.stateVersion = "24.05";
   programs.home-manager.enable = true;
 }
