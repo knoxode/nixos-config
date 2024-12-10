@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Paths to Hyprland sockets
 EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
@@ -28,7 +28,7 @@ configure_dual_monitor() {
 
   # Update binds for dual-monitor configuration
   for i in $(seq 1 5); do
-    echo "keyword bind \$mainMod, $i, exec, 2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword bind \$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
 }
 

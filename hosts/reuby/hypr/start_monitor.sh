@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Paths to Hyprland sockets
 COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
@@ -8,17 +8,22 @@ configure_single_monitor() {
     echo "Configuring single monitor setup..."
 
     # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor eDP-1,1920x1080@144,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-10 to eDP-1
-    for i in $(seq 1 10); do
+    for i in $(seq 1 9); do
         echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
     done
 
+    echo "keyword workspace 10, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+
+
     # Set up keybinds for workspaces 1-10
-    for i in $(seq 1 10); do
+    for i in $(seq 1 9); do
         echo "keyword bind \$mainMod, $i, workspace, $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
     done
+    
+    echo "keyword bind \$mainMod, 0, workspace, 10" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 }
 
 # Function to configure for a dual monitor setup
@@ -29,7 +34,7 @@ configure_dual_monitor() {
     echo "keyword monitor DP-2,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor eDP-1,1920x1080@144,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-5 to DP-2 and 6-10 to eDP-1
     for i in $(seq 1 5); do

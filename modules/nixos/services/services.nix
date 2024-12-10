@@ -10,5 +10,6 @@
     ./hyprland.nix
     ./garbage_collection.nix
     ./flatpak.nix
+    # ./onedrive.nix
   ];
 }

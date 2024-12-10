@@ -26,11 +26,6 @@
         sha256 = "10xqyrzybjy6dfgbzdhjyylm6xnwbqwccw1r1p1312j52cjydf32";
       };
 
-      snapgeneWrapper = pkgs.writeScript "snapgene" ''
-        #!${pkgs.stdenv.shell}
-        exec "${placeholder "out"}/opt/gslbiotech/snapgene/snapgene.sh" "$@"
-      '';
-
       nativeBuildInputs = [
         pkgs.rpm
         pkgs.autoPatchelfHook
@@ -87,23 +82,15 @@
         mkdir -p $out/opt/gslbiotech/snapgene
         cp -r opt/gslbiotech/snapgene/* $out/opt/gslbiotech/snapgene/
 
-        # Modify snapgene.sh
-        sed -i 's#${placeholder "dollar"}{INSTALLED_DIR}/snapgene "$@"#QT_QPA_PLATFORM="xcb" ${placeholder "dollar"}{INSTALLED_DIR}/snapgene "$@"#' \
-          $out/opt/gslbiotech/snapgene/snapgene.sh
-
-        # Install the snapgene wrapper
-        mkdir -p $out/bin
-        install -m755 ${snapgeneWrapper} $out/bin/snapgene
-
         # Create symlink to license
         mkdir -p $out/share/licenses/$pname
         ln -s $out/opt/gslbiotech/snapgene/resources/licenseAgreement.html \
           $out/share/licenses/$pname/LICENSE.html
 
-        # Wrap the binary
-        makeWrapper $out/opt/gslbiotech/snapgene/snapgene.sh $out/bin/snapgene \
-          --set QT_QPA_PLATFORM "xcb" \
-          --set QT_PLUGIN_PATH "${pkgs.qt6.qtbase.dev}/lib/qt6/plugins"
+        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:${placeholder "out"}/opt/gslbiotech/snapgene" \
+          $out/opt/gslbiotech/snapgene/tls/libqopensslbackend.so
+        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:${placeholder "out"}/opt/gslbiotech/snapgene" \
+          $out/opt/gslbiotech/snapgene/snapgene
       '';
 
       meta = with pkgs.lib; {

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Validate input argument
 if [ -z "$1" ]; then

@@ -34,6 +34,9 @@
 
       #Organisation related
       obsidian
+      #Partially imperative, check the OneDrive Nixos documentation
+      onedrive
+      onedrivegui
 
       #hyprland-related
       hyprpanel
