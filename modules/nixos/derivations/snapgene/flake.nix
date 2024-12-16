@@ -29,7 +29,6 @@
       nativeBuildInputs = [
         pkgs.rpm
         pkgs.autoPatchelfHook
-        pkgs.makeWrapper
         pkgs.kdePackages.wrapQtAppsHook
         pkgs.cpio
       ];
@@ -42,7 +41,7 @@
         qt6.qtpositioning
         qt6.qtsvg
         qt6.qtwebengine
-        kdePackages.qca  # or kdeFrameworks.qca if kdeApplications.qca is unavailable
+        kdePackages.qca
         xorg.libSM
         fontconfig
         nspr
@@ -64,15 +63,18 @@
         nss
         hicolor-icon-theme
         xorg.libICE
+        xorg.libXcursor
         libglvnd
         xorg.libXext
-        openssl_1_1  # Requires explicit permission due to being insecure
+        openssl_1_1  # Ensure OpenSSL is available
         zlib
         llvmPackages.openmp
       ];
 
-      # Ensure autoPatchelfHook can find the binaries
-      autoPatchelfIgnoreMissingDeps = true;
+      env = {
+        QT_QPA_PLATFORM = "xcb";  # Use X11 (or "wayland" for Wayland)
+        QT_TLS_BACKEND = "openssl";  # Ensure TLS uses OpenSSL
+      };
 
       unpackPhase = ''
         rpm2cpio $src | cpio -idmv
@@ -82,15 +84,17 @@
         mkdir -p $out/opt/gslbiotech/snapgene
         cp -r opt/gslbiotech/snapgene/* $out/opt/gslbiotech/snapgene/
 
+        # Patch RPATH to ensure OpenSSL is found
+        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:\$ORIGIN" $out/opt/gslbiotech/snapgene/snapgene
+
         # Create symlink to license
         mkdir -p $out/share/licenses/$pname
         ln -s $out/opt/gslbiotech/snapgene/resources/licenseAgreement.html \
           $out/share/licenses/$pname/LICENSE.html
 
-        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:${placeholder "out"}/opt/gslbiotech/snapgene" \
-          $out/opt/gslbiotech/snapgene/tls/libqopensslbackend.so
-        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:${placeholder "out"}/opt/gslbiotech/snapgene" \
-          $out/opt/gslbiotech/snapgene/snapgene
+        # Symlink binary for profile integration
+        mkdir -p $out/bin
+        ln -s $out/opt/gslbiotech/snapgene/snapgene $out/bin/snapgene
       '';
 
       meta = with pkgs.lib; {
