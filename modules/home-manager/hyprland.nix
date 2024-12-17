@@ -9,6 +9,10 @@
     source = ./../../dotfiles/hypr/hyprland.conf;
     executable = true;
   };
+  home.file.".config/hypr/hyprlock.conf" = lib.mkDefault {
+    source = ./../../dotfiles/hypr/hyprlock.conf;
+    executable = true;
+  };
   home.file.".config/hypr/hyprlock.conf.template" = lib.mkDefault {
     source = ./../../dotfiles/hypr/hyprlock.conf.template;
     executable = true;

@@ -42,6 +42,7 @@
     return {
       {"nvimtools/none-ls.nvim", lazy=true, dependencies = { "nvimtools/none-ls-extras.nvim", }},
       {"stsewd/isort.nvim", lazy=true},
+      {"christoomey/vim-tmux-navigator", lazy=false}
     } 
     '';
     extraPackages = with pkgs; [
@@ -61,10 +62,15 @@
   programs.tmux = {
     enable = true;
     plugins = with pkgs; [
-      tmuxPlugins.better-mouse-mode
+      tmuxPlugins.sensible
+      tmuxPlugins.vim-tmux-navigator
     ];
+    extraConfig = ''
+      set -g @plugin 'tmux-plugins/tmux-sensible'
+      set -g @plugin 'christoomey/vim-tmux-navigator'
+    '';
   };
 
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 }
