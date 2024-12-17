@@ -6,5 +6,6 @@
     ./sops.nix
     ./rstudio.nix
     ./direnv.nix
+    ./fish.nix
   ];
 }

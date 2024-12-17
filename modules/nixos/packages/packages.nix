@@ -12,6 +12,7 @@
       jetbrains-mono
       tree
       tmux
+      fish
 
       #Desktop-related
       google-chrome

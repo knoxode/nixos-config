@@ -3,26 +3,26 @@
 status="$(nmcli general status | grep -oh "\w*connect\w*")"
 
 if [[ "$status" == "disconnected" ]]; then
-  printf "󰤮 "
+  printf "󰤮 \n"
 elif [[ "$status" == "connecting" ]]; then
-  printf "󱍸 "
+  printf "󱍸 \n"
 elif [[ "$status" == "connected" ]]; then
   strength="$(nmcli -f IN-USE,SIGNAL device wifi | grep '*' | awk '{print $2}')"
   # strength="$(python $HOME/.config/Scripts/wifi-conn-strength)"
   if [[ "$?" == "0" ]]; then
     if [[ "$strength" -eq "0" ]]; then
-      printf "󰤯 "
+      printf "󰤯 \n"
     elif [[ ("$strength" -ge "0") && ("$strength" -le "25") ]]; then
-      printf "󰤟 "  
+      printf "󰤟 \n"  
     elif [[ ("$strength" -ge "25") && ("$strength" -le "50") ]]; then
-      printf "󰤢 "
+      printf "󰤢 \n"
     elif [[ ("$strength" -ge "50") && ("$strength" -le "75") ]]; then
-      printf "󰤥 "
+      printf "󰤥 \n"
     elif [[ ("$strength" -ge "75") && ("$strength" -le "100") ]]; then
-      printf "󰤨 "
+      printf "󰤨 \n"
     fi
   else
-    printf "󰈀 "
+    printf "󰈀 \n"
   fi
 fi
 
