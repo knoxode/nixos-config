@@ -17,6 +17,8 @@
     ./wlogout.nix
     ./spicetify.nix
     ./fish.nix
+    ./rofi.nix
+    ./onedrive.nix
   ];
 
   home.file.".config/hypr/hyprland.conf".source = ./../../dotfiles/hypr/hyprland.conf;

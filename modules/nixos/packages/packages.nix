@@ -13,6 +13,8 @@
       tree
       tmux
       fish
+      python3
+      python3Packages.pip
 
       #Desktop-related
       google-chrome
@@ -28,6 +30,7 @@
       gimp
       inkscape
       libreoffice
+      teams-for-linux
 
       #Development environments
       direnv
@@ -37,7 +40,6 @@
       obsidian
       #Partially imperative, check the OneDrive Nixos documentation
       onedrive
-      onedrivegui
 
       #hyprland-related
       hyprpanel
@@ -57,10 +59,13 @@
       #wireguard
       networkmanagerapplet
 
+      #openssl
+      openssl
+
   ];
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" "DroidSansMono" ]; })
   ];
 }
 

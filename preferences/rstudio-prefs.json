@@ -1,7 +1,8 @@
 {
   "theme": "Solarized Dark",
   "font_size_points": 12,
-  "editor_theme": "Solarized Dark",
+  "editor_theme": "Pastel On Dark",
+  "editor_font": "JetBrains Mono",
   "default_project_location": "~/projects",
   "show_rmd_render_tab": true,
   "show_hidden_files": true

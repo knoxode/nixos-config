@@ -37,7 +37,7 @@
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
-      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; overlays = [ nur.overlay ]; };
+      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; overlays = [ nur.overlays.default ]; };
       extraSpecialArgs = { inherit system; inherit inputs; };
       specialArgs = { inherit system; inherit inputs; };
       common-modules = [
