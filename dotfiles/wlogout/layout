@@ -6,13 +6,13 @@
 }
 {
     "label" : "hibernate",
-    "action" : "hyprlock & sleep 1 && systemctl hibernate",
+    "action" : "hyprlock & sleep 1 && systemctl suspend-then-hibernate",
     "text" : "Hibernate",
     "keybind" : "h"
 }
 {
     "label" : "logout",
-    "action" : "loginctl terminate-user $USER",
+    "action" : "sleep 1; hyprctl dispatch exit",
     "text" : "Logout",
     "keybind" : "e"
 }

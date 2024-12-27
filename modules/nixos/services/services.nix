@@ -10,6 +10,8 @@
     ./hyprland.nix
     ./garbage_collection.nix
     ./flatpak.nix
+    ./avahi.nix
+    ./printing.nix
     # ./onedrive.nix
   ];
 }

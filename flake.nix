@@ -21,8 +21,6 @@
 
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
 
-    ags.url = "github:aylur/ags";
-
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -64,7 +62,6 @@
         nix-flatpak.nixosModules.nix-flatpak
 
       ];
-      agsConfig = import ./ags-devshell.nix { inherit pkgs system inputs; };
     in { 
       nixosConfigurations.nomad = lib.nixosSystem {
         inherit system pkgs specialArgs;
@@ -78,9 +75,6 @@
           ./hosts/reuby/configuration.nix
         ];
       };
-
-      # Include AGS-specific devShells
-      devShells = agsConfig.devShells;
     };
 }
 

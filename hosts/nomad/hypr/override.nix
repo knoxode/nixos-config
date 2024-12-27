@@ -9,6 +9,10 @@
     source = ./execs.conf;
     executable = true;
   };
+  home-manager.users.shaiikura.home.file.".config/hypr/env.conf" = lib.mkOverride 10 {
+    source = ./env.conf;
+    executable = true;
+  };
   home-manager.users.shaiikura.home.file.".config/hypr/handle_monitor_connect.sh" = {
     source = ./handle_monitor_connect.sh;
     executable = true;

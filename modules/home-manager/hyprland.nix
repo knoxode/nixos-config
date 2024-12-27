@@ -13,8 +13,8 @@
     source = ./../../dotfiles/hypr/hyprlock.conf;
     executable = true;
   };
-  home.file.".config/hypr/hyprlock.conf.template" = lib.mkDefault {
-    source = ./../../dotfiles/hypr/hyprlock.conf.template;
+  home.file.".config/hypr/hypridle.conf" = lib.mkDefault {
+    source = ./../../dotfiles/hypr/hypridle.conf;
     executable = true;
   };
   home.file.".config/hypr/execs.conf" = lib.mkDefault {

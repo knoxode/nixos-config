@@ -1,6 +1,7 @@
 { pkgs, ... }:
 
 {
+  hardware.openrazer.enable = true;
   environment.systemPackages = with pkgs; [
 
       #Terminal-related
@@ -15,10 +16,16 @@
       fish
       python3
       python3Packages.pip
+      superfile
 
       #Desktop-related
       google-chrome
       flatpak
+      mission-center
+
+      #Gaming-related
+      mangohud
+      gamemode
 
       # ags
       brightnessctl
@@ -39,28 +46,38 @@
       #Organisation related
       obsidian
       #Partially imperative, check the OneDrive Nixos documentation
-      onedrive
+      # onedrive
+      onedrivegui
 
       #hyprland-related
       hyprpanel
+      hyprlock
+      hyprpicker
+      hypridle
+      hyprsunset
       rofi
       swww
       waypaper
       grim
       grimblast
-      hyprpicker
       slurp
       swappy
-      hyprlock
       wlogout
       jq
       socat
+
+      #Disk management
+      gparted
 
       #wireguard
       networkmanagerapplet
 
       #openssl
       openssl
+
+      #keyboard-related
+      openrazer-daemon
+      polychromatic
 
   ];
 
