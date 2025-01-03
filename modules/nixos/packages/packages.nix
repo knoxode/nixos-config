@@ -22,6 +22,7 @@
       google-chrome
       flatpak
       mission-center
+      nautilus
 
       #Gaming-related
       mangohud
