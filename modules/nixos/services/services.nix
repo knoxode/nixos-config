@@ -13,5 +13,6 @@
     ./avahi.nix
     ./printing.nix
     # ./onedrive.nix
+    ./upower.nix
   ];
 }

@@ -12,6 +12,9 @@
       ./services/syncthing.nix
       ./hypr/override.nix
 
+      #Bluetooth
+      ./../../modules/nixos/hardware/hardware.nix
+
       # Services imports
       ./../../modules/nixos/services/services.nix
 
@@ -72,16 +75,13 @@
 
   # Configure console keymap
   console.keyMap = "uk";
-
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-
   security.rtkit.enable = true;
 
 
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
   };
 
   # Load nvidia driver for Xorg and Wayland
@@ -100,7 +100,7 @@
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = true;
+    powerManagement.finegrained = false;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -127,6 +127,7 @@
       nvidiaBusId = "PCI:1:0:0";
     };
   };
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  environment.systemPackages = with pkgs; [
+    nvtopPackages.full
+  ];
 }

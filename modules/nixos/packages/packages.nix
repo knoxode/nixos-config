@@ -27,12 +27,6 @@
       mangohud
       gamemode
 
-      # ags
-      brightnessctl
-      fastfetch
-      os-prober
-      powertop
-
       #Office-related
       gimp
       inkscape
@@ -65,6 +59,14 @@
       wlogout
       jq
       socat
+      pywal
+
+      # ags
+      brightnessctl
+      fastfetch
+      os-prober
+      powertop
+      power-profiles-daemon
 
       #Disk management
       gparted
