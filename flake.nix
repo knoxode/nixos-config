@@ -17,10 +17,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nur.url = "github:nix-community/NUR";
-    hyprland.url = "github:hyprwm/Hyprland";
-
-    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
-
+    hyprland.url = "github:hyprwm/Hyprland/775111b6032185c9ef164d7ba1417a875c1d0287";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -31,7 +28,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, nixos-cosmic, nix-flatpak, spicetify-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nix-flatpak, spicetify-nix, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
@@ -51,16 +48,14 @@
         }
         {
           nix.settings = {
-            substituters = [ "https://cosmic.cachix.org/" ];
-            trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+            substituters = ["https://hyprland.cachix.org"];
+            trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
           };
         }
         {
           nixpkgs.overlays = [inputs.hyprpanel.overlay];
         }
-        nixos-cosmic.nixosModules.default
         nix-flatpak.nixosModules.nix-flatpak
-
       ];
     in { 
       nixosConfigurations.nomad = lib.nixosSystem {

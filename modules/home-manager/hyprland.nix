@@ -4,12 +4,13 @@
   home.file.".config/hypr/scripts/" = lib.mkDefault {
     source = ./../../dotfiles/hypr/scripts;
     executable = true;
+    recursive = true;
   };
   home.file.".config/hypr/hyprland.conf" = lib.mkDefault {
     source = ./../../dotfiles/hypr/hyprland.conf;
     executable = true;
   };
-  home.file.".config/hypr/hyprlock.conf" = lib.mkDefault {
+  home.file.".config/hypr/hyprlock.conf.template" = lib.mkDefault {
     source = ./../../dotfiles/hypr/hyprlock.conf;
     executable = true;
   };

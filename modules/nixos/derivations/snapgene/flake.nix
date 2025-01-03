@@ -29,8 +29,9 @@
       nativeBuildInputs = [
         pkgs.rpm
         pkgs.autoPatchelfHook
-        pkgs.kdePackages.wrapQtAppsHook
+        pkgs.makeWrapper
         pkgs.cpio
+        pkgs.qt6.wrapQtAppsHook
       ];
 
       buildInputs = with pkgs; [
@@ -63,38 +64,35 @@
         nss
         hicolor-icon-theme
         xorg.libICE
-        xorg.libXcursor
         libglvnd
         xorg.libXext
-        openssl_1_1  # Ensure OpenSSL is available
+        openssl_1_1
         zlib
         llvmPackages.openmp
       ];
-
-      env = {
-        QT_QPA_PLATFORM = "xcb";  # Use X11 (or "wayland" for Wayland)
-        QT_TLS_BACKEND = "openssl";  # Ensure TLS uses OpenSSL
-      };
 
       unpackPhase = ''
         rpm2cpio $src | cpio -idmv
       '';
 
       installPhase = ''
-        mkdir -p $out/opt/gslbiotech/snapgene
-        cp -r opt/gslbiotech/snapgene/* $out/opt/gslbiotech/snapgene/
+        # Install the extracted files
+        mkdir -p $out/opt
+        cp -r opt/* $out/opt/
 
-        # Patch RPATH to ensure OpenSSL is found
-        patchelf --set-rpath "${pkgs.openssl_1_1}/lib:\$ORIGIN" $out/opt/gslbiotech/snapgene/snapgene
+        mkdir -p $out/usr/bin
+        cp $out/opt/gslbiotech/snapgene/snapgene $out/usr/bin/
 
-        # Create symlink to license
-        mkdir -p $out/share/licenses/$pname
-        ln -s $out/opt/gslbiotech/snapgene/resources/licenseAgreement.html \
-          $out/share/licenses/$pname/LICENSE.html
+        # Modify the shell script to reference the Nix store path and set QT_QPA_PLATFORM
+        sed -i "s|$(placeholder "INSTALLED_DIR")/snapgene \"\$@\"|QT_QPA_PLATFORM=\"xcb\" $out/opt/gslbiotech/snapgene/snapgene \"\$@\"|" \
+          $out/opt/gslbiotech/snapgene/snapgene.sh
 
-        # Symlink binary for profile integration
-        mkdir -p $out/bin
-        ln -s $out/opt/gslbiotech/snapgene/snapgene $out/bin/snapgene
+        chmod a+x $out/usr/bin/snapgene
+
+        # Create symlink for the license
+        mkdir -p $out/usr/share/licenses/$pname
+        ln -s /opt/gslbiotech/snapgene/resources/licenseAgreement.html \
+          $out/usr/share/licenses/$pname/LICENSE.html
       '';
 
       meta = with pkgs.lib; {
