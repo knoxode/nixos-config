@@ -26,9 +26,10 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix.url = "github:danth/stylix/release-24.11";
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, nix-flatpak, spicetify-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nix-flatpak, spicetify-nix, stylix, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
@@ -56,8 +57,15 @@
           nixpkgs.overlays = [inputs.hyprpanel.overlay];
         }
         nix-flatpak.nixosModules.nix-flatpak
+        inputs.stylix.nixosModules.stylix
       ];
     in { 
+      nixosConfigurations.node = lib.nixosSystem {
+        inherit system pkgs specialArgs;
+        modules = common-modules ++ [
+          ./hosts/node/configuration.nix
+        ];
+      };
       nixosConfigurations.nomad = lib.nixosSystem {
         inherit system pkgs specialArgs;
         modules = common-modules ++ [

@@ -10,6 +10,8 @@
       # host-specific overrides
       ./services/syncthing.nix
       ./hypr/override.nix
+      #Bluetooth
+      ./../../modules/nixos/hardware/hardware.nix
 
       # Services imports
       ./../../modules/nixos/services/services.nix

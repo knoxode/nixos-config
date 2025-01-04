@@ -1,11 +1,11 @@
-{ pkgs, inputs, ... }:
+{ lib, pkgs, inputs, ... }:
 
 {
   programs.spicetify =
      let
        spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
      in
-     {
+     lib.mkForce {
        enable = true;
        enabledExtensions = with spicePkgs.extensions; [
          # adblock

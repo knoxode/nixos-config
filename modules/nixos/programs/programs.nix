@@ -7,5 +7,6 @@
     ./rstudio.nix
     ./direnv.nix
     ./fish.nix
+    ./stylix.nix
   ];
 }

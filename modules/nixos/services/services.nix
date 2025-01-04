@@ -14,5 +14,6 @@
     ./printing.nix
     # ./onedrive.nix
     ./upower.nix
+    ./nautilus-related.nix
   ];
 }
