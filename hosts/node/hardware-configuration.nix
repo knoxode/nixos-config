@@ -23,6 +23,16 @@
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
+  
+  fileSystems."/mnt/windows" =
+    { device = "/dev/disk/by-uuid/943AB5D03AB5B01A";
+      fsType = "ntfs";
+    };
+  
+  fileSystems."/mnt/games" =
+    { device = "/dev/disk/by-uuid/F69C7E789C7E336B";
+      fsType = "ntfs";
+    };
 
    swapDevices = [ {
       device = "/var/lib/swapfile";
