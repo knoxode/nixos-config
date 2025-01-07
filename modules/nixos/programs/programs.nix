@@ -8,5 +8,6 @@
     ./direnv.nix
     ./fish.nix
     ./stylix.nix
+    ./virt-manager.nix
   ];
 }

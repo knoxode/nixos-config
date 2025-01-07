@@ -82,6 +82,9 @@
       openrazer-daemon
       polychromatic
 
+      #virtualisation-related
+      virtiofsd
+
   ];
 
   fonts.packages = with pkgs; [
