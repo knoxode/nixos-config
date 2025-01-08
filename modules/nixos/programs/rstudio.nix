@@ -16,6 +16,9 @@
         rmarkdown
         stringi
         stringr
+
+        BiocManager
+        clusterProfiler
       ];
     })
   ];
