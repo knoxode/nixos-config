@@ -17,6 +17,10 @@
         stringi
         stringr
 
+        ggVennDiagram
+        ggridges
+        showtext
+
         BiocManager
         clusterProfiler
       ];
