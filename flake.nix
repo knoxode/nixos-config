@@ -18,7 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nur.url = "github:nix-community/NUR";
-    hyprland.url = "github:hyprwm/Hyprland/775111b6032185c9ef164d7ba1417a875c1d0287";
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
