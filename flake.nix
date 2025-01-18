@@ -4,7 +4,6 @@
   inputs = {
     # NixOS official package source, using the nixos-24.11 branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -31,14 +30,13 @@
     stylix.url = "github:danth/stylix/release-24.11";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nur, nix-flatpak, spicetify-nix, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nur, nix-flatpak, spicetify-nix, stylix, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; overlays = [ nur.overlays.default ]; };
-      unstablePkgs = import nixpkgs-unstable { inherit system; config.allowUnfree = true; };
       extraSpecialArgs = { inherit system; inherit inputs; };
-      specialArgs = { inherit system; inherit inputs unstablePkgs; };
+      specialArgs = { inherit system; inherit inputs; };
       common-modules = [
         home-manager.nixosModules.home-manager
         {
