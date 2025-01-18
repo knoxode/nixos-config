@@ -1,94 +1,96 @@
-{ pkgs, ... }:
+{ pkgs, unstablePkgs, ... }:
 
 {
   hardware.openrazer.enable = true;
+
   environment.systemPackages = with pkgs; [
+    # Terminal-related
+    rustc
+    cargo
+    unzip
+    git
+    starship
+    jetbrains-mono
+    tree
+    tmux
+    fish
+    python3
+    python3Packages.pip
+    superfile
 
-      #Terminal-related
-      rustc
-      cargo
-      unzip
-      git
-      starship
-      jetbrains-mono
-      tree
-      tmux
-      fish
-      python3
-      python3Packages.pip
-      superfile
+    # Desktop-related
+    google-chrome
+    flatpak
+    mission-center
+    nautilus
 
-      #Desktop-related
-      google-chrome
-      flatpak
-      mission-center
-      nautilus
+    # Gaming-related
+    mangohud
+    gamemode
 
-      #Gaming-related
-      mangohud
-      gamemode
+    # Office-related
+    gimp
+    inkscape
+    libreoffice
+    teams-for-linux
 
-      #Office-related
-      gimp
-      inkscape
-      libreoffice
-      teams-for-linux
+    # Development environments
+    direnv
+    nix-direnv
 
-      #Development environments
-      direnv
-      nix-direnv
+    # Organisation related
+    obsidian
+    # Partially imperative, check the OneDrive NixOS documentation
+    # onedrive
+    onedrivegui
 
-      #Organisation related
-      obsidian
-      #Partially imperative, check the OneDrive Nixos documentation
-      # onedrive
-      onedrivegui
+    # Hyprland-related
+    hyprpanel
+    hyprlock
+    hyprpicker
+    hypridle
+    hyprsunset
+    rofi
+    swww
+    waypaper
+    grim
+    grimblast
+    slurp
+    swappy
+    wlogout
+    jq
+    socat
+    pywal
 
-      #hyprland-related
-      hyprpanel
-      hyprlock
-      hyprpicker
-      hypridle
-      hyprsunset
-      rofi
-      swww
-      waypaper
-      grim
-      grimblast
-      slurp
-      swappy
-      wlogout
-      jq
-      socat
-      pywal
+    # Miscellaneous tools
+    brightnessctl
+    fastfetch
+    os-prober
+    powertop
+    power-profiles-daemon
 
-      # ags
-      brightnessctl
-      fastfetch
-      os-prober
-      powertop
-      power-profiles-daemon
+    # Disk management
+    gparted
 
-      #Disk management
-      gparted
+    # Wireguard
+    networkmanagerapplet
 
-      #wireguard
-      networkmanagerapplet
+    # OpenSSL
+    openssl
 
-      #openssl
-      openssl
+    # Keyboard-related
+    openrazer-daemon
+    polychromatic
 
-      #keyboard-related
-      openrazer-daemon
-      polychromatic
+    # Virtualisation-related
+    virtiofsd
 
-      #virtualisation-related
-      virtiofsd
+    mcpelauncher-ui-qt
 
-  ];
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" "DroidSansMono" ]; })
+    #Fonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.droid-sans-mono
   ];
 }
 
