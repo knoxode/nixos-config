@@ -1,4 +1,4 @@
-{ pkgs, unstablePkgs, ... }:
+{ pkgs, ... }:
 
 {
   hardware.openrazer.enable = true;
@@ -17,7 +17,10 @@
     python3
     python3Packages.pip
     superfile
-
+    
+    #music-related
+    easyeffects
+      
     # Desktop-related
     google-chrome
     flatpak
@@ -25,8 +28,10 @@
     nautilus
 
     # Gaming-related
+    prismlauncher
     mangohud
-    gamemode
+    discord-canary
+    lutris
 
     # Office-related
     gimp
@@ -84,9 +89,6 @@
 
     # Virtualisation-related
     virtiofsd
-
-    mcpelauncher-ui-qt
-
 
     #Fonts
     nerd-fonts.jetbrains-mono

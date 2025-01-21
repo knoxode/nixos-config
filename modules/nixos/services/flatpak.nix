@@ -14,7 +14,6 @@
 
   services.flatpak.packages = [
     { appId = "tv.plex.PlexDesktop"; origin = "flathub"; }
-    { appId = "com.discordapp.DiscordCanary"; origin = "flathub-beta"; }
-    # { appId = "io.missioncenter.MissionCenter"; origin = "flathub"; }
+    # { appId = "com.discordapp.DiscordCanary"; origin = "flathub-beta"; }
   ];
 }
