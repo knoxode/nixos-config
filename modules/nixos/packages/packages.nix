@@ -33,14 +33,12 @@
     mangohud
     gamemode
     discord-canary
-    discord-canary
     lutris
 
     # Office-related
     gimp
     inkscape
     libreoffice
-    teams-for-linux
 
     # Development environments
     direnv
