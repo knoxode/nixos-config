@@ -1,4 +1,4 @@
-{ pkgs, unstablePkgs, ... }:
+{ pkgs, ... }:
 
 {
   hardware.openrazer.enable = true;
@@ -17,6 +17,7 @@
     python3
     python3Packages.pip
     superfile
+    clang
 
     # Desktop-related
     google-chrome
@@ -27,6 +28,7 @@
     # Gaming-related
     mangohud
     gamemode
+    discord-canary
 
     # Office-related
     gimp

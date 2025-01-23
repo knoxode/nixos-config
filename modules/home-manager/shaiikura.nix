@@ -57,6 +57,7 @@
       black
       nodePackages_latest.prettier
       nodePackages.eslint_d
+      clang-tools
     ];
     chadrcConfig = builtins.readFile ./../../preferences/nvim/chadrc.lua;
     extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;

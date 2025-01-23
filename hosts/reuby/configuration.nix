@@ -79,7 +79,7 @@
   console.keyMap = "uk";
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
