@@ -84,11 +84,6 @@
     enable32Bit = true;
   };
 
-  boot.kernelParams = [
-    "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-    "nvidia.NVreg_TemporaryFilePath=/var/lib/swapfile"
-  ];
-
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
 
@@ -96,6 +91,8 @@
     open = true;
     # Modesetting is required.
     modesetting.enable = true;
+
+    powerManagement.enable = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
