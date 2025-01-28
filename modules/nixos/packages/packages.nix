@@ -39,6 +39,7 @@
     gimp
     inkscape
     libreoffice
+    mupdf
 
     # Development environments
     direnv
