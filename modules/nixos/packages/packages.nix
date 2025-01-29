@@ -40,6 +40,7 @@
     inkscape
     libreoffice
     mupdf
+    anydesk
 
     # Development environments
     direnv
