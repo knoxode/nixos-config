@@ -18,6 +18,10 @@
     python3Packages.pip
     superfile
     clang
+    vulkan-tools
+    vulkan-headers
+    vulkan-loader
+    vulkan-validation-layers
 
     #music-related
     easyeffects
