@@ -22,6 +22,8 @@
     vulkan-headers
     vulkan-loader
     vulkan-validation-layers
+    ddcutil
+    ddcui
 
     #music-related
     easyeffects
@@ -80,6 +82,7 @@
     os-prober
     powertop
     power-profiles-daemon
+    lm_sensors
 
     # Disk management
     gparted

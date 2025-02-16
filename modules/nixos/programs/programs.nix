@@ -9,5 +9,6 @@
     ./fish.nix
     ./stylix.nix
     ./virt-manager.nix
+    ./coolercontrol.nix
   ];
 }

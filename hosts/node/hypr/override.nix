@@ -13,6 +13,10 @@
     source = ./keybinds.conf;
     executable = true;
   };
+  home-manager.users.shaiikura.home.file.".config/hypr/hypridle.conf" = lib.mkOverride 10 {
+    source = ./hypridle.conf;
+    executable = true;
+  };
   home-manager.users.shaiikura.home.file.".config/hypr/2_workspace.sh" = {
     source = ./2_workspace.sh;
     executable = true;

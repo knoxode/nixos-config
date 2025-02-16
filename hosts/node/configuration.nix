@@ -37,6 +37,7 @@
   
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelModules = [ "it87.force_id=0x8686" "i2c-dev" ];
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
@@ -86,6 +87,10 @@
 
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
+
+  services.udev.extraRules = ''
+      KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+  '';
 
   hardware.nvidia = {
     open = true;
