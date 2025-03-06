@@ -56,7 +56,7 @@
     obsidian
     # Partially imperative, check the OneDrive NixOS documentation
     # onedrive
-    onedrivegui
+    # onedrivegui
 
     # Hyprland-related
     hyprpanel
