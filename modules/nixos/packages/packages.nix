@@ -91,6 +91,7 @@
 
     # Wireguard
     networkmanagerapplet
+    wgnord
 
     # OpenSSL
     openssl
