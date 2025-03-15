@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -31,21 +31,50 @@
   system.stateVersion = "24.11"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-# Use the systemd-boot EFI boot loader.
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    devices = [ "nodev" ];
-    useOSProber = true;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = lib.mkDefault {
+    kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.initrd.luks.devices = {
-    luks-root = {
-      device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
-      preLVM = true;
+    loader = {
+      grub = {
+        enable = true;
+        efiSupport = true;
+        devices = [ "nodev" ];
+        useOSProber = true;
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 0;
     };
+
+    initrd = {
+      verbose = false;
+      luks.devices.luks-root = {
+        device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
+        preLVM = true;
+      };
+    };
+
+    plymouth = {
+      enable = true;
+      theme = "dna";
+      themePackages = with pkgs; [
+        # By default we would install all themes
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "dna" ];
+        })
+      ];
+    };
+
+    consoleLogLevel = 3;
+
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
   };
 
   networking.networkmanager.enable = true;
