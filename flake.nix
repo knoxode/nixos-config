@@ -2,6 +2,7 @@
   description = "A simple NixOS flake";
 
   inputs = {
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # NixOS official package source, using the nixos-24.11 branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
@@ -31,7 +32,7 @@
     stylix.url = "github:danth/stylix/release-24.11";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, nur, nix-flatpak, spicetify-nix, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, chaotic, home-manager, nur, nix-flatpak, spicetify-nix, stylix, ... }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
@@ -51,6 +52,7 @@
       extraSpecialArgs = { inherit system; inherit inputs; };
       specialArgs = { inherit system; inherit inputs; };
       common-modules = [
+        chaotic.nixosModules.default
         home-manager.nixosModules.home-manager
         {
           home-manager = {
