@@ -12,13 +12,13 @@ configure_dual_monitor() {
 
   echo "reload" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   # Configure DP-2 monitor
-  echo "keyword monitor DP-2,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+  echo "keyword monitor HDMI-A-1,3840x2160,0x0,2" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   # Configure eDP-1 monitor
   echo "keyword monitor eDP-1,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   
   # Assign workspaces 1-5 to DP-2
   for i in $(seq 1 5); do
-    echo "keyword workspace $i, monitor:DP-2, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword workspace $i, monitor:HDMI-A-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
 
   # Assign workspaces 6-10 to eDP-1
@@ -43,7 +43,7 @@ handle_event() {
       local monitor_name=$(echo "$monitor_info" | awk -F',' '{print $2}' | xargs)
 
       # If the added monitor is DP-2, configure the dual-monitor setup
-      if [ "$monitor_name" = "DP-2" ]; then
+      if [ "$monitor_name" = "HDMI-A-1" ]; then
         configure_dual_monitor
       fi
       ;;

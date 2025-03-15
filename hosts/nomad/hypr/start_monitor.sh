@@ -31,14 +31,14 @@ configure_dual_monitor() {
     echo "Configuring dual monitor setup..."
 
     # Set up monitor DP-2
-    echo "keyword monitor DP-2,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor HDMI-A-1,3840x2160,0x0,2" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Set up monitor eDP-1
     echo "keyword monitor eDP-1,1920x1080@144,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-5 to DP-2 and 6-10 to eDP-1
     for i in $(seq 1 5); do
-        echo "keyword workspace $i, monitor:DP-2, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+        echo "keyword workspace $i, monitor:HDMI-A-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
     done
     for i in $(seq 6 10); do
         echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
