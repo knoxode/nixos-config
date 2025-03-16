@@ -33,6 +33,8 @@
     flatpak
     mission-center
     nautilus
+    vlc
+    beeper
 
     # Gaming-related
     prismlauncher
@@ -54,9 +56,6 @@
 
     # Organisation related
     obsidian
-    # Partially imperative, check the OneDrive NixOS documentation
-    # onedrive
-    # onedrivegui
 
     # Hyprland-related
     hyprpanel

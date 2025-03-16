@@ -9,6 +9,7 @@
 
       # host-specific overrides
       ./services/syncthing.nix
+      ./services/sched_ext.nix
       ./hypr/override.nix
       #Bluetooth
       ./../../modules/nixos/hardware/hardware.nix
@@ -28,24 +29,53 @@
       ./../../modules/nixos/packages/packages.nix
   ];
 
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-# Use the systemd-boot EFI boot loader.
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    devices = [ "nodev" ];
-    useOSProber = true;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_cachyos;
 
-  boot.initrd.luks.devices = {
-    luks-root = {
-      device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
-      preLVM = true;
+    loader = {
+      grub = {
+        enable = true;
+        efiSupport = true;
+        devices = [ "nodev" ];
+        useOSProber = true;
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 0;
     };
+
+    initrd = {
+      verbose = false;
+      luks.devices.luks-root = {
+        device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
+        preLVM = true;
+      };
+    };
+
+    plymouth = {
+      enable = true;
+      theme = "dna";
+      themePackages = with pkgs; [
+        # By default we would install all themes
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "dna" ];
+        })
+      ];
+    };
+
+    consoleLogLevel = 3;
+
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
   };
 
   networking.networkmanager.enable = true;
@@ -87,6 +117,28 @@
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "simple";
   };
+
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 20;
+
+     #Optional helps save long term battery health
+     START_CHARGE_THRESH_BAT0 = 40; # 40 and bellow it starts to charge
+     STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
+
+    };
+  }; 
+
 
 # Install the driver
   services.fprintd.enable = true;
