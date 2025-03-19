@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   hardware.openrazer.enable = true;
@@ -33,6 +33,9 @@
     flatpak
     mission-center
     nautilus
+    kdePackages.dolphin
+    lxqt.lxqt-policykit
+    inputs.zen-browser.packages."${system}".default
     vlc
     beeper
 
