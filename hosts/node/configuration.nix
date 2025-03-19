@@ -36,7 +36,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
   boot.kernelModules = [ "it87.force_id=0x8686" "i2c-dev" ];
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
