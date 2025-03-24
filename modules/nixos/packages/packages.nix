@@ -114,6 +114,7 @@
 
     # support 32-bit only
     wine
+    openconnect
 
     # support 64-bit only
     (wine.override { wineBuild = "wine64"; })
