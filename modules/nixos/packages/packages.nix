@@ -24,6 +24,7 @@
     vulkan-validation-layers
     ddcutil
     ddcui
+    bash-language-server
 
     #music-related
     easyeffects
