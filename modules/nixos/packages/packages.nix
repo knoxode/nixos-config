@@ -30,11 +30,13 @@
     easyeffects
       
     # Desktop-related
+    cifs-utils
     google-chrome
     flatpak
     mission-center
     nautilus
     kdePackages.dolphin
+    kdePackages.gwenview
     lxqt.lxqt-policykit
     inputs.zen-browser.packages."${system}".default
     vlc
