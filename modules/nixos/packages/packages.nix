@@ -1,8 +1,6 @@
 { inputs, pkgs, ... }:
 
 {
-  hardware.openrazer.enable = true;
-
   environment.systemPackages = with pkgs; [
     # Terminal-related
     rustc
