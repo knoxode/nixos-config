@@ -39,6 +39,7 @@
     inputs.zen-browser.packages."${system}".default
     vlc
     beeper
+    plex-desktop
 
     # Gaming-related
     prismlauncher
