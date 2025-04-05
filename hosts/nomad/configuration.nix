@@ -7,6 +7,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./hardware-specific/hardware-specific.nix
 
       # host-specific overrides
       ./services/syncthing.nix

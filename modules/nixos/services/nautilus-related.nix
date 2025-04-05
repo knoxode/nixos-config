@@ -1,3 +1,8 @@
+{pkgs, lib, ... }:
+
 {
-  services.gvfs.enable = true;
+  services.gvfs = {
+    enable = true;
+    package = lib.mkForce pkgs.gnome.gvfs;
+  };
 }

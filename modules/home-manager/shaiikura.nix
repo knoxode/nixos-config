@@ -7,7 +7,7 @@
     inputs.nvchad4nix.homeManagerModule
     inputs.spicetify-nix.homeManagerModules.default
     # ./ags.nix
-    ./sh.nix
+    ./bash.nix
     ./firefox.nix
     ./hyprland.nix
     ./fastfetch.nix

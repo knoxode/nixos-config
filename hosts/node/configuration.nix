@@ -7,6 +7,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./hardware-specific/hardware-specific.nix
 
       # host-specific overrides
       ./services/syncthing.nix
@@ -36,7 +37,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
   boot.kernelModules = [ "it87.force_id=0x8686" "i2c-dev" ];
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;

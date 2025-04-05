@@ -1,8 +1,6 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
-  hardware.openrazer.enable = true;
-
   environment.systemPackages = with pkgs; [
     # Terminal-related
     rustc
@@ -24,17 +22,24 @@
     vulkan-validation-layers
     ddcutil
     ddcui
+    bash-language-server
 
     #music-related
     easyeffects
       
     # Desktop-related
+    cifs-utils
     google-chrome
     flatpak
     mission-center
     nautilus
+    kdePackages.dolphin
+    kdePackages.gwenview
+    lxqt.lxqt-policykit
+    inputs.zen-browser.packages."${system}".default
     vlc
     beeper
+    plex-desktop
 
     # Gaming-related
     prismlauncher
@@ -90,6 +95,7 @@
 
     # Wireguard
     networkmanagerapplet
+    wgnord
 
     # OpenSSL
     openssl
@@ -110,6 +116,7 @@
 
     # support 32-bit only
     wine
+    openconnect
 
     # support 64-bit only
     (wine.override { wineBuild = "wine64"; })

@@ -26,6 +26,9 @@
       #wireguard-related keys
       "wireguard/reuby/privatekey" = {};
       "wireguard/reuby/presharedkey" = {};
+
+      #Geldoc(SPR)
+      "geldoc" = {};
     };
   };
 }

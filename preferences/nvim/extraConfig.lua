@@ -3,7 +3,7 @@ local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- Add `nil_ls` to the list of default servers
-local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright" }
+local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls" }
 
 -- Iterate over servers and apply default configuration
 for _, lsp in ipairs(servers) do
@@ -41,6 +41,10 @@ lspconfig.clangd.setup {
     cmd = { "clangd" },
     filetypes = { "c", "cpp", "objc", "objcpp" },
     root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"),
+}
+
+lspconfig.bashls.setup {
+  filetypes = {"sh", "bash", "zsh", "sbatch"},
 }
 
 -- Configure Black formatter using `null-ls.nvim`
