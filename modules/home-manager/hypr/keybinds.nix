@@ -1,6 +1,6 @@
 {
   # Set modifiers
-  mainMod = "SUPER";
+  mainMod = "super";
   terminal = "kitty";
   fileManager = "nautilus";
   menu = "rofi -show drun";

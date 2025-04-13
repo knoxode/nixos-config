@@ -10,7 +10,7 @@ let
   rules = import ./rules.nix;
 
   # Merge all configs into one attribute set
-  mergedSettings = env // colors // execs // general // hyprland // keybinds // rules;
+  mergedSettings = keybinds // colors // execs // general // hyprland // env // rules;
 
 in {
   wayland.windowManager.hyprland = {

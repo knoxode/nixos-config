@@ -1,5 +1,3 @@
-{ config, lib, ... }:
-
 {
   # Environment variables
   env = [
