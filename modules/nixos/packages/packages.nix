@@ -66,7 +66,6 @@
     hyprpanel
     hyprlock
     hyprpicker
-    hypridle
     hyprsunset
     rofi
     swww
