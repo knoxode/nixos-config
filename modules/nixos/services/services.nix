@@ -15,5 +15,6 @@
     ./onedrive.nix
     ./upower.nix
     ./nautilus-related.nix
+    ./fwupd.nix
   ];
 }

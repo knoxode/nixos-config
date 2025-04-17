@@ -12,6 +12,9 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 10;
+  };
 
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -51,5 +54,6 @@
   # networking.interfaces.wlp4s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = true;
+  hardware.enableRedistributableFirmware = true;
 }

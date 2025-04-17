@@ -18,10 +18,8 @@
     ./spicetify.nix
     ./fish.nix
     ./rofi.nix
-    # ./onedrive.nix
+    ./onedrive.nix
   ];
-
-  home.file.".config/hypr/hyprland.conf".source = ./../../dotfiles/hypr/hyprland.conf;
 
   home.file.".config/rstudio/rstudio-prefs.json".source = ./../../preferences/rstudio-prefs.json;
 

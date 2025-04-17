@@ -30,7 +30,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:danth/stylix/release-24.11";
+    stylix.url = "github:danth/stylix/master";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
@@ -44,11 +44,6 @@
         config.permittedInsecurePackages = [ "openssl-1.1.1w" ];
         overlays = [
           nur.overlays.default
-
-          # Override RStudio with the version from nixos-24.11
-          (final: prev: {
-            rstudio = inputs.nixpkgs-stable.legacyPackages.${system}.rstudio;
-          })
         ];
       };
       extraSpecialArgs = { inherit system; inherit inputs; };
