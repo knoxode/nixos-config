@@ -13,16 +13,8 @@
     source = ./env.conf;
     executable = true;
   };
-  home-manager.users.shaiikura.home.file.".config/hypr/handle_monitor_connect.sh" = {
-    source = ./handle_monitor_connect.sh;
-    executable = true;
-  };
-  home-manager.users.shaiikura.home.file.".config/hypr/handle_monitor_disconnect.sh" = {
-    source = ./handle_monitor_disconnect.sh;
-    executable = true;
-  };
-  home-manager.users.shaiikura.home.file.".config/hypr/start_monitor.sh" = {
-    source = ./start_monitor.sh;
+  home-manager.users.shaiikura.home.file.".config/hypr/monitor_script.sh" = {
+    source = ./monitor_script.sh;
     executable = true;
   };
   home-manager.users.shaiikura.home.file.".config/hypr/2_workspace.sh" = {

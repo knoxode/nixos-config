@@ -11,6 +11,7 @@
 
       # host-specific overrides
       ./services/syncthing.nix
+      ./services/monitor_script.nix
       ./hypr/override.nix
 
       #Bluetooth
