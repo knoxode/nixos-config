@@ -40,10 +40,10 @@ configure_dual_monitor() {
     echo "Configuring dual monitor setup..."
 
     # Set up monitor DP-2
-    echo "keyword monitor $external_monitor,3840x2160,0x0,2" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor $external_monitor,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080@144,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor eDP-1,1920x1080@144,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-5 to DP-2 and 6-10 to eDP-1
     for i in $(seq 1 5); do

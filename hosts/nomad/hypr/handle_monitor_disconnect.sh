@@ -16,6 +16,8 @@ reset_single_monitor() {
   # Move workspaces to eDP-1
   move_workspaces_to_edp1
 
+  echo "keyword env AQ_DRM_DEVICES,/dev/dri/card0"
+
   # Reload configuration
   echo "reload" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
@@ -30,6 +32,9 @@ reset_single_monitor() {
     echo "keyword bind \$mainMod, $i, workspace, $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
   echo "keyword bind \$mainMod, 0, workspace, 10" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+
+  sleep 1
+  hyprpanel -q && hyprpanel
 }
 
 # Handle monitor removed events
@@ -38,7 +43,7 @@ handle_event() {
   case "$event" in
     monitorremoved*)
       local monitor_name=$(echo "$event" | awk -F'>>' '{print $2}' | xargs)
-      if [ "$monitor_name" = "DP-2" ]; then
+      if [ "$monitor_name" = "DP-2" || "$monitor_name" = "HDMI-A-1" ]; then
         reset_single_monitor
       fi
       ;;
