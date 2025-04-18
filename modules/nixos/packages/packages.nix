@@ -23,6 +23,8 @@
     ddcutil
     ddcui
     bash-language-server
+    lsof
+    busybox
 
     #music-related
     easyeffects
