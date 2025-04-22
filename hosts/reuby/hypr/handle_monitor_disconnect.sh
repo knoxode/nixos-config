@@ -19,8 +19,6 @@ reset_single_monitor() {
   # Reload configuration
   echo "reload" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
-  echo "keyword monitor eDP-1,1920x1080,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-
   # Bind workspaces 1-10 to the internal monitor
   for i in $(seq 1 9); do
     echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"

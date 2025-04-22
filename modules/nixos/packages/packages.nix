@@ -25,6 +25,7 @@
     bash-language-server
     lsof
     busybox
+    vscode-fhs
 
     #music-related
     easyeffects

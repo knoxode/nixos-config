@@ -28,7 +28,7 @@ configure_dual_monitor() {
 
   # Update binds for dual-monitor configuration
   for i in $(seq 1 5); do
-    echo "keyword bind \$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword bind \$mainMod, $i, exec, 2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
 }
 
