@@ -26,6 +26,8 @@
     lsof
     busybox
     vscode-fhs
+    nextflow
+    temurin-bin-17
 
     #music-related
     easyeffects
