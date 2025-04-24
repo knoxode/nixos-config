@@ -9,4 +9,7 @@
   environment.systemPackages = with pkgs; [ openrgb-with-all-plugins ];
   virtualisation.libvirtd.enable = true;
   virtualisation.spiceUSBRedirection.enable = true;
+  virtualisation.docker = {
+    enable = true;
+  };
 }
