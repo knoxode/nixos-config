@@ -26,8 +26,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:Gerg-L/spicetify-nix/02098a8c4f373cb0b2f6691bab1fa2e921d6c123";
     };
 
     stylix.url = "github:danth/stylix/master";
@@ -62,6 +61,7 @@
         }
         {
           nix.settings = {
+            download-buffer-size = 524288000;
             substituters = ["https://hyprland.cachix.org"];
             trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
           };
