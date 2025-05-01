@@ -28,6 +28,7 @@
     vscode-fhs
     nextflow
     temurin-bin-17
+    sshfs-fuse
 
     #music-related
     easyeffects

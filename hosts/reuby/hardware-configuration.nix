@@ -21,6 +21,16 @@
       fsType = "ext4";
     };
 
+  # fileSystems."/mnt/biol-synoxys" = {
+  #   device = "reub0524@arc-login.arc.ox.ac.uk:/data/biol-synoxys";
+  #   fsType = "sshfs";
+  #   options = [
+  #     "x-systemd.automount"
+  #     "noauto"
+  #     "IdentityFile=/home/shaiikura/.ssh/id_ed25519"
+  #   ];
+  # };
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/1A2E-3DAB";
       fsType = "vfat";
