@@ -12,7 +12,7 @@
     ./flatpak.nix
     ./avahi.nix
     ./printing.nix
-    ./onedrive.nix
+    # ./onedrive.nix
     ./upower.nix
     ./nautilus-related.nix
     ./fwupd.nix
