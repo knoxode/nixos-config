@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 status="$(nmcli general status | grep -oh "\w*connect\w*")"
 

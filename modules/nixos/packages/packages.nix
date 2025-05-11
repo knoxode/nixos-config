@@ -29,6 +29,7 @@
     nextflow
     temurin-bin-17
     sshfs-fuse
+    conda
 
     #music-related
     easyeffects
@@ -59,6 +60,7 @@
     libreoffice
     mupdf
     anydesk
+    igv
 
     # Development environments
     direnv
@@ -84,8 +86,6 @@
     jq
     socat
     pywal
-    wayvnc
-    tigervnc
 
     # Miscellaneous tools
     brightnessctl
@@ -137,6 +137,9 @@
 
     # native wayland support (unstable)
     wineWowPackages.waylandFull
+
+    # General python packages
+    python313Packages.dbus-python
   ];
 }
 

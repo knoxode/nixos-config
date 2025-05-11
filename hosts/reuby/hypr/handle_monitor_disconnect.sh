@@ -1,8 +1,20 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Paths to Hyprland sockets
 EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
 COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
+
+echo "Running as: $(whoami)" >&2
+printf "\n"
+echo "UID: $(id -u)" >&2
+printf "\n"
+echo "HOME: $HOME" >&2
+printf "\n"
+env >&2  # Dumps all environment variables to stderr (i.e., to your log)
+printf "\n"
+echo "Checking for socket 1: $XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
+printf "\n"
+echo "Checking for socket 2: $XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock" >&2
 
 # Move workspaces 1-5 to eDP-1
 move_workspaces_to_edp1() {
@@ -45,8 +57,13 @@ handle_event() {
   esac
 }
 
+# Wait until both Hyprland sockets exist
+while [ ! -S "$COMMAND_SOCKET" ] && [ ! -S "$EVENT_SOCKET" ]; do
+    echo "Waiting for Hyprland sockets to appear..." >&2
+    sleep 0.5
+done
+
 # Listen for events and process them
 socat - "UNIX-CONNECT:$EVENT_SOCKET" | while read -r line; do
   handle_event "$line"
 done
-
