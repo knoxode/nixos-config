@@ -17,6 +17,8 @@ if [[ "$primary_conn_type" == "802-11-wireless" ]]; then
       printf "󰤨 \n"
     fi
   else
+    if [[ $primary_conn_type == "802-3-ethernet" ]]; then
     printf "󰈀 \n"
+    fi
   fi
 fi
