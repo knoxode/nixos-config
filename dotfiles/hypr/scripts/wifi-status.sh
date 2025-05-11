@@ -1,28 +1,22 @@
 #!/usr/bin/env bash
 
-status="$(nmcli general status | grep -oh "\w*connect\w*")"
+primary_conn_type=$(nmcli -t -f TYPE connection show --active | head -n 1)
 
-if [[ "$status" == "disconnected" ]]; then
-  printf "󰤮 \n"
-elif [[ "$status" == "connecting" ]]; then
-  printf "󱍸 \n"
-elif [[ "$status" == "connected" ]]; then
+if [[ "$primary_conn_type" == "802-11-wireless" ]]; then
   strength="$(nmcli -f IN-USE,SIGNAL device wifi | grep '*' | awk '{print $2}')"
-  # strength="$(python $HOME/.config/Scripts/wifi-conn-strength)"
   if [[ "$?" == "0" ]]; then
-    if [[ "$strength" -eq "0" ]]; then
+    if [[ "$strength" -eq 0 ]]; then
       printf "󰤯 \n"
-    elif [[ ("$strength" -ge "0") && ("$strength" -le "25") ]]; then
+    elif [[ "$strength" -le 25 ]]; then
       printf "󰤟 \n"  
-    elif [[ ("$strength" -ge "25") && ("$strength" -le "50") ]]; then
+    elif [[ "$strength" -le 50 ]]; then
       printf "󰤢 \n"
-    elif [[ ("$strength" -ge "50") && ("$strength" -le "75") ]]; then
+    elif [[ "$strength" -le 75 ]]; then
       printf "󰤥 \n"
-    elif [[ ("$strength" -ge "75") && ("$strength" -le "100") ]]; then
+    else
       printf "󰤨 \n"
     fi
   else
     printf "󰈀 \n"
   fi
 fi
-
