@@ -4,22 +4,10 @@
 EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
 COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
 
-echo "Running as: $(whoami)"
-printf "\n"
-echo "UID: $(id -u)"
-printf "\n"
-echo "HOME: $HOME"
-printf "\n"
-env >&2  # Dumps all environment variables to stderr (i.e., to your log)
-printf "\n"
-echo "Checking for socket 1: $XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
-printf "\n"
-echo "Checking for socket 2: $XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
-
 # Move workspaces 1-5 to eDP-1
 move_workspaces_to_edp1() {
   for i in $(seq 1 5); do
-    hyprctl dispatch moveworkspacetomonitor $i eDP-1
+    hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
   done
 }
 
@@ -50,18 +38,12 @@ handle_event() {
   case "$event" in
     monitorremoved*)
       local monitor_name=$(echo "$event" | awk -F'>>' '{print $2}' | xargs)
-      if [ "$monitor_name" = "DP-2" ]; then
+      if [[ "$monitor_name" = "DP-2" ]] || [[ "$monitor_name" = "HDMI-A-1" ]]; then
         reset_single_monitor
       fi
       ;;
   esac
 }
-
-# Wait until both Hyprland sockets exist
-while [ ! -S "$COMMAND_SOCKET" ] && [ ! -S "$EVENT_SOCKET" ]; do
-    echo "Waiting for Hyprland sockets to appear..."
-    sleep 0.5
-done
 
 # Listen for events and process them
 while true; do

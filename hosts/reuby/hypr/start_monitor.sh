@@ -8,7 +8,7 @@ configure_single_monitor() {
     echo "Configuring single monitor setup..."
 
     # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080@144,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor eDP-1,1920x1080,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-10 to eDP-1
     for i in $(seq 1 9); do
@@ -28,17 +28,19 @@ configure_single_monitor() {
 
 # Function to configure for a dual monitor setup
 configure_dual_monitor() {
+    external_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .name')
+    
     echo "Configuring dual monitor setup..."
 
     # Set up monitor DP-2
-    echo "keyword monitor DP-2,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor $external_monitor,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080@144,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "keyword monitor eDP-1,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
 
     # Assign workspaces 1-5 to DP-2 and 6-10 to eDP-1
     for i in $(seq 1 5); do
-        echo "keyword workspace $i, monitor:DP-2, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+        echo "keyword workspace $i, monitor:$external_monitor, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
     done
     for i in $(seq 6 10); do
         echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"

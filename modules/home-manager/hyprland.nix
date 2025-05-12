@@ -6,6 +6,7 @@
     executable = true;
     recursive = true;
   };
+
   home.file.".config/hypr/hyprland.conf" = lib.mkDefault {
     source = ./../../dotfiles/hypr/hyprland.conf;
     executable = true;

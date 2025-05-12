@@ -1,6 +1,14 @@
 { inputs, pkgs, ... }:
 
 {
+  fonts.packages = with pkgs; [
+    #Fonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.symbols-only
+    # apple-fonts.sf-pro
+  ];
+
   environment.systemPackages = with pkgs; [
     # Terminal-related
     rustc
@@ -112,9 +120,6 @@
     # Virtualisation-related
     virtiofsd
 
-    #Fonts
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.droid-sans-mono
 
     # support both 32-bit and 64-bit applications
     wineWowPackages.stable
