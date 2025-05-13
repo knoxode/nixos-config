@@ -38,7 +38,7 @@
   
 
   boot.kernelPackages = pkgs.linuxPackages_cachyos;
-  boot.kernelModules = [ "it87.force_id=0x8686" "i2c-dev" ];
+  boot.kernelModules = [ ];
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {

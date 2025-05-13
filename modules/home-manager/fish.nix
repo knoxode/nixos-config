@@ -1,6 +1,9 @@
 {
   programs.fish = {
     enable = true;
+    shellInit = ''
+      set -g fish_greeting
+    '';
     shellAliases = {
       ls = "ls --color=auto";
       ll = "ls -la";

@@ -6,7 +6,6 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.droid-sans-mono
     nerd-fonts.symbols-only
-    # apple-fonts.sf-pro
   ];
 
   environment.systemPackages = with pkgs; [
@@ -54,6 +53,7 @@
     inputs.zen-browser.packages."${system}".default
     vlc
     beeper
+    jellyfin-media-player
 
     # Gaming-related
     prismlauncher
