@@ -5,7 +5,6 @@ local nvlsp = require "nvchad.configs.lspconfig"
 -- Add `nil_ls` to the list of default servers
 local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls", "nextflow_ls" }
 
-
 -- Iterate over servers and apply default configuration
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -122,6 +121,19 @@ local config = {
 
 -- Override the specific setting
 config.filters.git_ignored = false -- Show files ignored by .gitignore
+
+-- Register external parser for nextflow (custom install)
+local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+
+parser_config.nextflow = {
+  install_info = {
+    url = "https://github.com/matthuska/tree-sitter-nextflow", -- Git repo
+    files = { "src/parser.c" }, -- Only this file is needed
+    branch = "main", -- Or whatever the correct branch is
+  },
+  filetype = "nextflow",
+}
+vim.treesitter.language.register('nextflow', 'nextflow') -- for Neovim ≥ 0.9
 
 -- Apply the configuration
 nvimtree.setup(config)

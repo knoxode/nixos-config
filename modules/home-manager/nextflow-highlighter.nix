@@ -1,8 +1,7 @@
 {
-  home.file.".local/share/nvim/site/plugin/nextflow.vim" = {
-    source = ./../../assets/vim-language-nextflow/ftdetect/nextflow.vim;
-  };
-  home.file.".local/share/nvim/site/ftplugin/nextflow/syntax.vim" = {
-    source = ./../../assets/vim-language-nextflow/syntax/nextflow.vim;
+  #Adding the ft detection
+  home.file.".local/share/nvim/site/pack/vim-language-nextflow/start/vim-language-nextflow" = {
+    source = ./../../assets/vim-language-nextflow;
+    recursive = true;
   };
 }

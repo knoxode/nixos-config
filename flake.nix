@@ -2,6 +2,7 @@
   description = "A simple NixOS flake";
 
   inputs = {
+    self.submodules = true;
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     # NixOS official package source, using the nixos-24.11 branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
