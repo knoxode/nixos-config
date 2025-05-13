@@ -19,6 +19,7 @@
     ./fish.nix
     ./rofi.nix
     ./onedrive.nix
+    ./nextflow-highlighter.nix
   ];
 
   home.file.".config/rstudio/rstudio-prefs.json".source = ./../../preferences/rstudio-prefs.json;

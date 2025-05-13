@@ -1,0 +1,3 @@
+[submodule "assets/vim-language-nextflow"]
+	path = assets/vim-language-nextflow
+	url = https://github.com/nextflow-io/vim-language-nextflow.git

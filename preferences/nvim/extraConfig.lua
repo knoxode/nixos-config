@@ -3,7 +3,8 @@ local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- Add `nil_ls` to the list of default servers
-local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls" }
+local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls", "nextflow_ls" }
+
 
 -- Iterate over servers and apply default configuration
 for _, lsp in ipairs(servers) do
@@ -13,6 +14,27 @@ for _, lsp in ipairs(servers) do
     capabilities = nvlsp.capabilities,
   }
 end
+
+vim.filetype.add({
+  extension = {
+    nf = "nextflow",
+  },
+})
+
+--Add Nextflow server
+lspconfig.nextflow_ls.setup {
+  cmd = { "java", "-jar", "/home/shaiikura/Documents/syncthing/asr/language-servers/language-server-all.jar" },
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+  settings = {
+    nextflow = {
+      files = {
+        exclude = { ".git", ".nf-test", "work" },
+      },
+    },
+  },
+}
 
 -- Provide custom settings for `nil_ls`
 lspconfig.nil_ls.setup {
