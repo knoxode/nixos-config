@@ -33,7 +33,19 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, chaotic, home-manager, nur, nix-flatpak, spicetify-nix, stylix, zen-browser, ... }@inputs:
+  outputs = 
+    { 
+      self, 
+      nixpkgs, 
+      nixpkgs-stable, 
+      chaotic, 
+      home-manager, 
+      nur, 
+      nix-flatpak, 
+      spicetify-nix, 
+      stylix, 
+      zen-browser, ... 
+    }@inputs:
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;

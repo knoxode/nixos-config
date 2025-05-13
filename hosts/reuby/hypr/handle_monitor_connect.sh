@@ -7,11 +7,10 @@ COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.soc
 # Function to configure dual-monitor setup
 configure_dual_monitor() {
 
-  echo "reload" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   # Configure DP-2 monitor
-  echo "keyword monitor $external_monitor,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+  echo "keyword monitor $external_monitor,preferred,auto,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   # Configure eDP-1 monitor
-  echo "keyword monitor eDP-1,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+  echo "keyword monitor eDP-1,1920x1080,auto-left,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   
   # Assign workspaces 1-5 to DP-2
   for i in $(seq 1 5); do
@@ -27,6 +26,8 @@ configure_dual_monitor() {
   for i in $(seq 1 5); do
     echo "keyword bind \$mainMod, $i, exec, 2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
+
+  hyrpanel -q && hyprpanel
 }
 
 # Function to handle monitor added events

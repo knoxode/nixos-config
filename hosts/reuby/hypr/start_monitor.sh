@@ -4,27 +4,6 @@
 COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
 
 # Function to configure for a single monitor setup
-configure_single_monitor() {
-    echo "Configuring single monitor setup..."
-
-    # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-
-    # Assign workspaces 1-10 to eDP-1
-    for i in $(seq 1 9); do
-        echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-    done
-
-    echo "keyword workspace 10, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-
-
-    # Set up keybinds for workspaces 1-10
-    for i in $(seq 1 9); do
-        echo "keyword bind \$mainMod, $i, workspace, $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-    done
-    
-    echo "keyword bind \$mainMod, 0, workspace, 10" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-}
 
 # Function to configure for a dual monitor setup
 configure_dual_monitor() {
@@ -50,6 +29,7 @@ configure_dual_monitor() {
     for i in $(seq 1 5); do
         echo "keyword bind \$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
     done
+    hyprpanel -q && hyprpanel
 }
 
 # Main function to determine monitor setup and configure accordingly
@@ -60,7 +40,8 @@ main() {
     if [ "$num_monitors" -eq 2 ]; then
         configure_dual_monitor
     else
-        configure_single_monitor
+      echo "Single monitor detected. Not changing config."
+      hyprpanel -q && hyprpanel
     fi
 }
 

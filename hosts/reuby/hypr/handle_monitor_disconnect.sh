@@ -16,9 +16,6 @@ reset_single_monitor() {
   # Move workspaces to eDP-1
   move_workspaces_to_edp1
 
-  # Reload configuration
-  echo "reload" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-
   # Bind workspaces 1-10 to the internal monitor
   for i in $(seq 1 9); do
     echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
@@ -30,6 +27,8 @@ reset_single_monitor() {
     echo "keyword bind \$mainMod, $i, workspace, $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
   done
   echo "keyword bind \$mainMod, 0, workspace, 10" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+
+  hyprpanel -q && hyprpanel
 }
 
 # Handle monitor removed events
