@@ -30,9 +30,9 @@
 
   outputs = {nixpkgs, ...} @ inputs: let
     system = "x86_64-linux";
-    host = "nixstation";
-    profile = "nvidia";
-    username = "zaney";
+    host = "reuby";
+    profile = "intel";
+    username = "shaiikura";
   in {
     nixosConfigurations = {
       amd = nixpkgs.lib.nixosSystem {
