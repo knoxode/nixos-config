@@ -1,4 +1,7 @@
-{ ... }:
+{ 
+  inputs,
+  ... 
+}:
 {
   nix = {
     settings = {
@@ -13,7 +16,7 @@
     };
   };
   nixpkgs.overlays = [
-    nur.overlay
+    inputs.nur.overlays.default
   ];
   time.timeZone = "Europe/London";
   i18n.defaultLocale = "en_GB.UTF-8";
