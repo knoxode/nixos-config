@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   username,
+  profile,
   ...
 }: 
 {
@@ -10,7 +11,7 @@
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = {inherit inputs username;};
+    extraSpecialArgs = {inherit inputs username profile;};
     users.${username} = {
       imports = [./../home];
       home = {

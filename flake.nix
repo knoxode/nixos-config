@@ -30,13 +30,14 @@
 
   outputs = { self, nixpkgs, ... }@inputs:
     let
-      system = "x86_64-linux";
+      system = "x86-64-linux";
       username = "shaiikura";
       host = "reuby";
       profile = "intel";
     in {
       nixosConfigurations = {
         node = nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit inputs;
             inherit username;
@@ -48,6 +49,7 @@
           ];
         };
         nomad = nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit inputs;
             inherit username;
@@ -59,6 +61,7 @@
           ];
         };
         reuby = nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit inputs;
             inherit username;
