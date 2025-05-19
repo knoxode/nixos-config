@@ -30,7 +30,7 @@
 
   outputs = { self, nixpkgs, ... }@inputs:
     let
-      system = "x86-64-linux";
+      system = "x86_64-linux";
       username = "shaiikura";
       host = "reuby";
       profile = "intel";
