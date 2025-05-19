@@ -44,7 +44,6 @@
             inherit profile;
           };
           modules = [ 
-            inputs.nur.modules.nixos.default
             ./hosts/node
           ];
         };
@@ -56,7 +55,6 @@
             inherit profile;
           };
           modules = [ 
-            inputs.nur.modules.nixos.default
             ./hosts/nomad
           ];
         };
@@ -68,7 +66,6 @@
             inherit profile;
           };
           modules = [ 
-            inputs.nur.modules.nixos.default
             ./profiles/intel
           ];
         };
