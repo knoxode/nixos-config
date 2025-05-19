@@ -16,6 +16,7 @@
     };
   };
   nixpkgs.overlays = [
+    inputs.hyprpanel.overlay
     inputs.nur.overlays.default
   ];
   time.timeZone = "Europe/London";

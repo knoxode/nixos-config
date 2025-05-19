@@ -13,7 +13,6 @@
     ./fish.nix
     ./rofi.nix
     ./onedrive.nix
-    ./nextflow-highlighter.nix
     ./helix.nix
   ];
 }
