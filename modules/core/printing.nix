@@ -3,9 +3,10 @@
 {
   services.printing = {
     enable = true;
-    fprintd.enable = true;
     drivers = [ pkgs.hplipWithPlugin ];
   };
+
+  services.fprintd.enable = true;
 
   systemd.services.fprintd = {
     wantedBy = [ "multi-user.target" ];

@@ -31,8 +31,5 @@
   };
   console.keyMap = "uk";
   system.stateVersion = "25.05"; # Do not change!
-  openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfRPyTbfUwQ/3V94NfCQ+dNzr9N4MQaRkxsXIqSXp1z powerskater3@gmail.com"
-  ];
 }
 
