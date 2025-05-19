@@ -1,4 +1,6 @@
 { 
+  pkgs,
+  system,
   inputs,
   ... 
 }:
@@ -18,6 +20,9 @@
   nixpkgs.overlays = [
     inputs.hyprpanel.overlay
     inputs.nur.overlays.default
+    (final: prev: {
+      nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
+    })
   ];
   time.timeZone = "Europe/London";
   i18n.defaultLocale = "en_GB.UTF-8";

@@ -12,7 +12,7 @@
     ./wlogout.nix
     ./fish.nix
     ./rofi.nix
-    ./onedrive.nix
+    ./nvchad.nix
     ./helix.nix
   ];
 }
