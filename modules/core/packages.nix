@@ -13,7 +13,7 @@
     hyprland.enable = true;
   };
 
-  nixpkgs.options.allowUnfree = true;
+  nixpkgs.config.allowUnfree = true;
 
   fonts.packages = with pkgs; [
     #Fonts

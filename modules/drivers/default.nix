@@ -2,7 +2,7 @@
   ...
 }:
 {
-  imports = {
+  imports = [
     ./intel-drivers.nix
-  };
+  ];
 }
