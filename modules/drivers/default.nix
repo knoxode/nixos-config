@@ -1,0 +1,8 @@
+{
+  ...
+}:
+{
+  imports = {
+    ./intel-drivers.nix
+  };
+}
