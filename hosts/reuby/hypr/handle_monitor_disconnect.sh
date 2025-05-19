@@ -2,11 +2,11 @@
 
 # Paths to Hyprland sockets
 EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
-COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
 
 # Move workspaces 1-5 to eDP-1
 move_workspaces_to_edp1() {
   for i in $(seq 1 5); do
+    hyprctl keyword unbind "SUPER,$i,exec,~/.config/hypr/2_workspace.sh $i"
     hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
   done
 }
@@ -18,17 +18,15 @@ reset_single_monitor() {
 
   # Bind workspaces 1-10 to the internal monitor
   for i in $(seq 1 9); do
-    echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
   done
-  echo "keyword workspace 10, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+  hyprctl dispatch moveworkspacetomonitor 10 eDP-1
 
   # Reset binds to single monitor configuration
   for i in $(seq 1 9); do
-    echo "keyword bind \$mainMod, $i, workspace, $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    hyprctl keyword bind "\$mainMod, $i, workspace, $i"
   done
-  echo "keyword bind \$mainMod, 0, workspace, 10" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
-
-  hyprpanel -q && hyprpanel
+  hyprctl keyword bind "\$mainMod, 0, workspace, 10"
 }
 
 # Handle monitor removed events
@@ -38,6 +36,7 @@ handle_event() {
     monitorremoved*)
       local monitor_name=$(echo "$event" | awk -F'>>' '{print $2}' | xargs)
       if [[ "$monitor_name" = "DP-2" ]] || [[ "$monitor_name" = "HDMI-A-1" ]]; then
+        echo ""$monitor_name" Removed."
         reset_single_monitor
       fi
       ;;

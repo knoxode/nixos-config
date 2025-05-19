@@ -37,6 +37,7 @@
     temurin-bin-17
     sshfs-fuse
     conda
+    helix
 
     #music-related
     easyeffects

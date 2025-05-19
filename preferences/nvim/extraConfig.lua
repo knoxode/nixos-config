@@ -3,7 +3,7 @@ local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- Add `nil_ls` to the list of default servers
-local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls", "nextflow_ls" }
+local servers = { "html", "cssls", "nil_ls", "r_language_server", "pyright", "bashls", "nextflow_ls", "dockerls" }
 
 -- Iterate over servers and apply default configuration
 for _, lsp in ipairs(servers) do
@@ -19,6 +19,19 @@ vim.filetype.add({
     nf = "nextflow",
   },
 })
+
+--Add Dockerfile language server
+lspconfig.dockerls.setup {
+  settings = {
+    docker = {
+      languageserver = {
+        formatter = {
+          ignoreMultilineInstructions = true,
+        }
+      }
+    }
+  }
+}
 
 --Add Nextflow server
 lspconfig.nextflow_ls.setup {

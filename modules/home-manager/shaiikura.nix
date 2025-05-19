@@ -20,6 +20,7 @@
     ./rofi.nix
     ./onedrive.nix
     ./nextflow-highlighter.nix
+    ./helix.nix
   ];
 
   home.file.".config/rstudio/rstudio-prefs.json".source = ./../../preferences/rstudio-prefs.json;
@@ -57,6 +58,7 @@
       nodePackages_latest.prettier
       nodePackages.eslint_d
       clang-tools
+      dockerfile-language-server-nodejs
     ];
     chadrcConfig = builtins.readFile ./../../preferences/nvim/chadrc.lua;
     extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;

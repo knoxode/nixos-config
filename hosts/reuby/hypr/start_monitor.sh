@@ -1,50 +1,55 @@
 #!/usr/bin/env bash
 
-# Paths to Hyprland sockets
-COMMAND_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket.sock"
-
-# Function to configure for a single monitor setup
-
 # Function to configure for a dual monitor setup
 configure_dual_monitor() {
     external_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .name')
-    
-    echo "Configuring dual monitor setup..."
 
-    # Set up monitor DP-2
-    echo "keyword monitor $external_monitor,2560x1440,0x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    echo "$external_monitor was detected. Configuring dual monitor."
 
-    # Set up monitor eDP-1
-    echo "keyword monitor eDP-1,1920x1080,-1920x0,1" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+    # Set up monitors
+    hyprctl keyword monitor "$external_monitor,2560x1440,0x0,1"
+    hyprctl keyword monitor "eDP-1,1920x1080,-1920x0,1"
 
-    # Assign workspaces 1-5 to DP-2 and 6-10 to eDP-1
+    # Assign workspaces 1–5 to external monitor, 6–10 to laptop
     for i in $(seq 1 5); do
-        echo "keyword workspace $i, monitor:$external_monitor, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+        hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor"
     done
     for i in $(seq 6 10); do
-        echo "keyword workspace $i, monitor:eDP-1, default:true" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+        hyprctl dispatch moveworkspacetomonitor "$i" "eDP-1"
     done
 
-    # Set up keybinds to switch workspaces on both monitors
+    # Set up keybinds to use external script for switching
     for i in $(seq 1 5); do
-        echo "keyword bind \$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i" | socat - "UNIX-CONNECT:$COMMAND_SOCKET"
+        hyprctl keyword bind "\$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i"
     done
-    hyprpanel -q && hyprpanel
+}
+
+# Function to configure for a single monitor setup
+configure_single_monitor() {
+    echo "Single monitor detected. Configuring..."
+
+    # Assign workspaces 1–10 to eDP-1
+    for i in $(seq 1 10); do
+        hyprctl dispatch moveworkspacetomonitor "$i" "eDP-1"
+    done
+
+    # Reset binds to standard single monitor switching
+    for i in $(seq 1 9); do
+        hyprctl keyword bind "\$mainMod, $i, workspace, $i"
+    done
+    hyprctl keyword bind "\$mainMod, 0, workspace, 10"
 }
 
 # Main function to determine monitor setup and configure accordingly
 main() {
-    # Count connected monitors
     num_monitors=$(hyprctl monitors -j | jq '. | length')
 
     if [ "$num_monitors" -eq 2 ]; then
         configure_dual_monitor
     else
-      echo "Single monitor detected. Not changing config."
-      hyprpanel -q && hyprpanel
+        configure_single_monitor
     fi
 }
 
-# Run the script
 main
 
