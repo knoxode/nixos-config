@@ -10,7 +10,6 @@
     ./waypaper.nix
     ./grim.nix
     ./wlogout.nix
-    ./spicetify.nix
     ./fish.nix
     ./rofi.nix
     ./onedrive.nix
