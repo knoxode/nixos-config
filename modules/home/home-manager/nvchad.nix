@@ -27,7 +27,7 @@
       clang-tools
       dockerfile-language-server-nodejs
     ];
-    chadrcConfig = builtins.readFile ./../../preferences/nvim/chadrc.lua;
-    extraConfig = builtins.readFile ./../../preferences/nvim/extraConfig.lua;
+    chadrcConfig = builtins.readFile ../../../../preferences/nvim/chadrc.lua;
+    extraConfig = builtins.readFile ../../../../preferences/nvim/extraConfig.lua;
   };
 }
