@@ -4,6 +4,7 @@
     ./common-xserver.nix
     ./cosmic.nix
     ./flatpak.nix
+    ./greetd.nix
     ./nautilus-related.nix
     ./nh.nix
     ./openssh.nix
@@ -12,6 +13,7 @@
     ./printing.nix
     ./rstudio.nix
     ./sops.nix
+    ./spicetify.nix
     ./starship.nix
     ./steam.nix
     ./stylix.nix
@@ -20,7 +22,6 @@
     ./tlp.nix
     ./upower.nix
     ./user.nix
-    ./virt-manager.nix
   ];
 }
 

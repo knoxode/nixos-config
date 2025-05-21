@@ -3,8 +3,9 @@
 {
   imports = [
     ./bash.nix
+    ./btop.nix
     ./firefox.nix
-    ./hyprland.nix
+    ./hyprland
     ./fastfetch.nix
     ./kitty.nix
     ./waypaper.nix
@@ -14,5 +15,6 @@
     ./rofi.nix
     ./nvchad.nix
     ./helix.nix
+    ./stylix.nix
   ];
 }

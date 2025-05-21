@@ -1,4 +1,6 @@
 {
+  host,
+  lib,
   pkgs,
   inputs,
   username,
@@ -11,7 +13,7 @@
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = {inherit inputs username profile;};
+    extraSpecialArgs = {inherit inputs username profile host;};
     users.${username} = {
       imports = [./../home];
       home = {
@@ -25,7 +27,7 @@
   users.users.${username} = {
     hashedPassword = "$6$14MwOQmWC/c0B5Uf$asW2FXs8oG8imtSPs9nLaXnZk1VKduLYz5l6TGBqLS8H64sWmONDOhUlTpHZ8HEl/UsKjD1SoGPyUECAju55z0";
     isNormalUser = true;
-    description = "Main";
+    description = "Alex Ryder";
     extraGroups = [
       "docker"
       "libvirtd"
@@ -42,6 +44,7 @@
   };
   users.users.root = {
     hashedPassword = "$6$re41R8kMD0bE.pPA$msbTYZQbZ0syZcicbHlHrqWXlxGii7IbwOEW1ORNHuEkiIma2pjV4eynsFo46K.MQQ8jg1gth7zgf6JW9bFjB0";
+    description = lib.mkForce "Root";
   };
   nix.settings.allowed-users = ["${username}"];
 }

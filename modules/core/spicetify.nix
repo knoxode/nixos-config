@@ -1,6 +1,11 @@
-{ lib, pkgs, inputs, ... }:
+{ lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
+  imports = [ inputs.spicetify-nix.nixosModules.spicetify ];
   programs.spicetify =
      let
        spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};

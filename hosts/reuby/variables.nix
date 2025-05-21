@@ -6,6 +6,7 @@
   # Program Options
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)
   terminal = "kitty"; # Set Default System Terminal
+  fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm) 
   keyboardLayout = "gb";
   consoleKeyMap = "gb";
 
@@ -18,5 +19,10 @@
 
   # Enable Printing Support
   printEnable = false;
+  hostType = "Laptop";
+
+  extraMonitorSettings = "
+    monitor=eDP-1,preferred,0x0,1
+  ";
 }
 

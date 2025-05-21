@@ -1,14 +1,28 @@
 { 
+  host,
   pkgs,
-  system,
   inputs,
   ... 
 }:
 {
+  console.keyMap = "uk";
+  i18n.defaultLocale = "en_GB.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_GB.UTF-8";
+    LC_IDENTIFICATION = "en_GB.UTF-8";
+    LC_MEASUREMENT = "en_GB.UTF-8";
+    LC_MONETARY = "en_GB.UTF-8";
+    LC_NAME = "en_GB.UTF-8";
+    LC_NUMERIC = "en_GB.UTF-8";
+    LC_PAPER = "en_GB.UTF-8";
+    LC_TELEPHONE = "en_GB.UTF-8";
+    LC_TIME = "en_GB.UTF-8";
+  };
+  networking.hostName = host;
   nix = {
     settings = {
-      download-buffer-size = 250000000;
       auto-optimise-store = true;
+      download-buffer-size = 250000000;
       experimental-features = [
         "nix-command"
         "flakes"
@@ -24,24 +38,12 @@
       nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
     })
   ];
-  time.timeZone = "Europe/London";
-  i18n.defaultLocale = "en_GB.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_GB.UTF-8";
-    LC_IDENTIFICATION = "en_GB.UTF-8";
-    LC_MEASUREMENT = "en_GB.UTF-8";
-    LC_MONETARY = "en_GB.UTF-8";
-    LC_NAME = "en_GB.UTF-8";
-    LC_NUMERIC = "en_GB.UTF-8";
-    LC_PAPER = "en_GB.UTF-8";
-    LC_TELEPHONE = "en_GB.UTF-8";
-    LC_TIME = "en_GB.UTF-8";
-  };
+  security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {
     layout = "gb";
     variant = "";
   };
-  console.keyMap = "uk";
   system.stateVersion = "25.05"; # Do not change!
+  time.timeZone = "Europe/London";
 }
 

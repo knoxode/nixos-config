@@ -11,9 +11,9 @@
     firefox.enable = true;
     fish.enable = true;
     hyprland.enable = true;
+    virt-manager.enable = true;
+    starship.enable = true;
   };
-
-  nixpkgs.config.allowUnfree = true;
 
   fonts.packages = with pkgs; [
     #Fonts
@@ -24,142 +24,85 @@
 
   environment.systemPackages = with pkgs; [
     # Terminal-related
-    nvchad
-    rustc
-    cargo
-    unzip
-    git
-    starship
-    tree
-    tmux
-    fish
-    python3
-    python3Packages.pip
-    superfile
-    clang
-    vulkan-tools
-    vulkan-headers
-    vulkan-loader
-    vulkan-validation-layers
-    ddcutil
-    ddcui
+    anydesk
     bash-language-server
-    lsof
-    busybox
-    vscode-fhs
-    nextflow
-    temurin-bin-17
-    sshfs-fuse
-    conda
-    helix
-    htop
-    kitty
-    starship
-
-    #music-related
-    easyeffects
-      
-    # Desktop-related
-    syncthing
-    mendeley
-    wl-clipboard
+    beeper
+    brightnessctl
+    cargo
     cifs-utils
-    google-chrome
+    clang
+    conda
+    ddcui
+    ddcutil
+    direnv
+    discord-canary
+    easyeffects
+    fastfetch
     flatpak
-    nautilus
+    fish
+    gamemode
+    gimp
+    git
+    grim
+    greetd.tuigreet
+    grimblast
+    gparted
+    htop
+    hypridle
+    hyprland
+    hyprlock
+    hyprpanel
+    hyprpicker
+    hyprsunset
+    igv
+    inkscape
+    jellyfin-media-player
+    jq
     kdePackages.dolphin
     kdePackages.gwenview
-    lxqt.lxqt-policykit
-    vlc
-    beeper
-    jellyfin-media-player
-
-    # Gaming-related
-    prismlauncher
-    mangohud
-    gamemode
-    discord-canary
-    lutris
-
-    # Office-related
-    gimp
-    inkscape
+    kitty
     libreoffice
-    mupdf
-    anydesk
-    igv
-
-    # Development environments
-    direnv
-    nix-direnv
-
-    # Organisation related
-    obsidian
-
-    # Hyprland-related
-    hyprpanel
-    hyprlock
-    hyprpicker
-    hypridle
-    hyprsunset
-    rofi
-    swww
-    waypaper
-    grim
-    grimblast
-    slurp
-    swappy
-    wlogout
-    jq
-    socat
-    pywal
-
-    # Miscellaneous tools
-    brightnessctl
-    fastfetch
-    os-prober
-    powertop
-    power-profiles-daemon
     lm_sensors
-
-    # Disk management
-    gparted
-
-    # OpenSSL
-    openssl
-
-    # Keyboard-related
-    openrazer-daemon
-    polychromatic
-
-    # Virtualisation-related
-    virtiofsd
-
-
-    # support both 32-bit and 64-bit applications
-    wineWowPackages.stable
-
-    # support 32-bit only
-    wine
+    lsof
+    lutris
+    lxqt.lxqt-policykit
+    mangohud
+    mendeley
+    mupdf
+    nautilus
+    nextflow
+    nix-direnv
+    nvchad
+    obsidian
     openconnect
-
-    # support 64-bit only
-    (wine.override { wineBuild = "wine64"; })
-
-    # support 64-bit only
-    wine64
-
-    # wine-staging (version with experimental features)
-    wineWowPackages.staging
-
-    # winetricks (all versions)
-    winetricks
-
-    # native wayland support (unstable)
-    wineWowPackages.waylandFull
-
-    # General python packages
-    python313Packages.dbus-python
+    openrazer-daemon
+    openssl
+    os-prober
+    polychromatic
+    power-profiles-daemon
+    powertop
+    prismlauncher
+    python3
+    rofi
+    rustc
+    socat
+    starship
+    superfile
+    swappy
+    syncthing
+    swww
+    temurin-bin-17
+    tmux
+    tree
+    unzip
+    virt-manager
+    virtiofsd
+    vlc
+    vscode-fhs
+    waypaper
+    wl-clipboard
+    wlogout
   ];
+  nixpkgs.config.allowUnfree = true;
 }
 
