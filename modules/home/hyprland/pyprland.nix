@@ -37,13 +37,13 @@
     [scratchpads.discord]
     process_tracking = false
     animation = "fromTop"
-    command = "discordcanary"
+    command = "discordcanary --start-minimized"
     class = "discord"
     initialClass = "discord"
     size = "75% 75%"
     max_size = "1920px 100%"
     position = "150px 150px"
-    lazy = true
+    lazy = false
     
     [scratchpads.obsidian]
     animation = "fromTop"

@@ -30,14 +30,8 @@
 
   outputs = {nixpkgs, ...} @ inputs: let
     system = "x86_64-linux";
-    host = "reuby"; # or set this dynamically
-    hostProfiles = {
-      "reuby" = "intel";
-      "nomad" = "nvidia-laptop";
-      "node" = "nvidia";
-      # add more hosts as needed
-    };
-    profile = hostProfiles.${host} or "intel"; # default to "intel" if not found
+    host = "node";
+    profile = "nvidia";
     username = "shaiikura";
   in {
     nixosConfigurations = {

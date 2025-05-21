@@ -1,12 +1,19 @@
+let
+  centerMonitor = "Acer Technologies XB273U GX 3052185574200";
+  leftMonitor   = "Dell Inc. Dell S2716DG";
+in
 {
   # Git Configuration ( For Pulling Software Repos )
   gitUsername = "Alex Ryder";
   gitEmail = "powerskater3@gmail.com";
 
   # System Features
-  hasRazer = true;
-  hostType = "Desktop";
-  forGaming = true;
+  hasRazer      = true;
+  hostType      = "Desktop";
+  forGaming     = true;
+  centerMonitor = centerMonitor;
+  leftMonitor   = leftMonitor;
+
 
   # Program Options
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)
@@ -26,6 +33,8 @@
   printEnable = true;
 
   extraMonitorSettings = "
+    monitor=desc:${centerMonitor},highrr,auto,1
+    monitor=desc:${leftMonitor},highrr,auto-left,1
   ";
 }
 

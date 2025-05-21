@@ -1,12 +1,45 @@
 {host, ...}: let
-  inherit
-    (import ../../../hosts/${host}/variables.nix)
+  
+  hostVars = import ../../../hosts/${host}/variables.nix;
+
+  # Safe access with fallback
+  hasDefinedMonitors = builtins.hasAttr "centerMonitor" hostVars && builtins.hasAttr "leftMonitor" hostVars;
+
+  inherit (hostVars)
     browser
     terminal
-    fileManager
-    ;
+    fileManager;
+
+  # Only inherit if present
+  centerMonitor = if hasDefinedMonitors then hostVars.centerMonitor else null;
+  leftMonitor = if hasDefinedMonitors then hostVars.leftMonitor else null;
+
+  workspacesForMonitor = monitor: wsStart: wsEnd:
+    builtins.map (i:
+      "${toString i},monitor:desc:${monitor}"
+    ) (builtins.genList (i: wsStart + i) (wsEnd - wsStart + 1));
+
+  #Defines a list containing strings that map the monitors to the appropriate workspaces
+  workspaceBindings =
+    if hasDefinedMonitors then
+      workspacesForMonitor centerMonitor 1 5
+      ++ workspacesForMonitor leftMonitor 6 10
+    else
+      [ ];  # empty fallback
+
+  #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
+  workspaceScriptBinds =
+  if hasDefinedMonitors then
+    builtins.genList (i:
+      let ws = toString (i + 1); in
+      "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
+    ) 5
+  else
+    [ ];
+
 in {
   wayland.windowManager.hyprland.settings = {
+    workspace = workspaceBindings;
     bind = [
       "$modifier, Q, killactive,"
       "$modifier, E, exec, ${fileManager}"
@@ -43,7 +76,7 @@ in {
       "Ctrl+$modifier+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
       "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
       # "ALT, X, togglespecialworkspace, outlook"
-    ];
+    ] ++ workspaceScriptBinds;
 
     bindel = [
       ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"

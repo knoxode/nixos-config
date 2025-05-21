@@ -8,14 +8,35 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-  boot.kernel.sysctl = {
-    "vm.swappiness" = 10;
-  };
+  boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
 
+    loader = {
+      grub = {
+        enable = true;
+        efiSupport = true;
+        devices = [ "nodev" ];
+        useOSProber = true;
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 5;
+    };
+    initrd = {
+      verbose = false;
+      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+      kernelModules = [ ];
+    };
+    kernel.sysctl = {
+      "vm.swappiness" = 10;
+    };
+    kernelParams = [
+    ];
+    kernelModules = [
+      "kvm-intel"
+      "i2c-dev"
+    ];
+  };
+  
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/1ebe754e-b2b2-42c1-acf8-5abb1acd45eb";
       fsType = "ext4";

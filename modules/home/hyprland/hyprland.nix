@@ -11,10 +11,12 @@
     fileManager
     keyboardLayout
     hostType
+    forGaming
     ;
     startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
     handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
     handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
+    steamExecForGameComputers = if forGaming then "steam -silent" else "";
     
     hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
 in {
@@ -55,6 +57,7 @@ in {
         startMonitorScript
         handleMonitorConnectScript
         handleMonitorDisconnectScript
+        steamExecForGameComputers
       ];
       execr = [
         startMonitorScript
