@@ -6,7 +6,7 @@ EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock
 # Move workspaces 1-5 to eDP-1
 move_workspaces_to_edp1() {
   for i in $(seq 1 5); do
-    hyprctl keyword unbind "SUPER,$i,exec,~/.config/hypr/2_workspace.sh $i"
+    hyprctl keyword unbind "SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
     hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
   done
 }
@@ -24,9 +24,9 @@ reset_single_monitor() {
 
   # Reset binds to single monitor configuration
   for i in $(seq 1 9); do
-    hyprctl keyword bind "\$mainMod, $i, workspace, $i"
+    hyprctl keyword bind "SUPER, $i, workspace, $i"
   done
-  hyprctl keyword bind "\$mainMod, 0, workspace, 10"
+  hyprctl keyword bind "SUPER, 0, workspace, 10"
 }
 
 # Handle monitor removed events

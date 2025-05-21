@@ -1,17 +1,21 @@
 { 
+  host,
   pkgs,
   ... 
 }:
 
-
-{
+let
+  inherit (import ../../hosts/${host}/variables.nix)
+  hasRazer
+  forGaming
+  ;
+in{
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
     firefox.enable = true;
     fish.enable = true;
     hyprland.enable = true;
-    virt-manager.enable = true;
     starship.enable = true;
   };
 
@@ -40,7 +44,6 @@
     fastfetch
     flatpak
     fish
-    gamemode
     gimp
     git
     grim
@@ -48,9 +51,6 @@
     grimblast
     gparted
     htop
-    hypridle
-    hyprland
-    hyprlock
     hyprpanel
     hyprpicker
     hyprsunset
@@ -66,7 +66,6 @@
     lsof
     lutris
     lxqt.lxqt-policykit
-    mangohud
     mendeley
     mupdf
     nautilus
@@ -75,13 +74,10 @@
     nvchad
     obsidian
     openconnect
-    openrazer-daemon
     openssl
     os-prober
-    polychromatic
     power-profiles-daemon
     powertop
-    prismlauncher
     python3
     rofi
     rustc
@@ -95,14 +91,15 @@
     tmux
     tree
     unzip
-    virt-manager
     virtiofsd
     vlc
     vscode-fhs
     waypaper
     wl-clipboard
     wlogout
-  ];
+  ] ++ ( if hasRazer then [ polychromatic openrazer-daemon ] else [])
+    ++ (if forGaming then [ mangohud prismlauncher gamemode ] else [])
+  ;
   nixpkgs.config.allowUnfree = true;
 }
 

@@ -30,6 +30,7 @@
     description = "Alex Ryder";
     extraGroups = [
       "docker"
+      "i2c"
       "libvirtd"
       "lp"
       "networkmanager"

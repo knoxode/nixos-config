@@ -4,16 +4,16 @@
   gitEmail = "powerskater3@gmail.com";
 
   # System Features
-  hasRazer = false;
+  hasRazer = true;
   hostType = "Laptop";
-  forGaming = false;
+  forGaming = true;
 
   # Program Options
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)
   terminal = "kitty"; # Set Default System Terminal
   fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm) 
-  keyboardLayout = "us";
-  consoleKeyMap = "us";
+  keyboardLayout = "gb";
+  consoleKeyMap = "gb";
 
   # For Nvidia Prime support
   intelID = "PCI:1:0:0";

@@ -20,7 +20,7 @@ configure_dual_monitor() {
 
     # Set up keybinds to use external script for switching
     for i in $(seq 1 5); do
-        hyprctl keyword bind "\$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i"
+        hyprctl keyword bind "SUPER, $i, exec, ~/.config/hypr/startupscripts/2_workspace.sh $i"
     done
 }
 
@@ -35,9 +35,9 @@ configure_single_monitor() {
 
     # Reset binds to standard single monitor switching
     for i in $(seq 1 9); do
-        hyprctl keyword bind "\$mainMod, $i, workspace, $i"
+        hyprctl keyword bind "SUPER, $i, workspace, $i"
     done
-    hyprctl keyword bind "\$mainMod, 0, workspace, 10"
+    hyprctl keyword bind "SUPER, 0, workspace, 10"
 }
 
 # Main function to determine monitor setup and configure accordingly

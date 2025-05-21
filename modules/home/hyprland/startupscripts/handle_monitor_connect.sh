@@ -25,15 +25,15 @@ configure_dual_monitor() {
 
   #Remove stale keybinds 1-10 that only move to one workspace at a time
   for i in $(seq 1 9); do
-    hyprctl keyword unbind "\$mainMod, $i, workspace, $i"
+    hyprctl keyword unbind "SUPER, $i, workspace, $i"
     echo "Removed single monitor keybind $i"
   done
   
-  hyprctl keyword unbind "\$mainMod, 0, workspace, 10"
+  hyprctl keyword unbind "SUPER, 0, workspace, 10"
   
   # Update binds for dual-monitor configuration (moving to both workspace 1 and 6, etc.)
   for i in $(seq 1 5); do
-    hyprctl keyword bind "\$mainMod, $i, exec, ~/.config/hypr/2_workspace.sh $i"
+    hyprctl keyword bind "SUPER, $i, exec, ~/.config/hypr/startupscripts/2_workspace.sh $i"
     echo "Added dual-monitor keybind $i"
   done
 }

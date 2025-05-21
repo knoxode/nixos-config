@@ -14,5 +14,44 @@
     size = "75% 75%"
     max_size = "1920px 100%"
     position = "150px 150px"
+    
+    [scratchpads.spotify]
+    animation = "fromTop"
+    command = "spotify"
+    class = "spotify"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150px"
+    lazy = true
+    
+    [scratchpads.beeper]
+    process_tracking = false
+    animation = "fromTop"
+    command = "beeper"
+    class = "BeeperTexts"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150px"
+    lazy = true
+    
+    [scratchpads.discord]
+    process_tracking = false
+    animation = "fromTop"
+    command = "discordcanary"
+    class = "discord"
+    initialClass = "discord"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150px"
+    lazy = true
+    
+    [scratchpads.obsidian]
+    animation = "fromTop"
+    command = "obsidian"
+    class = "obsidian"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150px"
+    lazy = true
   '';
 }

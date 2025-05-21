@@ -42,6 +42,7 @@
     ];
     kernelModules = [
       "kvm-intel"
+      "i2c-dev"
     ];
   };
   

@@ -4,9 +4,9 @@
   gitEmail = "powerskater3@gmail.com";
 
   # System Features
-  hasRazer = false;
-  hostType = "Laptop";
-  forGaming = false;
+  hasRazer = true;
+  hostType = "Desktop";
+  forGaming = true;
 
   # Program Options
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)

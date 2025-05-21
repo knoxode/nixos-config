@@ -3,9 +3,7 @@
     enable = true;
     settings = {
       general = {
-        disable_loading_bar = true;
         hide_cursor = false;
-        grace = 10;
       };
       background = [
         {
@@ -38,7 +36,18 @@
           position = "0, 200";
           halign = "center";
           valign = "bottom";
-          opacity = 0.5;
+        }
+        {
+          #BOTTOM RIGHT
+          #NIXOS ICON
+          monitor = "";
+          path = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/nix-snowflake-colours.png";
+          size = 70;
+          position = "0, 0.5%";
+          border_size = 0;
+          rounding = 0;
+          halign = "center";
+          valign = "bottom";
         }
       ];
       input-field = [
@@ -62,7 +71,6 @@
           check_color = "rgb(204, 136, 34)";
           fail_color = "rgb(204, 34, 34)"; # if authentication failed, changes outer_color and fail message color
           fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>"; # can be set to empty
-          fail_transition = 300; # transition time in ms between normal outer_color and fail_color
           capslock_color = -1;
           numlock_color = -1;
           bothlock_color = -1; # when both locks are active. -1 means don't change outer color (same for above)
@@ -87,9 +95,9 @@
         {
           monitor = "";
           text = ''
-            cmd[update:1000] echo "<b><big><span color='white'>\$(date +\"%H\"):</span><span color='gray'>\$(date +\"%M\")</span></big></b>"
+            cmd[update:1000] echo "<b><big><span color='white'>$(date +'%H')</span>:<span color='gray'>$(date +'%M')</span></big></b>"
           '';
-          color = "white";
+          color = "rgba(255,255,255,1)";
           font_size = 128;
           font_family = "JetBrains Mono Nerd Font";
           position = "0, 300";
@@ -101,7 +109,7 @@
           text = ''
             cmd[update:1000] echo "<b><big> Alex Ryder </big></b>"
           '';
-          color = "$color3";
+          color = "rgba(255,255,255,1)";
           font_size = 12;
           font_family = "JetBrains Mono Nerd Font";
           position = "0, 165";
@@ -112,7 +120,7 @@
           # Location & Weather
           monitor = "";
           text = ''
-            cmd[update:300000] echo "\$(bash ~/.config/hypr/scripts/location.sh) \$(bash ~/.config/hypr/scripts/weather.sh)"
+            cmd[update:300000] echo "$(bash ~/.config/hypr/scripts/location.sh) $(bash ~/.config/hypr/scripts/weather.sh)"
           '';
           color = "rgba(255, 255, 255, 1)";
           font_size = 10;
@@ -125,7 +133,7 @@
           #Playertitle
           monitor = "";
           text = ''
-            cmd[update:1000] echo "\$(~/.config/hypr/scripts/playerctlock.sh --title)"
+            cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --title)"
           '';
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 12;
@@ -139,7 +147,7 @@
           #WIFI STATUS
           monitor = "";
           text = ''
-            cmd[update:1000] echo "\$(~/.config/hypr/scripts/wifi-status.sh)"
+            cmd[update:1000] echo "$(~/.config/hypr/scripts/wifi-status.sh)"
           '';
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
@@ -153,7 +161,7 @@
           # BATTERY STATUS
           monitor = "";
           text = ''
-            cmd[update:1000] echo "\$(~/.config/hypr/scripts/battery-status.sh)"
+            cmd[update:1000] echo "$(~/.config/hypr/scripts/battery-status.sh)"
           '';
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
@@ -167,7 +175,7 @@
           #POWER BUTTON
           monitor = "";
           text = "";
-          onclick = "systemctl poweroff";
+          # onclick = "systemctl poweroff";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
@@ -180,7 +188,7 @@
           #HIBERNATE BUTTON
           monitor = "";
           text = "";
-          onclick = "systemctl hibernate";
+          # onclick = "systemctl hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
@@ -193,24 +201,12 @@
           #HIBERNATE THEN SUSPEND BUTTON
           monitor = "";
           text = "⏼";
-          onclick = "systemctl suspend-then-hibernate";
+          # onclick = "systemctl suspend-then-hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
           position = "-90, 30";
           halign = "right";
-          valign = "bottom";
-        }
-        {
-          #BOTTOM RIGHT
-          #NIXOS ICON
-          monitor = "";
-          path = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/nix-snowflake-colours.png";
-          size = 70;
-          position = "0, 0.5%";
-          border_size = 0;
-          rounding = 0;
-          halign = "center";
           valign = "bottom";
         }
       ];

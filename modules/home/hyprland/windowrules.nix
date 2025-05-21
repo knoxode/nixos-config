@@ -26,7 +26,7 @@ in {
         "tag +gamestore, title:^([Ll]utris)$"
         "tag +gamestore, class:^(com.heroicgameslauncher.hgl)$"
         "tag +settings, class:^(gnome-disks|wihotspot(-gui)?)$"
-        "tag +settings, class:^([Rr]ofi)$"
+        # "tag +settings, class:^([Rr]ofi)$"
         "tag +settings, class:^(file-roller|org.gnome.FileRoller)$"
         "tag +settings, class:^(nm-applet|nm-connection-editor|blueman-manager)$"
         "tag +settings, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
@@ -84,9 +84,6 @@ in {
         "keepaspectratio, title:^(Picture-in-Picture)$"
         "noblur, tag:games*"
         "fullscreen, tag:games*"
-        "workspace special:spotify, class:^(Spotify)$"
-        "workspace special:beeper, class:^(Beeper)$"
-        "workspace special:obsidian, class:^(obsidian)$"
       ];
       layerrule = [
         "xray 1, .*"

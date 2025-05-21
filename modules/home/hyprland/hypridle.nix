@@ -1,4 +1,6 @@
-{ ... }:
+{
+  ...
+}:
 
 {
   services = {
@@ -6,7 +8,7 @@
       enable = true;
       settings = {
         general = {
-          lock_cmd = "pidof hyprlock || hyprlock";
+          lock_cmd = "hyprlock";
           before_sleep_cmd = "loginctl lock-session";    # lock before suspend.
           after_sleep_cmd = "hyprctl dispatch dpms on";  # to avoid having to press a key twice to turn on the display.
           ignore_dbus_inhibit = false;
@@ -16,11 +18,6 @@
             timeout = 120;                                # 2min.
             on-timeout = "brightnessctl -s set 10";         # set monitor backlight to minimum, avoid 0 on OLED monitor.
             on-resume = "brightnessctl -r";                 # monitor backlight restore.
-          }
-          {
-            timeout = 1200;
-            on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on";
           }
           {
             timeout = 120;                                              # 2min.
@@ -37,8 +34,13 @@
             on-resume = "hyprctl dispatch dpms on";          # screen on when activity is detected after timeout has fired.
           }
           {
+            timeout = 1200;
+            on-timeout = "hyprctl dispatch dpms off";
+            on-resume = "hyprctl dispatch dpms on";
+          }
+          {
             timeout = 1800;                                  # 30min
-            on-timeout = "systemctl suspend";                # suspend pc
+            on-timeout = "systemctl suspend-then-hibernate";                # suspend pc
           }
         ];
       };

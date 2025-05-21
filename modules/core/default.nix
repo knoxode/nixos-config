@@ -1,4 +1,12 @@
 {
+  host,
+  ...
+}:
+let
+   inherit (import ../../hosts/${host}/variables.nix)
+   forGaming
+   ;
+in {
   imports = [
     ./avahi.nix
     ./common-xserver.nix
@@ -12,16 +20,17 @@
     ./audio.nix
     ./printing.nix
     ./rstudio.nix
+    ./security.nix
     ./sops.nix
     ./spicetify.nix
     ./starship.nix
-    ./steam.nix
     ./stylix.nix
     ./syncthing.nix
     ./system.nix
     ./tlp.nix
     ./upower.nix
     ./user.nix
-  ];
+    ./virtualisation.nix
+  ] ++ (if forGaming then [ ./steam.nix ] else [])
+  ;
 }
-

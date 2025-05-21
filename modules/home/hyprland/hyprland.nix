@@ -15,6 +15,8 @@
     startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
     handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
     handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
+    
+    hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
 in {
   home.packages = with pkgs; [
     swww
@@ -42,22 +44,14 @@ in {
     };
     settings = {
       exec-once = [
-        "hyprland"
         "hyprpanel"
         "waypaper --restore"
         "/home/shaiikura/.config/waypaper/autopicker.sh"
-        "flatpak run com.discordapp.DiscordCanary --start-minimized"
-        "~/.config/hypr/scripts/copy_hyprlock.sh"
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user start hyprpolkitagent"
-        "pypr &"
-        "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
-        "[workspace special:spotify silent] spotify"
-        "[workspace special:beeper silent] beeper"
-        "[workspace special:obsidian silent] obsidian"
-        "[workspace special:discord silent] discordcanary"
-        "/home/shaiikura/.config/waypaper/autopicker.sh"
+        "sleep 1; pypr &"
+        # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
         startMonitorScript
         handleMonitorConnectScript
         handleMonitorDisconnectScript
@@ -202,7 +196,7 @@ in {
       ];
     };
     extraConfig = "
-      monitor=,preferred,auto,auto
+      ${hostDependentMonitorConfig}
       ${extraMonitorSettings}
     ";
   };
