@@ -7,7 +7,12 @@
   profile,
   ...
 }: 
-{
+let
+  inherit (import ../../hosts/${host}/variables.nix)
+  hasRazer
+  ;
+
+in {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
     useUserPackages = true;
@@ -36,7 +41,8 @@
       "networkmanager"
       "scanner"
       "wheel"
-    ];
+    ] ++ (if hasRazer then [ "openrazer" ] else [])
+    ;
     shell = pkgs.bash;
     ignoreShellProgramCheck = true;
     openssh.authorizedKeys.keys = [

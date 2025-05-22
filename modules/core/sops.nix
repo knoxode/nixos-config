@@ -1,6 +1,22 @@
-{  inputs, pkgs, ... }:
+{  
+  host,
+  inputs,
+  pkgs,
+  ...
+}:
+let
+  hostSecrets = { 
+    "syncthing/${host}/key" = {};
+    "syncthing/${host}/cert" = {}; 
+    "wireguard/${host}/privatekey" = {};
+  };    
 
-{
+  commonSecrets = {
+    "wireguard/publickey" = {};
+    "wireguard/presharedkey" = {};
+    "geldoc" = {};
+  };
+in {
   imports = [
     inputs.sops-nix.nixosModules.sops
   ];
@@ -15,20 +31,6 @@
     age = {
       keyFile = "/home/shaiikura/.config/sops/age/keys.txt";
     };
-    secrets = {
-      "syncthing/nomad/key" = {};
-      "syncthing/nomad/cert" = {};
-      "syncthing/reuby/key" = {};
-      "syncthing/reuby/cert" = {};
-      "syncthing/node/key" = {};
-      "syncthing/node/cert" = {};
-
-      #wireguard-related keys
-      "wireguard/reuby/privatekey" = {};
-      "wireguard/reuby/presharedkey" = {};
-
-      #Geldoc(SPR)
-      "geldoc" = {};
-    };
+    secrets = commonSecrets // hostSecrets;
   };
 }

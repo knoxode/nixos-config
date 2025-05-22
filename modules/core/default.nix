@@ -5,11 +5,11 @@
 let
    inherit (import ../../hosts/${host}/variables.nix)
    forGaming
+   hasRazer
    ;
 in {
   imports = [
     ./avahi.nix
-    ./common-xserver.nix
     ./cosmic.nix
     ./flatpak.nix
     ./greetd.nix
@@ -31,6 +31,8 @@ in {
     ./upower.nix
     ./user.nix
     ./virtualisation.nix
+    ./wireguard.nix
   ] ++ (if forGaming then [ ./steam.nix ] else [])
+    ++ (if hasRazer then [ ./openrgb.nix ] else [])
   ;
 }
