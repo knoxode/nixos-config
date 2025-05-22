@@ -95,6 +95,18 @@
         {
           monitor = "";
           text = ''
+          cmd[update:1000] echo "<b><big> $(date +"%A"), $(date +"%d %b %Y") </big></b>"
+          '';
+          color = "rgba(255,255,255,1)";
+          font_size = 24;
+          font_family = "JetBrains Mono Nerd Font";
+          position = "0, 400";
+          halign = "center";
+          valign = "center";
+        }
+        {
+          monitor = "";
+          text = ''
             cmd[update:1000] echo "<b><big><span color='white'>$(date +'%H')</span>:<span color='gray'>$(date +'%M')</span></big></b>"
           '';
           color = "rgba(255,255,255,1)";

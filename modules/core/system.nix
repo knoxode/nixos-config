@@ -32,6 +32,7 @@
     };
   };
   nixpkgs.overlays = [
+    (import ../overlays/hyprlock.nix)
     inputs.hyprpanel.overlay
     inputs.nur.overlays.default
     (final: prev: {

@@ -30,8 +30,8 @@
 
   outputs = {nixpkgs, ...} @ inputs: let
     system = "x86_64-linux";
-    host = "node";
-    profile = "nvidia";
+    host = "reuby";
+    profile = "intel";
     username = "shaiikura";
   in {
     nixosConfigurations = {
