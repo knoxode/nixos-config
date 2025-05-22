@@ -1,5 +1,5 @@
 {
-  profile,
+  host,
   ...
 }:
 {
@@ -9,8 +9,8 @@
       set -g fish_greeting
     '';
     shellAliases = {
-      fr = "nh os switch --hostname ${profile}";
-      fu = "nh os switch --hostname ${profile} --update";
+      fr = "nh os switch --hostname ${host}";
+      fu = "nh os switch --hostname ${host} --update";
       ls = "ls --color=auto";
       ll = "ls -la";
       logout = "hyprctl dispatch exit";

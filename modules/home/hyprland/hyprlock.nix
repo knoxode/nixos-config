@@ -137,7 +137,7 @@
           color = "rgba(255, 255, 255, 1)";
           font_size = 10;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, -20";
+          position = "0, -30";
           halign = "center";
           valign = "top";
         }
@@ -150,9 +150,21 @@
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 12;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0,0";
+          position = "30,-30";
           halign = "left";
           valign = "top";
+        }
+        {
+            monitor = "";
+            text = ''
+              cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --artist)"
+            '';
+            color = "rgba(255, 255, 255, 0.8)";
+            font_size = 10;
+            font_family = "JetBrains Mono Nerd Font";
+            position = "30,-60";
+            halign = "left";
+            valign = "top";
         }
         {
           #TOP RIGHT
@@ -164,7 +176,7 @@
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-30, -20";
+          position = "-30, -30";
           halign = "right";
           valign = "top";
         }
@@ -178,16 +190,16 @@
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-60, -20";
+          position = "-60, -30";
           halign = "right";
           valign = "top";
         }
         {
           #BOTTOM RIGHT
-          #POWER BUTTON
+          #HIBERNATE THEN SUSPEND BUTTON
           monitor = "";
-          text = "";
-          # onclick = "systemctl poweroff";
+          text = "⏼";
+          onclick = "systemctl suspend-then-hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
@@ -200,24 +212,11 @@
           #HIBERNATE BUTTON
           monitor = "";
           text = "";
-          # onclick = "systemctl hibernate";
+          onclick = "systemctl hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
           position = "-60, 30";
-          halign = "right";
-          valign = "bottom";
-        }
-        {
-          #BOTTOM RIGHT
-          #HIBERNATE THEN SUSPEND BUTTON
-          monitor = "";
-          text = "⏼";
-          # onclick = "systemctl suspend-then-hibernate";
-          color = "rgba(242, 243, 244, 0.75)";
-          font_size = 16;
-          font_family = "Symbols Nerd Font";
-          position = "-90, 30";
           halign = "right";
           valign = "bottom";
         }

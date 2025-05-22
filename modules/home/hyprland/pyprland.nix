@@ -17,7 +17,7 @@
     
     [scratchpads.spotify]
     animation = "fromTop"
-    command = "spotify"
+    command = "spotify --enable-features=UseOzonePlatform --ozone-platform=wayland"
     class = "spotify"
     size = "75% 75%"
     max_size = "1920px 100%"

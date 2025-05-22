@@ -27,6 +27,7 @@ configure_dual_monitor() {
 # Function to configure for a single monitor setup
 configure_single_monitor() {
     echo "Single monitor detected. Configuring..."
+    hyprctl keyword monitor "eDP-1,1920x1080,0x0,1"
 
     # Assign workspaces 1–10 to eDP-1
     for i in $(seq 1 10); do

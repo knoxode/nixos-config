@@ -5,8 +5,8 @@ self: super: {
     src = super.fetchFromGitHub {
       owner = "hyprwm";
       repo = "hyprlock";
-      rev = "v0.8.2";
-      hash = "sha256-REPLACE_ME";  # Replace with actual hash
+      rev = "main";
+      hash = "sha256-IypoV7crmhQ4llD0n4qqO4XTRNAAbHfA+2oiTiq2qpk=";
     };
   });
 }
