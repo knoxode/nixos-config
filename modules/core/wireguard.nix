@@ -9,8 +9,9 @@ let
        else [];
   vpnConnectionName = "${host}_split";
 in {
-# Enable WireGuard
+# Enable wireguard
   networking.wireguard.enable = true;
+  networking.networkmanager.insertNameservers = [ "192.168.1.118" ];
   networking.wireguard.interfaces = {
      wg0 = {
       ips = selfIP;

@@ -64,6 +64,18 @@
     options = [ "rw" "uid=1000" ];
   };
 
+  fileSystems."/home/shaiikura/externalUbisoft" = {
+    depends = [
+      "/home/shaiikura"
+      "/mnt/games"
+    ];
+    device = "/mnt/games/Ubisoft";
+    fsType = "none";
+    options = [
+      "bind"
+    ];
+  };
+
   swapDevices = [ {
       device = "/var/lib/swapfile";
       size = 16*1024;
