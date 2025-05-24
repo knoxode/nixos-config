@@ -1,15 +1,15 @@
-{ 
-  host,
-  pkgs,
-  ... 
+{ host
+, pkgs
+, ...
 }:
 
 let
   inherit (import ../../hosts/${host}/variables.nix)
-  hasRazer
-  forGaming
-  ;
-in{
+    hasRazer
+    forGaming
+    ;
+in
+{
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
@@ -82,6 +82,7 @@ in{
     rofi
     rustc
     socat
+    (pkgs.callPackage ../packages/snapgene.nix { })
     starship
     superfile
     swappy
@@ -97,8 +98,8 @@ in{
     waypaper
     wl-clipboard
     wlogout
-  ] ++ ( if hasRazer then [ polychromatic openrazer-daemon ] else [])
-    ++ (if forGaming then [ mangohud prismlauncher gamemode ] else [])
+  ] ++ (if hasRazer then [ polychromatic openrazer-daemon ] else [ ])
+  ++ (if forGaming then [ mangohud prismlauncher gamemode ] else [ ])
   ;
   nixpkgs.config.allowUnfree = true;
 }

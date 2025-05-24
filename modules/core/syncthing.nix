@@ -1,7 +1,6 @@
-{ 
-  host,
-  lib,
-  ...
+{ host
+, lib
+, ...
 }:
 let
   nodePartners = [ "sync-home" "reuby" "nomad" ];
@@ -34,7 +33,8 @@ let
     else [ "sync-home" ];
 
   selectedDevices = lib.genAttrs partners (name: allDevices.${name});
-in {
+in
+{
   services.syncthing = lib.mkDefault {
     enable = true;
     dataDir = "/home/shaiikura";

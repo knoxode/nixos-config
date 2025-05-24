@@ -1,5 +1,4 @@
-{ 
-  ... 
+{ ...
 }:
 {
   home.file.".config/hypr/scripts/battery-status.sh" = {

@@ -1,26 +1,26 @@
-{
-  host,
-  lib,
-  pkgs,
-  inputs,
-  username,
-  profile,
-  ...
-}: 
+{ host
+, lib
+, pkgs
+, inputs
+, username
+, profile
+, ...
+}:
 let
   inherit (import ../../hosts/${host}/variables.nix)
-  hasRazer
-  ;
+    hasRazer
+    ;
 
-in {
-  imports = [inputs.home-manager.nixosModules.home-manager];
+in
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = {inherit inputs username profile host;};
+    extraSpecialArgs = { inherit inputs username profile host; };
     users.${username} = {
-      imports = [./../home];
+      imports = [ ./../home ];
       home = {
         username = "${username}";
         homeDirectory = "/home/${username}";
@@ -41,7 +41,7 @@ in {
       "networkmanager"
       "scanner"
       "wheel"
-    ] ++ (if hasRazer then [ "openrazer" ] else [])
+    ] ++ (if hasRazer then [ "openrazer" ] else [ ])
     ;
     shell = pkgs.bash;
     ignoreShellProgramCheck = true;
@@ -53,5 +53,5 @@ in {
     hashedPassword = "$6$re41R8kMD0bE.pPA$msbTYZQbZ0syZcicbHlHrqWXlxGii7IbwOEW1ORNHuEkiIma2pjV4eynsFo46K.MQQ8jg1gth7zgf6JW9bFjB0";
     description = lib.mkForce "Root";
   };
-  nix.settings.allowed-users = ["${username}"];
+  nix.settings.allowed-users = [ "${username}" ];
 }

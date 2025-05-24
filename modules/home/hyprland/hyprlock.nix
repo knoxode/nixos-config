@@ -1,4 +1,4 @@
-{username, ...}: {
+{ username, ... }: {
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -95,7 +95,7 @@
         {
           monitor = "";
           text = ''
-          cmd[update:1000] echo "<b><big> $(date +"%A"), $(date +"%d %b %Y") </big></b>"
+            cmd[update:1000] echo "<b><big> $(date +"%A"), $(date +"%d %b %Y") </big></b>"
           '';
           color = "rgba(255,255,255,1)";
           font_size = 24;
@@ -155,16 +155,16 @@
           valign = "top";
         }
         {
-            monitor = "";
-            text = ''
-              cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --artist)"
-            '';
-            color = "rgba(255, 255, 255, 0.8)";
-            font_size = 10;
-            font_family = "JetBrains Mono Nerd Font";
-            position = "30,-60";
-            halign = "left";
-            valign = "top";
+          monitor = "";
+          text = ''
+            cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --artist)"
+          '';
+          color = "rgba(255, 255, 255, 0.8)";
+          font_size = 10;
+          font_family = "JetBrains Mono Nerd Font";
+          position = "30,-60";
+          halign = "left";
+          valign = "top";
         }
         {
           #TOP RIGHT

@@ -1,19 +1,18 @@
-{
-  pkgs,
-  inputs,
-  ...
+{ pkgs
+, inputs
+, ...
 }:
 {
   imports = [ inputs.nvchad4nix.homeManagerModule ];
   programs.nvchad = {
     enable = true;
     backup = false;
-    extraPlugins =''
-    return {
-      {"nvimtools/none-ls.nvim", lazy=true, dependencies = { "nvimtools/none-ls-extras.nvim", }},
-      {"stsewd/isort.nvim", lazy=true},
-      {"christoomey/vim-tmux-navigator", lazy=false}
-    } 
+    extraPlugins = ''
+      return {
+        {"nvimtools/none-ls.nvim", lazy=true, dependencies = { "nvimtools/none-ls-extras.nvim", }},
+        {"stsewd/isort.nvim", lazy=true},
+        {"christoomey/vim-tmux-navigator", lazy=false}
+      } 
     '';
     extraPackages = with pkgs; [
       nodePackages.bash-language-server

@@ -1,9 +1,11 @@
-{host, ...}: let
+{ host, ... }:
+let
   inherit
     (import ../../../hosts/${host}/variables.nix)
     extraMonitorSettings
     ;
-in {
+in
+{
   wayland.windowManager.hyprland = {
     settings = {
       windowrulev2 = [
@@ -36,7 +38,7 @@ in {
         "tag +settings, class:(nwg-displays)"
         "move 72% 7%,title:^(Picture-in-Picture)$"
         "center, class:^([Ff]erdium)$"
-         "float, class:^([Ww]aypaper)$"
+        "float, class:^([Ww]aypaper)$"
         "center, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
         "center, class:([Tt]hunar), title:negative:(.*[Tt]hunar.*)"
         "center, title:^(Authentication Required)$"

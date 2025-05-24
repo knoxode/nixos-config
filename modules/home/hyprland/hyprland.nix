@@ -1,10 +1,10 @@
-{
-  config,
-  host,
-  inputs,
-  pkgs,
-  ...
-}: let
+{ config
+, host
+, inputs
+, pkgs
+, ...
+}:
+let
   inherit
     (import ../../../hosts/${host}/variables.nix)
     extraMonitorSettings
@@ -13,20 +13,21 @@
     hostType
     forGaming
     ;
-    startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
-    handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
-    handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh" else "";
-    steamExecForGameComputers = if forGaming then "steam -silent" else "";
-    
-    hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
-in {
+  startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
+  handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
+  handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh" else "";
+  steamExecForGameComputers = if forGaming then "steam -silent" else "";
+
+  hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
+in
+{
   home.packages = with pkgs; [
     swww
     grim
     slurp
     wl-clipboard
     hyprpolkitagent
-    hyprland-qtutils  # needed for banners and ANR messages
+    hyprland-qtutils # needed for banners and ANR messages
   ];
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
@@ -39,7 +40,7 @@ in {
     systemd = {
       enable = true;
       enableXdgAutostart = true;
-      variables = ["--all"];
+      variables = [ "--all" ];
     };
     xwayland = {
       enable = true;
@@ -126,8 +127,8 @@ in {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         enable_swallow = false;
-        vfr = true;   # Variable Frame Rate 
-        vrr = 2;   #Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
+        vfr = true; # Variable Frame Rate 
+        vrr = 2; #Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
         # Screen flashing to black momentarily or going black when app is fullscreen
         # Try setting vrr to 0
 
@@ -135,7 +136,7 @@ in {
         enable_anr_dialog = false;
         # anr_missed_pings = 20;
 
-      };  
+      };
 
 
       dwindle = {

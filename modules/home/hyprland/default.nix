@@ -1,14 +1,14 @@
-{
- lib,
-  host,
-  ...
+{ lib
+, host
+, ...
 }:
 
 let
-  inherit (import ./../../../hosts/${host}/variables.nix) 
-  hostType
-  ;
-in {
+  inherit (import ./../../../hosts/${host}/variables.nix)
+    hostType
+    ;
+in
+{
   imports = [
     ./animations-def.nix
     ./binds.nix

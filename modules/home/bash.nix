@@ -1,6 +1,5 @@
-{
-  host,
-  ...
+{ host
+, ...
 }:
 {
   programs.bash = {

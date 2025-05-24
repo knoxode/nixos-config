@@ -1,5 +1,6 @@
-{host, ...}: let
-  
+{ host, ... }:
+let
+
   hostVars = import ../../../hosts/${host}/variables.nix;
 
   # Safe access with fallback
@@ -15,9 +16,11 @@
   leftMonitor = if hasDefinedMonitors then hostVars.leftMonitor else null;
 
   workspacesForMonitor = monitor: wsStart: wsEnd:
-    builtins.map (i:
-      "${toString i},monitor:desc:${monitor}"
-    ) (builtins.genList (i: wsStart + i) (wsEnd - wsStart + 1));
+    builtins.map
+      (i:
+        "${toString i},monitor:desc:${monitor}"
+      )
+      (builtins.genList (i: wsStart + i) (wsEnd - wsStart + 1));
 
   #Defines a list containing strings that map the monitors to the appropriate workspaces
   workspaceBindings =
@@ -25,19 +28,21 @@
       workspacesForMonitor centerMonitor 1 5
       ++ workspacesForMonitor leftMonitor 6 10
     else
-      [ ];  # empty fallback
+      [ ]; # empty fallback
 
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
   workspaceScriptBinds =
-  if hasDefinedMonitors then
-    builtins.genList (i:
-      let ws = toString (i + 1); in
-      "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
-    ) 5
-  else
-    [ ];
+    if hasDefinedMonitors then
+      builtins.genList
+        (i:
+          let ws = toString (i + 1); in
+          "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
+        ) 5
+    else
+      [ ];
 
-in {
+in
+{
   wayland.windowManager.hyprland.settings = {
     workspace = workspaceBindings;
     bind = [

@@ -1,13 +1,13 @@
-{
-  host,
-  ...
+{ host
+, ...
 }:
 let
-   inherit (import ../../hosts/${host}/variables.nix)
-   forGaming
-   hasRazer
-   ;
-in {
+  inherit (import ../../hosts/${host}/variables.nix)
+    forGaming
+    hasRazer
+    ;
+in
+{
   imports = [
     ./avahi.nix
     ./cosmic.nix
@@ -32,7 +32,7 @@ in {
     ./user.nix
     ./virtualisation.nix
     ./wireguard.nix
-  ] ++ (if forGaming then [ ./steam.nix ] else [])
-    ++ (if hasRazer then [ ./openrgb.nix ] else [])
+  ] ++ (if forGaming then [ ./steam.nix ] else [ ])
+  ++ (if hasRazer then [ ./openrgb.nix ] else [ ])
   ;
 }

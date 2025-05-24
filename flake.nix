@@ -9,7 +9,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix/02098a8c4f373cb0b2f6691bab1fa2e921d6c123";
     stylix.url = "github:danth/stylix/master";
-    
+
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,41 +28,43 @@
     };
   };
 
-  outputs = {nixpkgs, ...} @ inputs: let
-    system = "x86_64-linux";
-    username = "shaiikura";
-  in {
-    nixosConfigurations = {
-      reuby = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs;
-          inherit username;
-          host = "reuby";
-          profile = "intel";
+  outputs = { nixpkgs, ... } @ inputs:
+    let
+      system = "x86_64-linux";
+      username = "shaiikura";
+    in
+    {
+      nixosConfigurations = {
+        reuby = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs;
+            inherit username;
+            host = "reuby";
+            profile = "intel";
+          };
+          modules = [ ./profiles/intel ];
         };
-        modules = [./profiles/intel];
-      };
-      node = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs;
-          inherit username;
-          host = "node";
-          profile = "nvidia";
+        node = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs;
+            inherit username;
+            host = "node";
+            profile = "nvidia";
+          };
+          modules = [ ./profiles/nvidia ];
         };
-        modules = [./profiles/nvidia];
-      };
-      nomad = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs;
-          inherit username;
-          host = "nomad";
-          profile = "nvidia-laptop";
+        nomad = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs;
+            inherit username;
+            host = "nomad";
+            profile = "nvidia-laptop";
+          };
+          modules = [ ./profiles/nvidia-laptop ];
         };
-        modules = [./profiles/nvidia-laptop];
       };
     };
-  };
 }
