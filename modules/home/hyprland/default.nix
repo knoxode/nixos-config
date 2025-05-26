@@ -18,6 +18,7 @@ in
     ./pyprland.nix
     ./scripts.nix
     ./windowrules.nix
+    ./workspaces.nix
   ];
 
   home.file = lib.mkMerge [

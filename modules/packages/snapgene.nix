@@ -8,6 +8,7 @@
   libcxx,
   xorg,
   openssl_1_1,
+  dbus,
   rpm,
   cpio,
 }:
@@ -47,7 +48,7 @@ stdenv.mkDerivation rec {
     xorg.libXext
     libcxx
     openssl_1_1
-    openssl_1_1.dev
+    dbus
     llvmPackages.openmp
   ];
 
@@ -66,7 +67,6 @@ stdenv.mkDerivation rec {
   '';
 
   patchPhase = ''
-    # Fix up .desktop file
     substituteInPlace usr/share/applications/snapgene.desktop \
       --replace "/opt/gslbiotech/snapgene/snapgene.sh" "$out/opt/gslbiotech/snapgene/snapgene" \
       --replace "/opt/gslbiotech/snapgene/launch.png" "$out/opt/gslbiotech/snapgene/launch.png"

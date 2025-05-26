@@ -11,25 +11,6 @@ let
     terminal
     fileManager;
 
-  # Only inherit if present
-  centerMonitor = if hasDefinedMonitors then hostVars.centerMonitor else null;
-  leftMonitor = if hasDefinedMonitors then hostVars.leftMonitor else null;
-
-  workspacesForMonitor = monitor: wsStart: wsEnd:
-    builtins.map
-      (i:
-        "${toString i},monitor:desc:${monitor}"
-      )
-      (builtins.genList (i: wsStart + i) (wsEnd - wsStart + 1));
-
-  #Defines a list containing strings that map the monitors to the appropriate workspaces
-  workspaceBindings =
-    if hasDefinedMonitors then
-      workspacesForMonitor centerMonitor 1 5
-      ++ workspacesForMonitor leftMonitor 6 10
-    else
-      [ ]; # empty fallback
-
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
   workspaceScriptBinds =
     if hasDefinedMonitors then
@@ -44,7 +25,6 @@ let
 in
 {
   wayland.windowManager.hyprland.settings = {
-    workspace = workspaceBindings;
     bind = [
       "$modifier, Q, killactive,"
       "$modifier, E, exec, ${fileManager}"

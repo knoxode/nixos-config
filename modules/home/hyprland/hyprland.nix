@@ -12,13 +12,20 @@ let
     keyboardLayout
     hostType
     forGaming
+    leftMonitor
+    centerMonitor
     ;
+
+  #Provides bash scripts for handling external and hotplugged monitors
   startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
   handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
   handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh" else "";
+
   steamExecForGameComputers = if forGaming then "steam -silent" else "";
 
+  #For Desktops with two monitors - sets up workspaces for each monitor
   hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
+
 in
 {
   home.packages = with pkgs; [
@@ -84,18 +91,6 @@ in
           scroll_factor = 0.8;
         };
       };
-      workspace = [
-        "1, persistent:true"
-        "2, persistent:true"
-        "3, persistent:true"
-        "4, persistent:true"
-        "5, persistent:true"
-        "6, persistent:true"
-        "7, persistent:true"
-        "8, persistent:true"
-        "9, persistent:true"
-        "10, persistent:true"
-      ];
 
       gestures = {
         workspace_swipe = 1;
