@@ -1,20 +1,20 @@
-{ lib
-, host
-, ...
-}:
-
-let
-  inherit (import ./../../../hosts/${host}/variables.nix)
+{
+  lib,
+  host,
+  ...
+}: let
+  inherit
+    (import ./../../../hosts/${host}/variables.nix)
     hostType
     ;
-in
-{
+in {
   imports = [
     ./animations-def.nix
     ./binds.nix
     ./hypridle.nix
     ./hyprland.nix
     ./hyprlock.nix
+    ./keyboards.nix
     ./pyprland.nix
     ./scripts.nix
     ./windowrules.nix
@@ -22,17 +22,21 @@ in
   ];
 
   home.file = lib.mkMerge [
-    (if hostType == "Laptop" then {
-      ".config/hypr/startupscripts" = {
-        source = ./startupscripts;
-        recursive = true;
-        executable = true;
-      };
-    } else {
-      ".config/hypr/startupscripts/2_workspace.sh" = {
-        source = ./startupscripts/2_workspace.sh;
-        executable = true;
-      };
-    })
+    (
+      if hostType == "Laptop"
+      then {
+        ".config/hypr/startupscripts" = {
+          source = ./startupscripts;
+          recursive = true;
+          executable = true;
+        };
+      }
+      else {
+        ".config/hypr/startupscripts/2_workspace.sh" = {
+          source = ./startupscripts/2_workspace.sh;
+          executable = true;
+        };
+      }
+    )
   ];
 }

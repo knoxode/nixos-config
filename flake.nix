@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland/a62ccb169aa05ef40c6c215c0638e843740920f3";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix/02098a8c4f373cb0b2f6691bab1fa2e921d6c123";

@@ -1,10 +1,10 @@
-{ config
-, host
-, inputs
-, pkgs
-, ...
-}:
-let
+{
+  config,
+  host,
+  inputs,
+  pkgs,
+  ...
+}: let
   inherit
     (import ../../../hosts/${host}/variables.nix)
     extraMonitorSettings
@@ -15,16 +15,35 @@ let
     ;
 
   #Provides bash scripts for handling external and hotplugged monitors
-  startMonitorScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh" else "";
-  handleMonitorConnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh" else "";
-  handleMonitorDisconnectScript = if hostType == "Laptop" then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh" else "";
+  startMonitorScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
+    else "";
+  handleMonitorConnectScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
+    else "";
+  handleMonitorDisconnectScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
+    else "";
 
-  steamExecForGameComputers = if forGaming then "steam -silent" else "";
+  steamExecForGameComputers =
+    if forGaming
+    then "steam -silent"
+    else "";
 
   #For Desktops with two monitors - sets up workspaces for each monitor
-  hostDependentMonitorConfig = if hostType == "Desktop" then "monitor=,preferred,auto,auto" else "";
-in
-{
+  hostDependentMonitorConfig =
+    if hostType == "Desktop"
+    then "monitor=,preferred,auto,auto"
+    else "";
+
+  AQConfig =
+    if host == "reuby"
+    then "AQ_DRM_DEVICES,/dev/dri/card1"
+    else "AQ_DRM_DEVICES,/dev/dri/card0";
+in {
   home.packages = with pkgs; [
     swww
     grim
@@ -44,7 +63,7 @@ in
     systemd = {
       enable = true;
       enableXdgAutostart = true;
-      variables = [ "--all" ];
+      variables = ["--all"];
     };
     xwayland = {
       enable = true;
@@ -119,7 +138,7 @@ in
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         enable_swallow = false;
-        vfr = true; # Variable Frame Rate 
+        vfr = true; # Variable Frame Rate
         vrr = 2; #Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
         # Screen flashing to black momentarily or going black when app is fullscreen
         # Try setting vrr to 0
@@ -127,9 +146,7 @@ in
         #  Application not responding (ANR) settings
         enable_anr_dialog = false;
         # anr_missed_pings = 20;
-
       };
-
 
       dwindle = {
         pseudotile = true;
@@ -186,7 +203,7 @@ in
         "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
         "SDL_VIDEODRIVER, x11"
         "MOZ_ENABLE_WAYLAND, 1"
-        "AQ_DRM_DEVICES,/dev/dri/card0"
+        AQConfig
         "GDK_SCALE,1"
         "QT_SCALE_FACTOR,1"
         "EDITOR,nvim"

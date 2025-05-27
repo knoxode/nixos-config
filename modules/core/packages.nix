@@ -71,7 +71,7 @@ in
     nautilus
     nextflow
     nix-direnv
-    nvchad
+    # nvchad
     obsidian
     openconnect
     openssl

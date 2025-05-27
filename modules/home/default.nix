@@ -13,7 +13,8 @@
     ./wlogout.nix
     ./fish.nix
     ./rofi.nix
-    ./nvchad.nix
+    # ./nvchad.nix
+    ./nvf.nix
     ./helix.nix
     ./stylix.nix
   ];

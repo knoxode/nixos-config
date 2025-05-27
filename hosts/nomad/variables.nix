@@ -12,8 +12,19 @@
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)
   terminal = "kitty"; # Set Default System Terminal
   fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm)
+
   keyboardLayout = "us";
   consoleKeyMap = "us";
+  keyboardLayouts = [
+    {
+      name = "at-translated-set-2-keyboard";
+      kb_layout = "gb";
+    }
+    {
+      name = "royuan-gaming-kb";
+      kb_layout = "us";
+    }
+  ];
 
   # For Nvidia Prime support
   intelID = "PCI:0:2:0";
