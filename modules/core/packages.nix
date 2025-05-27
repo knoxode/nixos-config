@@ -98,7 +98,7 @@ in
     waypaper
     wl-clipboard
     wlogout
-  ] ++ (if hasRazer then [ polychromatic openrazer-daemon ] else [ ])
+  ] ++ (if hasRazer then [ polychromatic ] else [ ])
   ++ (if forGaming then [ mangohud prismlauncher gamemode ] else [ ])
   ;
   nixpkgs.config.allowUnfree = true;

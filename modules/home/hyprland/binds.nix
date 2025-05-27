@@ -9,7 +9,9 @@ let
   inherit (hostVars)
     browser
     terminal
-    fileManager;
+    fileManager
+    hostType
+    ;
 
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
   workspaceScriptBinds =
@@ -21,6 +23,10 @@ let
         ) 5
     else
       [ ];
+
+  safeBrightnessKeybind = if hostType == "Laptop" 
+    then [ ",XF86MonBrightnessDown, exec, ~/.config/hypr/startupscripts/brightness-down-safe.sh" ] 
+    else [ ",XF86MonBrightnessDown, exec, brightnessctl s 10%-" ]; 
 
 in
 {
@@ -69,8 +75,7 @@ in
       ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
       ",XF86MonBrightnessUp, exec, brightnessctl s 10%+"
-      ",XF86MonBrightnessDown, exec, brightnessctl s 10%-"
-    ];
+    ] ++ safeBrightnessKeybind;
 
     bindl = [
       ",XF86AudioNext, exec, playerctl next"

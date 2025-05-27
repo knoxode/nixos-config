@@ -1,10 +1,13 @@
-{ config, lib, pkgs, modulesPath, ... }:
-
 {
-  imports =
-    [
-      (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}: {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
@@ -13,7 +16,7 @@
       grub = {
         enable = true;
         efiSupport = true;
-        devices = [ "nodev" ];
+        devices = ["nodev"];
         useOSProber = true;
       };
       efi.canTouchEfiVariables = true;
@@ -21,8 +24,8 @@
     };
     initrd = {
       verbose = false;
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
-      kernelModules = [ ];
+      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
+      kernelModules = [];
     };
     kernel.sysctl = {
       "vm.swappiness" = 10;
@@ -31,25 +34,26 @@
     ];
     kernelModules = [
       "kvm-intel"
-      "i2c-dev"
     ];
   };
 
-  fileSystems."/" =
-    {
-      device = "/dev/disk/by-uuid/1ebe754e-b2b2-42c1-acf8-5abb1acd45eb";
-      fsType = "ext4";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/723eb7d0-f5f2-4324-b196-b755d7510174";
+    fsType = "ext4";
+  };
 
-  fileSystems."/boot" =
-    {
-      device = "/dev/disk/by-uuid/588B-CC69";
-      fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" ];
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/54C2-C17F";
+    fsType = "vfat";
+    options = ["fmask=0077" "dmask=0077"];
+  };
 
-  swapDevices =
-    [{ device = "/dev/disk/by-uuid/709b9d05-9efe-4bce-877a-df14c390af11"; }];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024;
+    }
+  ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

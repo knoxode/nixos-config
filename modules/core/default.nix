@@ -33,6 +33,6 @@ in
     ./virtualisation.nix
     ./wireguard.nix
   ] ++ (if forGaming then [ ./steam.nix ] else [ ])
-  ++ (if hasRazer then [ ./openrgb.nix ] else [ ])
+  ++ (if hasRazer then [ ./rgb.nix ] else [ ])
   ;
 }

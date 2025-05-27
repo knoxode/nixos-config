@@ -8,7 +8,6 @@
 }:
 let
   inherit (import ../../hosts/${host}/variables.nix)
-    hasRazer
     ;
 
 in
@@ -41,8 +40,7 @@ in
       "networkmanager"
       "scanner"
       "wheel"
-    ] ++ (if hasRazer then [ "openrazer" ] else [ ])
-    ;
+    ];
     shell = pkgs.bash;
     ignoreShellProgramCheck = true;
     openssh.authorizedKeys.keys = [
