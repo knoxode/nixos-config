@@ -10,7 +10,7 @@ configure_dual_monitor() {
     hyprctl keyword monitor "$external_monitor,2560x1440,0x0,1"
     hyprctl keyword monitor "eDP-1,1920x1080,-1920x0,1"
 
-    # Assign workspaces 1–5 to external monitor, 6–10 to laptop
+    # move workspaces 1–5 to external monitor, 6–10 to laptop
     for i in $(seq 1 5); do
         hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor"
     done
