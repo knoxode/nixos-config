@@ -1,4 +1,4 @@
-{ username, ... }: {
+{username, ...}: {
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -38,7 +38,7 @@
           valign = "bottom";
         }
         {
-          #BOTTOM RIGHT
+          #BOTTOM CENTER
           #NIXOS ICON
           monitor = "";
           path = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/nix-snowflake-colours.png";
@@ -132,7 +132,7 @@
           # Location & Weather
           monitor = "";
           text = ''
-            cmd[update:300000] echo "$(bash ~/.config/hypr/scripts/location.sh) $(bash ~/.config/hypr/scripts/weather.sh)"
+            cmd[update:1800000] echo "$(bash ~/.config/hypr/scripts/location.sh) $(bash ~/.config/hypr/scripts/weather.sh)"
           '';
           color = "rgba(255, 255, 255, 1)";
           font_size = 10;
@@ -145,7 +145,7 @@
           #Playertitle
           monitor = "";
           text = ''
-            cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --title)"
+            cmd[update:60000] echo "$(~/.config/hypr/scripts/playerctlock.sh --title)"
           '';
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 12;
@@ -165,6 +165,18 @@
           position = "30,-60";
           halign = "left";
           valign = "top";
+        }
+        {
+          monitor = "";
+          text = ''
+            cmd[update:60000] echo "$(~/.config/hypr/scripts/news.sh)"
+          '';
+          color = "rgba(255, 255, 255, 0.8)";
+          font_size = 12;
+          font_family = "JetBrains Mono Nerd Font Bold";
+          position = "30,30";
+          halign = "left";
+          valign = "bottom";
         }
         {
           #TOP RIGHT
@@ -224,16 +236,13 @@
     };
   };
 }
-
-
 #################
 #   TOP LEFT    #
 #################
-
 # #MUSIC
 # image {
 #     monitor = "";
-#     path = 
+#     path =
 #     size = 60 # lesser side if not 1:1 ratio
 #     rounding = 5 # negative values mean circle
 #     border_size = 0
@@ -245,8 +254,6 @@
 #     valign = "top";
 #     opacity=0.5
 # }
-
-
 # # PLAYER Length
 # label {
 #     monitor = "";
@@ -291,7 +298,7 @@
 #     monitor = "";
 #     text = cmd[update:1000] echo "$(~/.config/hypr/scripts/playerctlock.sh --album)"
 #     color = rgba(255, 255, 255, 1)
-#     font_size = 10 
+#     font_size = 10
 #     font_family = JetBrains Mono Nerd Font
 #     position = 0,0
 #     halign = "left";
@@ -306,15 +313,13 @@
 #     color = rgba(255, 255, 255, 0.8)
 #     font_size = 10
 #     font_family = JetBrains Mono Nerd Font Mono ExtraBold
-#     position = 0,0 
+#     position = 0,0
 #     halign = "left";
 #     valign = "top";
 # }
-
-
 ##############
 # ANIMATIONS #
 ##############
-
 # Styles will eventually be added, but not ready yet.
-# animation = 
+# animation =
+
