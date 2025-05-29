@@ -17,11 +17,11 @@ in {
   consoleKeyMap = "us";
   keyboardLayouts = [
     {
-      name = "at-translated-set-2-keyboard";
-      kb_layout = "gb";
+      name = "razer-razer-huntsman-mini";
+      kb_layout = "us";
     }
     {
-      name = "royuan-gaming-kb";
+      name = "razer-razer-huntsman-mini-keyboard";
       kb_layout = "us";
     }
   ];

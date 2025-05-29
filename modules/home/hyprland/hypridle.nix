@@ -4,10 +4,10 @@ let
   suspend_cmd = "systemctl suspend ||  loginctl suspend";
 
   # Command to lower all DDC monitor brightness to 10 percent
-  ddc_brightness_down = ''for display in $(ddcutil detect | grep "Display" | awk "{print \$2}"); do ddcutil --display=$display setvcp 10 10; done'';
+  ddc_brightness_down = ''for bus in $(ddcutil detect 2>/dev/null | grep "I2C bus" | grep "/dev/i2c-" | grep -oE "[0-9]+$"); do ddcutil --bus=$bus setvcp 10 10 --sleep-multiplier=0.001; done'';
 
   # Command to restore all DDC monitor brightness to 100 percent
-  ddc_brightness_up = ''for display in $(ddcutil detect | grep "Display" | awk "{print \$2}"); do ddcutil --display=$display setvcp 10 100; done'';
+  ddc_brightness_up = ''for bus in $(ddcutil detect 2>/dev/null | grep "I2C bus" | grep "/dev/i2c-" | grep -oE "[0-9]+$"); do ddcutil --bus=$bus setvcp 10 100 --sleep-multiplier=0.001; done'';
 in {
   services = {
     hypridle = {
