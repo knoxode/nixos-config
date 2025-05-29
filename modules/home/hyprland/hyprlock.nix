@@ -172,7 +172,7 @@
             cmd[update:60000] echo "$(~/.config/hypr/scripts/news.sh)"
           '';
           color = "rgba(255, 255, 255, 0.8)";
-          font_size = 12;
+          font_size = 16;
           font_family = "JetBrains Mono Nerd Font Bold";
           position = "30,30";
           halign = "left";

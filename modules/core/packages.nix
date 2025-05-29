@@ -99,6 +99,7 @@ in {
       wl-clipboard
       wlogout
       w3m
+      xmlstarlet
     ]
     ++ (
       if hasRazer
