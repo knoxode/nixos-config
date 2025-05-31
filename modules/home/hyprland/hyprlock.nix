@@ -162,8 +162,8 @@
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 10;
           font_family = "JetBrains Mono Nerd Font";
-          position = "1.5625%,-2.77%";
-          halign = "left";
+          position = "0%,-5.54%";
+          halign = "center";
           valign = "top";
         }
         {
