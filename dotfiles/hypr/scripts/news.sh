@@ -4,9 +4,14 @@
 
 extract_generic_feed() {
   local url="$1"
-  curl -s "$url" | \
-    xmlstarlet sel -t -m '//item' \
-      -v 'concat(title, "|||", pubDate)' -n | \
+  local content
+  content=$(curl -s "$url")
+
+  # Skip if content is empty or doesn't start with < (likely not XML)
+  [[ -z "$content" || "$content" != \<* ]] && return
+
+  xmlstarlet sel -t -m '//item' \
+    -v 'concat(title, "|||", pubDate)' -n <<< "$content" | \
     while IFS= read -r line; do
       xmlstarlet unesc <<< "$line"
     done
@@ -14,9 +19,14 @@ extract_generic_feed() {
 
 extract_bbc_feed() {
   local url="$1"
-  curl -s "$url" | \
-    xmlstarlet sel -t -m '//item[not(title="BBC News app")]' \
-      -v 'concat(title, "|||", pubDate)' -n | \
+  local content
+  content=$(curl -s "$url")
+
+  # Skip if content is empty or doesn't start with < (likely not XML)
+  [[ -z "$content" || "$content" != \<* ]] && return
+
+  xmlstarlet sel -t -m '//item' \
+    -v 'concat(title, "|||", pubDate)' -n <<< "$content" | \
     while IFS= read -r line; do
       xmlstarlet unesc <<< "$line"
     done
@@ -25,14 +35,20 @@ extract_bbc_feed() {
 extract_google_news_feed() {
   local url="$1"
   curl -s "$url" | \
-    xmlstarlet sel \
-      -N ns="http://www.sitemaps.org/schemas/sitemap/0.9" \
-      -N news="http://www.google.com/schemas/sitemap-news/0.9" \
-      -t -m '//ns:url' \
-      -v 'concat(news:news/news:title, "|||", news:news/news:publication_date)' -n | \
-    while IFS= read -r line; do
-      xmlstarlet unesc <<< "$line"
-    done
+  local content
+  content=$(curl -s "$url")
+
+  # Skip if content is empty or doesn't start with < (likely not XML)
+  [[ -z "$content" || "$content" != \<* ]] && return
+
+  xmlstarlet sel \
+    -N ns="http://www.sitemaps.org/schemas/sitemap/0.9" \
+    -N news="http://www.google.com/schemas/sitemap-news/0.9" \
+    -t -m '//ns:url' \
+    -v 'concat(news:news/news:title, "|||", news:news/news:publication_date)' -n | \
+  while IFS= read -r line; do
+    xmlstarlet unesc <<< "$line"
+  done
 }
 
 # === Feeds: URL|TYPE|SOURCE ===
@@ -64,6 +80,15 @@ load_cache() {
 }
 
 save_cache() {
+  # Prevent saving if arrays are empty or mismatched
+  if (( ${#titles[@]} == 0 || ${#pubdates[@]} == 0 || ${#sources[@]} == 0 )); then
+    return
+  fi
+
+  if (( ${#titles[@]} != ${#pubdates[@]} || ${#titles[@]} != ${#sources[@]} )); then
+    return
+  fi
+
   jq -n \
     --argjson titles "$(printf '%s\n' "${titles[@]}" | jq -R . | jq -s .)" \
     --argjson pubdates "$(printf '%s\n' "${pubdates[@]}" | jq -R . | jq -s .)" \
@@ -126,7 +151,6 @@ fi
 # Select a random article
 select_random_title_info() {
   if [[ ${#titles[@]} -eq 0 ]]; then
-    echo "No recent articles available."
     return 1
   fi
 
@@ -141,7 +165,8 @@ select_random_title_info
 
 print_selected_info() {
   if [[ -z "$selected_raw_title" || -z "$selected_raw_pubdate" || -z "$selected_raw_source" ]]; then
-    echo "No selected information to print."
+    echo "<b><big>No recent articles available.</big></b>"
+    echo "<small><span color='gray'>Retrying on next cycle.</span></small>"
     return 1
   fi
 
@@ -173,5 +198,3 @@ print_selected_info() {
 }
 
 print_selected_info
-
-

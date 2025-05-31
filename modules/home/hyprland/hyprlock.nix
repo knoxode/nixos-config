@@ -12,8 +12,8 @@
           color = "rgba(25, 20, 20, 1.0)";
 
           # all these options are taken from hyprland, see https://wiki.hyprland.org/Configuring/Variables/#blur for explanations
-          blur_passes = 2; # 0 disables blurring
-          blur_size = 1;
+          blur_passes = 1; # 0 disables blurring
+          blur_size = 2;
           noise = 0.0117;
           contrast = 0.8916;
           brightness = 0.8172;
@@ -33,7 +33,7 @@
           rounding = -1;
           rotate = 0;
           reload_time = -1;
-          position = "0, 200";
+          position = "0%, 19.44%";
           halign = "center";
           valign = "bottom";
         }
@@ -43,7 +43,7 @@
           monitor = "";
           path = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/nix-snowflake-colours.png";
           size = 70;
-          position = "0, 0.5%";
+          position = "0%, 2.77%";
           border_size = 0;
           rounding = 0;
           halign = "center";
@@ -76,7 +76,7 @@
           bothlock_color = -1; # when both locks are active. -1 means don't change outer color (same for above)
           invert_numlock = false; # change color if numlock is off
 
-          position = "0, 100";
+          position = "0%, 11.1%";
           halign = "center";
           valign = "bottom";
         }
@@ -88,7 +88,7 @@
           color = "rgba(200, 200, 200, 1.0)";
           font_size = 24;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, 210";
+          position = "0%, 19.4%";
           halign = "center";
           valign = "center";
         }
@@ -100,7 +100,7 @@
           color = "rgba(255,255,255,1)";
           font_size = 24;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, 400";
+          position = "0%, 37.03%";
           halign = "center";
           valign = "center";
         }
@@ -112,7 +112,7 @@
           color = "rgba(255,255,255,1)";
           font_size = 128;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, 300";
+          position = "0%, 27.77%";
           halign = "center";
           valign = "center";
         }
@@ -124,7 +124,7 @@
           color = "rgba(255,255,255,1)";
           font_size = 12;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, 165";
+          position = "0%, 16.66%";
           halign = "center";
           valign = "bottom";
         }
@@ -132,13 +132,13 @@
           # Location & Weather
           monitor = "";
           text = ''
-            cmd[update:1800000] echo "$(bash ~/.config/hypr/scripts/location.sh) $(bash ~/.config/hypr/scripts/weather.sh)"
+            cmd[update:1800000] ~/.config/hypr/scripts/weather_location.sh
           '';
           color = "rgba(255, 255, 255, 1)";
-          font_size = 10;
+          font_size = 12;
           font_family = "JetBrains Mono Nerd Font";
-          position = "0, -30";
-          halign = "center";
+          position = "1.5625%,-2.77%";
+          halign = "left";
           valign = "top";
         }
         {
@@ -150,8 +150,8 @@
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 12;
           font_family = "JetBrains Mono Nerd Font";
-          position = "30,-30";
-          halign = "left";
+          position = "0%, -2.77%";
+          halign = "center";
           valign = "top";
         }
         {
@@ -162,7 +162,7 @@
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 10;
           font_family = "JetBrains Mono Nerd Font";
-          position = "30,-60";
+          position = "1.5625%,-2.77%";
           halign = "left";
           valign = "top";
         }
@@ -174,7 +174,7 @@
           color = "rgba(255, 255, 255, 0.8)";
           font_size = 16;
           font_family = "JetBrains Mono Nerd Font Bold";
-          position = "30,30";
+          position = "1.5625%,2.77%";
           halign = "left";
           valign = "bottom";
         }
@@ -188,7 +188,7 @@
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-30, -30";
+          position = "-1.5625%, -2.77%";
           halign = "right";
           valign = "top";
         }
@@ -202,7 +202,7 @@
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-60, -30";
+          position = "-3.125%, -2.77%";
           halign = "right";
           valign = "top";
         }
@@ -210,12 +210,12 @@
           #BOTTOM RIGHT
           #HIBERNATE THEN SUSPEND BUTTON
           monitor = "";
-          text = "⏼";
+          text = "⏾";
           onclick = "systemctl suspend-then-hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-30, 30";
+          position = "-1.5625%, 2.77%";
           halign = "right";
           valign = "bottom";
         }
@@ -223,12 +223,12 @@
           #BOTTOM RIGHT
           #HIBERNATE BUTTON
           monitor = "";
-          text = "";
+          text = "󰒲";
           onclick = "systemctl hibernate";
           color = "rgba(242, 243, 244, 0.75)";
           font_size = 16;
           font_family = "Symbols Nerd Font";
-          position = "-60, 30";
+          position = "-3.125%, 2.77%";
           halign = "right";
           valign = "bottom";
         }
