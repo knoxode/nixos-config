@@ -17,7 +17,7 @@
   consoleKeyMap = "us";
   keyboardLayouts = [
     {
-      name = "at-translated-set-2-keyboard";
+      name = "razer-razer-blade";
       kb_layout = "gb";
     }
     {

@@ -165,8 +165,8 @@ select_random_title_info
 
 print_selected_info() {
   if [[ -z "$selected_raw_title" || -z "$selected_raw_pubdate" || -z "$selected_raw_source" ]]; then
-    echo "<b><big>No recent articles available.</big></b>"
-    echo "<small><span color='gray'>Retrying on next cycle.</span></small>"
+    echo "<b><big>Not Connected to the internet.</big></b>"
+    echo "<small><span color='gray'>Retrying in 1 minute.</span></small>"
     return 1
   fi
 

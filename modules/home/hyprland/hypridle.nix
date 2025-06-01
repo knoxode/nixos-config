@@ -36,23 +36,23 @@ in {
         listener =
           [
             {
-              timeout = 120; # 2min.
+              timeout = 300; # 5min
+              on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
+            }
+            {
+              timeout = 600; # 2min.
               on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
               on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
             }
             {
-              timeout = 120; # 2min.
+              timeout = 600; # 2min.
               on-timeout = ''brightnessctl -s set 10''; # set monitor backlight to minimum, avoid 0 on OLED monitor.
               on-resume = ''brightnessctl -r''; # monitor backlight restore.
             }
             {
-              timeout = 120; # 2min.
+              timeout = 600; # 2min.
               on-timeout = ''${ddc_brightness_down}''; # set monitor backlight to minimum, avoid 0 on OLED monitor.
               on-resume = ''${ddc_brightness_up}''; # monitor backlight restore.
-            }
-            {
-              timeout = 300; # 5min
-              on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
             }
             {
               timeout = 1800; # 30min
