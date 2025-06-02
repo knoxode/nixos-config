@@ -79,6 +79,7 @@ in {
       power-profiles-daemon
       powertop
       python3
+      qalculate-qt
       rofi-wayland
       rustc
       socat
