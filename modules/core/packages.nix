@@ -79,7 +79,7 @@ in {
       power-profiles-daemon
       powertop
       python3
-      rofi
+      rofi-wayland
       rustc
       socat
       (pkgs.callPackage ../packages/snapgene.nix {})

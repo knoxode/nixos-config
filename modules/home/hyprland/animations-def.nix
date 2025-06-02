@@ -1,10 +1,8 @@
-{ host, ... }:
-let
+{host, ...}: let
   inherit
     (import ../../../hosts/${host}/variables.nix)
     ;
-in
-{
+in {
   wayland.windowManager.hyprland.settings = {
     animations = {
       enabled = true;
@@ -22,6 +20,7 @@ in
         "border, 0, 1, liner"
         "fade, 0, 10, default"
         "workspaces, 0, 5, wind"
+        "borderangle, 1, 30, default, loop"
       ];
     };
   };

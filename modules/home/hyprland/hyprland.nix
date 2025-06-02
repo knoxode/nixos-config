@@ -128,6 +128,8 @@ in {
         gaps_out = 8;
         border_size = 2;
         resize_on_border = true;
+        "col.active_border" = "rgba(ffffffff) rgba(000000ff) 45deg";
+        "col.inactive_border" = "rgba(00000000)";
       };
 
       misc = {

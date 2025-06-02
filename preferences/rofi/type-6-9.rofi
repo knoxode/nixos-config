@@ -60,7 +60,7 @@ mainbox {
 imagebox {
     padding:                     20px;
     background-color:            transparent;
-    background-image:            url("~/Documents/syncthing/asr/assets_for_desktop/rofi/rofi-bg.jpg", height);
+    background-image:            url("~/.cache/.wallpaper", height);
     orientation:                 vertical;
     children:                    [ "inputbar", "dummy", "mode-switcher" ];
 }
