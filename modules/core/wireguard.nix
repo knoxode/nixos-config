@@ -1,4 +1,8 @@
-{host, ...}: let
+{
+  host,
+  pkgs,
+  ...
+}: let
   selfIP =
     if host == "reuby"
     then ["10.7.0.5/32"]

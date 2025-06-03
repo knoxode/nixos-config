@@ -28,43 +28,41 @@
     };
   };
 
-  outputs = { nixpkgs, ... } @ inputs:
-    let
-      system = "x86_64-linux";
-      username = "shaiikura";
-    in
-    {
-      nixosConfigurations = {
-        reuby = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs;
-            inherit username;
-            host = "reuby";
-            profile = "intel";
-          };
-          modules = [ ./profiles/intel ];
+  outputs = {nixpkgs, ...} @ inputs: let
+    system = "x86_64-linux";
+    username = "shaiikura";
+  in {
+    nixosConfigurations = {
+      reuby = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          inherit username;
+          host = "reuby";
+          profile = "intel";
         };
-        node = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs;
-            inherit username;
-            host = "node";
-            profile = "nvidia";
-          };
-          modules = [ ./profiles/nvidia ];
+        modules = [./profiles/intel];
+      };
+      node = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          inherit username;
+          host = "node";
+          profile = "nvidia";
         };
-        nomad = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs;
-            inherit username;
-            host = "nomad";
-            profile = "nvidia-laptop";
-          };
-          modules = [ ./profiles/nvidia-laptop ];
+        modules = [./profiles/nvidia];
+      };
+      nomad = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          inherit username;
+          host = "nomad";
+          profile = "nvidia-laptop";
         };
+        modules = [./profiles/nvidia-laptop];
       };
     };
+  };
 }

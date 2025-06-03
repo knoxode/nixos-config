@@ -10,8 +10,6 @@ in {
   hasRazer = true;
   hostType = "Desktop";
   forGaming = true;
-  centerMonitor = centerMonitor;
-  leftMonitor = leftMonitor;
 
   keyboardLayout = "us";
   consoleKeyMap = "us";
@@ -42,7 +40,7 @@ in {
   printEnable = true;
 
   extraMonitorSettings = "
-    monitor=desc:${centerMonitor},highrr,auto,1
+    monitor=desc:${centerMonitor},highrr,auto,1, bitdepth, 10, cm, hdr, sdrbrightness, 1.2, sdrsaturation, 0.98
     monitor=desc:${leftMonitor},highrr,auto-left,1
   ";
 }

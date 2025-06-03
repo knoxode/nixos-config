@@ -109,7 +109,7 @@ in {
     )
     ++ (
       if forGaming
-      then [mangohud prismlauncher gamemode]
+      then [mangohud prismlauncher gamemode mesa proton-ge-bin]
       else []
     );
   nixpkgs.config.allowUnfree = true;

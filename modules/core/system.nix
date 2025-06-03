@@ -1,9 +1,9 @@
-{ host
-, pkgs
-, inputs
-, ...
-}:
 {
+  host,
+  pkgs,
+  inputs,
+  ...
+}: {
   console.keyMap = "uk";
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
@@ -26,15 +26,16 @@
         "nix-command"
         "flakes"
       ];
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      substituters = ["https://hyprland.cachix.org"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
     };
   };
   nixpkgs.config = {
-    permittedInsecurePackages = [ "openssl-1.1.1w" ];
+    permittedInsecurePackages = ["openssl-1.1.1w"];
   };
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)
+    (import ../overlays/mesa.nix)
     inputs.hyprpanel.overlay
     inputs.nur.overlays.default
     (final: prev: {
@@ -49,4 +50,3 @@
   system.stateVersion = "25.05"; # Do not change!
   time.timeZone = "Europe/London";
 }
-
