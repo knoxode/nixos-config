@@ -8,6 +8,12 @@
     hasRazer
     forGaming
     ;
+  myLutris = pkgs.lutris.override {
+    extraPkgs = pkgs: [
+      # e.g., pkgs.wineWowPackages.stable
+      pkgs.proton-ge-bin
+    ];
+  };
 in {
   programs = {
     direnv.enable = true;
@@ -109,7 +115,7 @@ in {
     )
     ++ (
       if forGaming
-      then [mangohud prismlauncher gamemode mesa proton-ge-bin]
+      then [mangohud prismlauncher gamemode mesa myLutris]
       else []
     );
   nixpkgs.config.allowUnfree = true;
