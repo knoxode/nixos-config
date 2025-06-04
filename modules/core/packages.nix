@@ -90,6 +90,8 @@ in {
       syncthing
       swww
       temurin-bin-17
+      texliveFull
+      texmaker
       tmux
       tree
       unzip

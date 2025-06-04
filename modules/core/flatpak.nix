@@ -1,23 +1,28 @@
-{ inputs
-, pkgs
-, ...
-}:
-
 {
-  imports = [ inputs.nix-flatpak.nixosModules.nix-flatpak ];
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.nix-flatpak.nixosModules.nix-flatpak];
 
   services.flatpak.enable = true;
   systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.flatpak ];
+    wantedBy = ["multi-user.target"];
+    path = [pkgs.flatpak];
     script = ''
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
       flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
     '';
   };
   services.flatpak.packages = [
-    { appId = "app.zen_browser.zen"; origin = "flathub"; }
-    # { appId = "tv.plex.PlexDesktop"; origin = "flathub"; }
+    {
+      appId = "app.zen_browser.zen";
+      origin = "flathub";
+    }
+    #{
+    #  appId = "tv.plex.PlexDesktop";
+    #  origin = "flathub";
+    #}
     # { appId = "com.discordapp.DiscordCanary"; origin = "flathub-beta"; }
     # { appId = "io.missioncenter.MissionCenter"; origin = "flathub"; }
   ];
