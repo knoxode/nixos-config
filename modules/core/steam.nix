@@ -4,19 +4,9 @@
       enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = false;
-      gamescopeSession.enable = true;
-      extraPackages = [];
+      extraPackages = [pkgs.gamescope pkgs.vulkan-hdr-layer-kwin6];
       extraCompatPackages = [pkgs.proton-ge-bin];
-      localNetworkGameTransfers = true;
-    };
-
-    gamescope = {
-      enable = true;
-      capSysNice = true;
-      args = [
-        "--rt"
-        "--expose-wayland"
-      ];
+      localNetworkGameTransfers.openFirewall = true;
     };
   };
 }
