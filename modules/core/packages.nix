@@ -11,6 +11,7 @@
   myLutris = pkgs.lutris.override {
     extraPkgs = pkgs: [
       # e.g., pkgs.wineWowPackages.stable
+      pkgs.vulkan-hdr-layer-kwin6
       pkgs.proton-ge-bin
     ];
   };
@@ -77,7 +78,6 @@ in {
       nautilus
       nextflow
       nix-direnv
-      # nvchad
       obsidian
       openconnect
       openssl
