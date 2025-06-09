@@ -9,10 +9,12 @@ in {
   imports =
     [
       ./avahi.nix
+      ./bluetooth.nix
       ./flatpak.nix
       ./greetd.nix
       ./i2c.nix
       ./nautilus-related.nix
+      ./network.nix
       ./nh.nix
       ./openssh.nix
       ./packages.nix
