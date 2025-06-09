@@ -33,6 +33,7 @@ in {
     description = "Alex Ryder";
     extraGroups = [
       "docker"
+      "gamemode"
       "i2c"
       "video"
       "libvirtd"

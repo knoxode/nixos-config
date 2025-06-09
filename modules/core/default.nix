@@ -3,12 +3,12 @@
     (import ../../hosts/${host}/variables.nix)
     forGaming
     hasRazer
+    hostType
     ;
 in {
   imports =
     [
       ./avahi.nix
-      ./cosmic.nix
       ./flatpak.nix
       ./greetd.nix
       ./i2c.nix
@@ -34,12 +34,17 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix]
+      then [./steam.nix ./gamemode.nix ]
       else []
     )
     ++ (
       if hasRazer
       then [./rgb.nix]
+      else []
+    )
+    ++ (
+      if hostType == "Desktop"
+      then [./coolercontrol.nix]
       else []
     );
 }

@@ -7,6 +7,7 @@
     (import ../../hosts/${host}/variables.nix)
     hasRazer
     forGaming
+    hostType
     ;
   myLutris = pkgs.lutris.override {
     extraPkgs = pkgs: [
@@ -118,6 +119,11 @@ in {
     ++ (
       if forGaming
       then [mangohud prismlauncher gamemode mesa myLutris]
+      else []
+    )
+    ++ (
+      if hostType == "Desktop"
+      then [coolercontrol.coolercontrol-gui]
       else []
     );
   nixpkgs.config.allowUnfree = true;
