@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   imports = [
     ./bash.nix
     ./btop.nix
@@ -13,9 +11,9 @@
     ./wlogout.nix
     ./fish.nix
     ./rofi.nix
-    # ./nvchad.nix
     ./nvf.nix
     ./helix.nix
     ./stylix.nix
+    ./yazi
   ];
 }
