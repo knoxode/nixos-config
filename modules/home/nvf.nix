@@ -22,6 +22,17 @@
         wrap = false;
       };
 
+      extraPlugins = with pkgs.vimPlugins; {
+        vimtex = {
+          package = vimtex;
+          setup = ''
+            vim.g.vimtex_view_method = "zathura"
+          '';
+        };
+      };
+
+      extraPackages = with pkgs; [texlab];
+
       clipboard = {
         enable = true;
         registers = "unnamedplus";
@@ -146,6 +157,11 @@
         lspSignature.enable = true;
         otter-nvim.enable = false;
         nvim-docs-view.enable = false;
+        servers = {
+          texlab = {
+            package = ["texlab"];
+          };
+        };
       };
 
       languages = {
@@ -153,6 +169,7 @@
         enableFormat = true;
         enableTreesitter = true;
         enableExtraDiagnostics = true;
+        bash.enable = true;
         nix.enable = true;
         clang.enable = true;
         zig.enable = true;
@@ -168,11 +185,13 @@
         lua.enable = true;
         css.enable = true;
         typst.enable = true;
+        r.enable = true;
         rust = {
           enable = true;
           crates.enable = true;
         };
       };
+
       visuals = {
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
