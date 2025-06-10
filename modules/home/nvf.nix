@@ -31,7 +31,7 @@
         };
       };
 
-      extraPackages = with pkgs; [texlab];
+      extraPackages = with pkgs; [texlab zathura];
 
       clipboard = {
         enable = true;
