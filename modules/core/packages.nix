@@ -100,6 +100,7 @@ in {
       texliveFull
       texmaker
       tmux
+      typst
       tree
       unzip
       virtiofsd
