@@ -28,6 +28,7 @@ in {
       ./stylix.nix
       ./syncthing.nix
       ./system.nix
+      ./systemd.nix
       ./tlp.nix
       ./upower.nix
       ./user.nix

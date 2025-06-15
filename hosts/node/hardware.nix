@@ -11,6 +11,9 @@
   ];
 
   boot = {
+    extraModprobeConfig = ''
+      options it87 force_id=0x8622
+    '';
     kernelPackages = pkgs.linuxPackages_zen;
 
     loader = {
@@ -35,7 +38,8 @@
       "acpi_enforce_resources=lax"
     ];
     kernelModules = [
-      "kvm-intel"
+      "k10temp"
+      "it87"
       "i2c-dev"
     ];
     supportedFilesystems = ["ntfs"];

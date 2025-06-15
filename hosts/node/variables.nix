@@ -8,6 +8,7 @@ in {
 
   # System Features
   hasRazer = true;
+  hasNvidia = true;
   hostType = "Desktop";
   forGaming = true;
   centerMonitor = centerMonitor;

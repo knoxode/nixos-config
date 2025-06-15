@@ -20,7 +20,6 @@ in {
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
-    firefox.enable = true;
     fish.enable = true;
     hyprland.enable = true;
     starship.enable = true;
@@ -79,6 +78,7 @@ in {
       nautilus
       nextflow
       nix-direnv
+      nvidia_oc
       obsidian
       openconnect
       openssl
@@ -101,6 +101,7 @@ in {
       texmaker
       tmux
       tree
+      typst
       unzip
       virtiofsd
       vlc
