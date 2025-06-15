@@ -100,6 +100,7 @@ in {
       texliveFull
       texmaker
       tmux
+      typst
       tree
       typst
       unzip

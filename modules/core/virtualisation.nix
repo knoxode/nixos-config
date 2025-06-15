@@ -9,6 +9,7 @@
     virt-manager.enable = true;
   };
   environment.systemPackages = with pkgs; [
+    distrobox
     virt-viewer # View Virtual Machines
   ];
 }

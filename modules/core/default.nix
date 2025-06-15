@@ -13,6 +13,7 @@ in {
       ./flatpak.nix
       ./greetd.nix
       ./i2c.nix
+      ./icons.nix
       ./nautilus-related.nix
       ./network.nix
       ./nh.nix
