@@ -27,7 +27,7 @@
 
   safeBrightnessKeybind =
     if hostType == "Laptop"
-    then [",XF86MonBrightnessDown, exec, ~/.config/hypr/startupscripts/brightness-down-safe.sh"]
+    then [",XF86MonBrightnessDown, exec, bash ~/.config/hypr/startupscripts/brightness-down-safe.sh"]
     else [",XF86MonBrightnessDown, exec, brightnessctl s 10%-"];
 in {
   wayland.windowManager.hyprland.settings = {

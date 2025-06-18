@@ -21,6 +21,10 @@
       kb_layout = "gb";
     }
     {
+      name = "razer-razer-blade-keyboard";
+      kb_layout = "gb";
+    }
+    {
       name = "royuan-gaming-kb";
       kb_layout = "us";
     }

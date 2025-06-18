@@ -37,7 +37,7 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix]
+      then [./steam.nix ./gamemode.nix ./coolercontrol.nix]
       else []
     )
     ++ (
@@ -47,7 +47,7 @@ in {
     )
     ++ (
       if hostType == "Desktop"
-      then [./coolercontrol.nix]
+      then []
       else [./tlp.nix]
     );
 }
