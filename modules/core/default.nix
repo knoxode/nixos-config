@@ -37,17 +37,17 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix ]
+      then [./steam.nix ./gamemode.nix]
       else []
     )
     ++ (
       if hasRazer
-      then [./rgb.nix]
+      then [] #[./rgb.nix]
       else []
     )
     ++ (
       if hostType == "Desktop"
       then [./coolercontrol.nix]
-      else []
+      else [./tlp.nix]
     );
 }

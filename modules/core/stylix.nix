@@ -7,9 +7,9 @@
   imports = [ inputs.stylix.nixosModules.stylix ];
   stylix = {
     enable = true;
-    targets = {
-      plymouth.enable = false;
-    };
+    # targets = {
+    #   plymouth.enable = false;
+    # };
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     image = pkgs.fetchurl {
       url = "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";

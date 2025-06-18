@@ -35,7 +35,7 @@ in {
 
   environment.systemPackages = with pkgs;
     [
-      # Terminal-related
+      adwaita-icon-theme
       anydesk
       bash-language-server
       beeper
