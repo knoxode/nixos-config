@@ -7,6 +7,7 @@
 with lib;
 let
   cfg = config.drivers.nvidia;
+  powerManagement = if host == "nomad" then false else true;
   finegPowerManagement = if host == "nomad" then true else false;
 
 in
@@ -21,7 +22,7 @@ in
       # Modesetting is required.
       modesetting.enable = true;
       # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-      powerManagement.enable = true;
+      powerManagement.enable = powerManagement;
       # Fine-grained power management. Turns off GPU when not in use.
       # Experimental and only works on modern Nvidia GPUs (Turing or newer).
       powerManagement.finegrained = finegPowerManagement;
@@ -32,7 +33,7 @@ in
       # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
       # Only available from driver 515.43.04+
       # Currently alpha-quality/buggy, so false is currently the recommended setting.
-      open = false;
+      open = true;
       # Enable the Nvidia settings menu,
       # accessible via `nvidia-settings`.
       nvidiaSettings = true;

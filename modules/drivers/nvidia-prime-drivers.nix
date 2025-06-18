@@ -22,6 +22,7 @@ in {
   config = mkIf cfg.enable {
     hardware.nvidia = {
       prime = {
+        reverseSync.enable = true;
         offload = {
           enable = true;
           enableOffloadCmd = true;
