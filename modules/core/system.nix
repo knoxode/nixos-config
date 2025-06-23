@@ -41,16 +41,6 @@
     (final: prev: {
       nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
     })
-    (final: prev:
-      let
-        forkedDenoPkgs = import inputs.nixpkgs-deno {
-          system = pkgs.system;
-          config = prev.config;
-        };
-      in {
-        deno = forkedDenoPkgs.deno;
-      }
-    )
   ];
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {

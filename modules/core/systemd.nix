@@ -13,5 +13,5 @@ in
       User = "root";
       Restart = "on-failure";
     };
-  } else null;
+  } else {};
 }
