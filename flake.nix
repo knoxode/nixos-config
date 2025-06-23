@@ -3,6 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    firefox.url = "github:K900/flake-firefox-nightly/vendor-package-expression";
+    firefox.inputs.nixpkgs.follows = "nixpkgs";
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";

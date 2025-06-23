@@ -1,9 +1,10 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   # Enable Firefox
   programs.firefox = {
     enable = true;
+    package = inputs.firefox.packages.${pkgs.system}.firefox-nightly-bin;
 
     # Define a profile named 'shaiikura' with extensions
     profiles = {
