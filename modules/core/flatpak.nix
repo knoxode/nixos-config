@@ -15,10 +15,6 @@
     '';
   };
   services.flatpak.packages = [
-    {
-      appId = "app.zen_browser.zen";
-      origin = "flathub";
-    }
     #{
     #  appId = "tv.plex.PlexDesktop";
     #  origin = "flathub";
