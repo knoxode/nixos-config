@@ -4,8 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    firefox.url = "github:K900/flake-firefox-nightly/vendor-package-expression";
-    firefox.inputs.nixpkgs.follows = "nixpkgs";
+    firefox = {
+      url = "github:nix-community/flake-firefox-nightly";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
@@ -19,10 +21,6 @@
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nvchad4nix = {
-      url = "github:nix-community/nix4nvchad";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
