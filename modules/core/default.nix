@@ -43,7 +43,7 @@ in {
     )
     ++ (
       if hasRazer
-      then [] #[./rgb.nix]
+      then [./rgb.nix]
       else []
     )
     ++ (
