@@ -9,7 +9,7 @@ in
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
-      ExecStart = "nvidia_oc set --index 0 --power-limit 373000 --freq-offset 160 --mem-offset 1000 --min-clock 0 --max-clock 2000";
+      ExecStart = "/run/current-system/sw/bin/nvidia_oc set --index 0 --power-limit 373000 --freq-offset 160 --mem-offset 1000 --min-clock 0 --max-clock 2075";
       User = "root";
       Restart = "on-failure";
     };
