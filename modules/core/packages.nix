@@ -90,6 +90,7 @@ in {
       rofi-wayland
       rustc
       socat
+      sshfs
       (pkgs.callPackage ../packages/snapgene.nix {})
       starship
       superfile
