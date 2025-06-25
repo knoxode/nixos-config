@@ -3,6 +3,7 @@
   virtualisation = {
     libvirtd.enable = true;
     docker.enable = true;
+    docker.enableNvidia = true;
     podman.enable = false;
   };
   programs = {

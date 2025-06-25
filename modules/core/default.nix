@@ -48,7 +48,7 @@ in {
     )
     ++ (
       if hostType == "Desktop"
-      then []
+      then [./nvidia-container-toolkit.nix]
       else [./tlp.nix]
     );
 }
