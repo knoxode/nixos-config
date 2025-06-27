@@ -1,4 +1,29 @@
-{ pkgs, ... }: {
+{ pkgs, host, ... }: 
+
+let
+  inherit (import ../../../hosts/${host}/variables.nix) hostType;
+  beeperConfig = if hostType == "Desktop" then ''
+    [scratchpads.beeper]
+    process_tracking = false
+    animation = "fromTop"
+    command = "beeper --disable-gpu --disable-software-rasterizer"
+    class = "BeeperTexts"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150%"
+    lazy = true
+  '' else ''
+    [scratchpads.beeper]
+    process_tracking = false
+    animation = "fromTop"
+    command = "beeper"
+    class = "BeeperTexts"
+    size = "75% 75%"
+    max_size = "1920px 100%"
+    position = "150px 150%"
+    lazy = true
+  '';
+in {
   home.packages = with pkgs; [ pyprland ];
 
   home.file.".config/hypr/pyprland.toml".text = ''
@@ -23,16 +48,8 @@
     max_size = "1920px 100%"
     position = "150px 150px"
     lazy = true
-    
-    [scratchpads.beeper]
-    process_tracking = false
-    animation = "fromTop"
-    command = "beeper"
-    class = "BeeperTexts"
-    size = "75% 75%"
-    max_size = "1920px 100%"
-    position = "150px 150px"
-    lazy = true
+
+    ${beeperConfig}    
     
     [scratchpads.discord]
     process_tracking = false
