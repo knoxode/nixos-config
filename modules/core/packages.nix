@@ -89,6 +89,7 @@ in {
       qalculate-qt
       rofi-wayland
       rustc
+      rustdesk
       socat
       sshfs
       (pkgs.callPackage ../packages/snapgene.nix {})
