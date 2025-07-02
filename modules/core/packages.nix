@@ -78,6 +78,7 @@ in {
       nautilus
       nextflow
       nix-direnv
+      nwg-displays
       nvidia_oc
       obsidian
       openconnect
