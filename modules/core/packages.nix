@@ -90,7 +90,7 @@ in {
       qalculate-qt
       rofi-wayland
       rustc
-      rustdesk
+      rustdesk-flutter
       socat
       sshfs
       (pkgs.callPackage ../packages/snapgene.nix {})
