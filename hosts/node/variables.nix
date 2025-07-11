@@ -43,7 +43,16 @@ in {
   printEnable = true;
 
   extraMonitorSettings = "
-    monitor=desc:${centerMonitor},highrr,auto,1, bitdepth, 10, cm, hdr, sdrbrightness, 1.5, sdrsaturation, 1.1
+    monitorv2 {
+      output=desc:${centerMonitor}
+      mode = highrr
+      position = auto
+      scale = 1
+      bitdepth = 10
+      supports_hdr = 1
+      sdrbrightness = 250
+      max_luminance = 400
+    }
     monitor=desc:${leftMonitor},highrr,auto-left,1
   ";
 }
