@@ -64,7 +64,6 @@ in {
         "$ALT,F,exec,pypr toggle discord"
         "$modifier+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
         "$modifier+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
-        "$modifier+Shift,T,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract -l eng \"tmp.png\" - | wl-copy && rm \"tmp.png\" # Screen snip to text >> clipboard"
         "Ctrl+$modifier+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
         "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
         # "ALT, X, togglespecialworkspace, outlook"
