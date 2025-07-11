@@ -12,7 +12,6 @@
   myLutris = pkgs.lutris.override {
     extraPkgs = pkgs: [
       # e.g., pkgs.wineWowPackages.stable
-      pkgs.vulkan-hdr-layer-kwin6
       pkgs.proton-ge-bin
     ];
   };
