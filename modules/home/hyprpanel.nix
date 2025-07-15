@@ -14,6 +14,20 @@ let
     middle = [ "clock" ];
     right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "battery" "notifications" ];
   };
+
+  clockScroll = if host == "node" then {
+    scrollDown = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 10 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 10";
+    scrollUp = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 100";
+  } else if host == "reuby" then {
+    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
+    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
+  } else if host == "nomad" then {
+    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
+    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
+  } else {
+    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 0";
+    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 100";
+  };
 in
 
 {
@@ -31,8 +45,7 @@ in
 
         clock = {
           format = "%a %b %d  %I:%M %p";
-          scrollDown = "ddcutil --display=1 setvcp 10 0 && ddcutil --display=2 setvcp 10 0";
-          scrollUp = "ddcutil --display=1 setvcp 10 100 && ddcutil --display=2 setvcp 10 100";
+          inherit (clockScroll) scrollDown scrollUp;
           showIcon = false;
           showTime = true;
         };
