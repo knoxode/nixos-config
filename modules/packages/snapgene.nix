@@ -1,5 +1,7 @@
 { 
+  binutils,
   lib,
+  libtiff,
   stdenv,
   fetchurl,
   autoPatchelfHook,
@@ -9,23 +11,22 @@
   xorg,
   openssl_1_1,
   dbus,
-  rpm,
-  cpio,
 }:
 
 let
-  sha256 = { "x86_64-linux" = "1bzfm7rzb5xzwzdl63ahmrngqay2d17968apazqwxpq0v1y1ms1y"; }."${stdenv.system}";
-
+  sha256 = {
+    "x86_64-linux" = "04xj4jyckzs36r0dv0s9jyhx4frmrvsxpwcaqa1s4v4wpj0fdv0p";
+  }."${stdenv.system}";
 in
 stdenv.mkDerivation rec {
   pname = "snapgene";
-  version = "8.0.3";
+  version = "8.1.1";
   versionMajor = "8";
-  versionMiddle = "0";
-  versionMinor = "3";
+  versionMiddle = "1";
+  versionMinor = "1";
 
   src = fetchurl {
-    url = "https://cdn.snapgene.com/downloads/SnapGene/${versionMajor}.x/${versionMajor}.${versionMiddle}/${version}/snapgene_${version}_linux.rpm";
+    url = "https://cdn.snapgene.com/downloads/SnapGene/${versionMajor}.x/${versionMajor}.${versionMiddle}/${version}/snapgene_${version}_linux.deb";
     inherit sha256;
   };
 
@@ -47,15 +48,15 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     xorg.libXext
     libcxx
+    libtiff
     openssl_1_1
     dbus
     llvmPackages.openmp
   ];
 
   nativeBuildInputs = [
+    binutils
     kdePackages.wrapQtAppsHook
-    cpio
-    rpm
     autoPatchelfHook
   ];
 
@@ -63,7 +64,11 @@ stdenv.mkDerivation rec {
   dontConfigure = true;
 
   unpackPhase = ''
-    rpm2cpio $src | cpio -idmv
+    ar x $src
+    mkdir -p extract
+    cd extract
+    # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
+    tar --extract --xz --file=../data.tar.xz
   '';
 
   patchPhase = ''
@@ -72,10 +77,17 @@ stdenv.mkDerivation rec {
       --replace "/opt/gslbiotech/snapgene/launch.png" "$out/opt/gslbiotech/snapgene/launch.png"
   '';
 
+  preFixup = ''
+    # The only object that still asks for libtiff.so.5
+    patchelf --replace-needed \
+             libtiff.so.5 libtiff.so \
+             $out/opt/gslbiotech/snapgene/imageformats/libqtiff.so
+  '';
+
   postFixup = ''
     wrapProgram $out/opt/gslbiotech/snapgene/snapgene \
       --set QT_QPA_PLATFORM xcb \
-      --set LD_LIBRARY_PATH "${lib.makeLibraryPath [ openssl_1_1 ]}:$LD_LIBRARY_PATH"
+      --set LD_LIBRARY_PATH "${lib.makeLibraryPath [ openssl_1_1 libtiff ]}:$LD_LIBRARY_PATH"
   '';
 
   installPhase = ''
@@ -86,8 +98,8 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "Molecular biology software that allows researchers and labs to document DNA constructs in an a shareable, electronic format";
-    homepage = "www.snapgene.com";
+    description = "Molecular biology software that allows researchers and labs to document DNA constructs in a shareable, electronic format";
+    homepage = "https://www.snapgene.com";
     license = licenses.unfree;
     maintainers = [ maintainers.knoxode ];
     platforms = [ "x86_64-linux" ];

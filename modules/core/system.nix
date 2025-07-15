@@ -36,10 +36,17 @@
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)
     (import ../overlays/mesa.nix)
-    inputs.hyprpanel.overlay
     inputs.nur.overlays.default
     (final: prev: {
       nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
+    })
+    (final: prev: let
+      fixedPkgs = import inputs.clisp-patch {
+        system = final.system;
+        config.allowUnfree = true;  # if needed
+      };
+    in {
+      clisp = fixedPkgs.clisp;
     })
   ];
   security.sudo.wheelNeedsPassword = false;

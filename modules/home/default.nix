@@ -12,7 +12,8 @@
     ./fish.nix
     ./rofi.nix
     ./nvf.nix
-    ./helix.nix
+    #./helix.nix
+    ./hyprpanel.nix
     ./stylix.nix
     ./yazi
   ];

@@ -2,6 +2,7 @@
   description = "Alex's NixOS flake";
 
   inputs = {
+    clisp-patch.url = "github:NixOS/nixpkgs/1f267934d9bf65e274a3d5ed0390f0a4bf845a3c";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     firefox = {

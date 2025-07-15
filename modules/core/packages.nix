@@ -51,14 +51,13 @@ in {
       fastfetch
       flatpak
       fish
-      gimp
+      gimp3
       git
       grim
       greetd.tuigreet
       grimblast
       gparted
       htop
-      hyprpanel
       hyprpicker
       hyprsunset
       igv
