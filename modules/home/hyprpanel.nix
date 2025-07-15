@@ -1,92 +1,167 @@
-{ inputs, ... }:
+{ host, ... }:
+let
+  inherit
+    (import ../../hosts/${host}/variables.nix)
+    hostType
+    ;
+
+  barModules = if hostType == "Desktop" then {
+    left = [ "dashboard" "workspaces" "media" ];
+    middle = [ "clock" ];
+    right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "notifications" ];
+  } else {
+    left = [ "dashboard" "workspaces" "media" ];
+    middle = [ "clock" ];
+    right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "battery" "notifications" ];
+  };
+in
 
 {
   programs.hyprpanel = {
     enable = true;
     settings = {
-      # --- Bar Settings ---
-      bar.battery.hideLabelWhenFull = true;
-      bar.bluetooth.label = false;
-      bar.clock.format = "%a %b %d  %I:%M %p";
-      bar.clock.scrollDown = "ddcutil --display=1 setvcp 10 0 && ddcutil --display=2 setvcp 10 0";
-      bar.clock.scrollUp = "ddcutil --display=1 setvcp 10 100 && ddcutil --display=2 setvcp 10 100";
-      bar.clock.showIcon = false;
-      bar.clock.showTime = true;
-      bar.customModules.cava.channels = 0;
-      bar.customModules.cpuTemp.pollingInterval = 8000;
-      bar.customModules.hypridle.pollingInterval = 2000;
-      bar.customModules.hypridle.scrollDown = "";
-      bar.customModules.hypridle.scrollUp = "";
-      bar.customModules.hyprsunset.label = false;
-      bar.customModules.hyprsunset.temperature = "4500k";
-      bar.customModules.netstat.dynamicIcon = true;
-      bar.customModules.netstat.label = true;
-      bar.customModules.netstat.rateUnit = "MiB";
-      bar.customModules.storage.paths = [ "/" ];
-      bar.launcher.icon = "";
-      bar.media.show_active_only = true;
-      bar.network.label = false;
-      bar.network.showWifiInfo = true;
-      bar.volume.label = true;
-      bar.volume.scrollDown = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-";
-      bar.volume.scrollUp = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+";
-      bar.windowtitle.custom_title = true;
-      bar.workspaces.ignored = "^-\\d+$";
-      bar.workspaces.numbered_active_indicator = "highlight";
-      bar.workspaces.showWsIcons = false;
-      bar.workspaces.show_numbered = true;
-      bar.layouts = {
-        "*" = {
-          left = [ "dashboard" "workspaces" "media" ];
-          middle = [ "clock" ];
-          right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "battery" "notifications" ];
+      bar = {
+        battery = {
+          hideLabelWhenFull = true;
+        };
+
+        bluetooth = {
+          label = false;
+        };
+
+        clock = {
+          format = "%a %b %d  %I:%M %p";
+          scrollDown = "ddcutil --display=1 setvcp 10 0 && ddcutil --display=2 setvcp 10 0";
+          scrollUp = "ddcutil --display=1 setvcp 10 100 && ddcutil --display=2 setvcp 10 100";
+          showIcon = false;
+          showTime = true;
+        };
+
+        customModules = {
+          cava.channels = 0;
+
+          cpuTemp.pollingInterval = 8000;
+
+          hypridle = {
+            pollingInterval = 2000;
+            scrollDown = "";
+            scrollUp = "";
+          };
+
+          hyprsunset = {
+            label = false;
+            temperature = "4500k";
+          };
+
+          netstat = {
+            dynamicIcon = true;
+            label = true;
+            rateUnit = "MiB";
+          };
+
+          storage.paths = [ "/" ];
+        };
+
+        launcher.icon = "";
+
+        media.show_active_only = true;
+
+        network = {
+          label = false;
+          showWifiInfo = true;
+        };
+
+        volume = {
+          label = true;
+          scrollDown = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-";
+          scrollUp = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+";
+        };
+
+        windowtitle.custom_title = true;
+
+        workspaces = {
+          ignored = "^-\\d+$";
+          numbered_active_indicator = "highlight";
+          showWsIcons = false;
+          show_numbered = true;
+        };
+
+        layouts."*" = {
+          inherit (barModules) left middle right;
         };
       };
 
-      # --- Menus Settings ---
-      menus.bluetooth.showBattery = true;
-      menus.clock.time.hideSeconds = true;
-      menus.clock.time.military = true;
-      menus.clock.weather.key = "1999bb6a16f5446db52112222241712";
-      menus.clock.weather.location = "Oxford";
-      menus.clock.weather.unit = "metric";
-      menus.dashboard.powermenu.avatar.image = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
-      menus.dashboard.shortcuts.left.shortcut1.command = "firefox";
-      menus.dashboard.shortcuts.left.shortcut1.icon = "󰈹";
-      menus.dashboard.shortcuts.left.shortcut1.tooltip = "Firefox";
-      menus.power.confirmation = true;
-      menus.power.lowBatteryNotification = true;
-      menus.power.showLabel = false;
-      menus.transition = "crossfade";
+      menus = {
+        bluetooth.showBattery = true;
 
-      # --- Theme Settings ---
-      theme.bar.border.width = "0.15em";
-      theme.bar.buttons.background_opacity = 100;
-      theme.bar.buttons.clock.enableBorder = false;
-      theme.bar.buttons.dashboard.enableBorder = false;
-      theme.bar.buttons.enableBorders = false;
-      theme.bar.buttons.modules.hypridle.enableBorder = false;
-      theme.bar.buttons.modules.netstat.enableBorder = false;
-      theme.bar.buttons.opacity = 100;
-      theme.bar.buttons.padding_x = "0.5rem";
-      theme.bar.buttons.padding_y = "0.2rem";
-      theme.bar.floating = false;
-      theme.bar.menus.monochrome = false;
-      theme.bar.opacity = 30;
-      theme.bar.outer_spacing = "0.2em";
-      theme.bar.transparent = false;
-      theme.font.label = "JetBrainsMono Nerd Font";
-      theme.font.name = "JetBrainsMono Nerd Font";
-      theme.font.size = "1rem";
-      theme.font.weight = 600;
+        clock = {
+          time = {
+            hideSeconds = true;
+            military = true;
+          };
+          weather = {
+            key = "1999bb6a16f5446db52112222241712";
+            location = "Oxford";
+            unit = "metric";
+          };
+        };
 
-      # --- Wallpaper Settings ---
-      theme.matugen = false;
-      wallpaper.enable = false;
-      wallpaper.image = "/home/shaiikura/Documents/syncthing/asr/DesktopBackground/wallhaven-jx2q3w.jpg";
-      wallpaper.pywal = false;
+        dashboard.powermenu.avatar.image = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
 
-      # --- Notifications ---
+        dashboard.shortcuts.left.shortcut1 = {
+          command = "firefox";
+          icon = "󰈹";
+          tooltip = "Firefox";
+        };
+
+        power = {
+          confirmation = true;
+          lowBatteryNotification = true;
+          showLabel = false;
+        };
+
+        transition = "crossfade";
+      };
+
+      theme = {
+        bar = {
+          border.width = "0.15em";
+          buttons = {
+            background_opacity = 100;
+            clock.enableBorder = false;
+            dashboard.enableBorder = false;
+            enableBorders = false;
+            modules = {
+              hypridle.enableBorder = false;
+              netstat.enableBorder = false;
+            };
+            opacity = 100;
+            padding_x = "0.5rem";
+            padding_y = "0.2rem";
+          };
+          floating = false;
+          menus.monochrome = false;
+          opacity = 30;
+          outer_spacing = "0.2em";
+          transparent = false;
+        };
+
+        font = {
+          label = "JetBrainsMono Nerd Font";
+          name = "JetBrainsMono Nerd Font";
+          size = "1rem";
+          weight = 600;
+        };
+
+        matugen = false;
+      };
+
+      wallpaper = {
+        enable = false;
+        image = "/home/shaiikura/Documents/syncthing/asr/DesktopBackground/wallhaven-jx2q3w.jpg";
+        pywal = false;
+      };
+
       notifications.clearDelay = 60;
     };
   };
