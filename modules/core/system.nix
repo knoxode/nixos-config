@@ -48,6 +48,9 @@
     in {
       clisp = fixedPkgs.clisp;
     })
+    (final: prev: {
+      jdk8 = final.openjdk8-bootstrap;
+    })
   ];
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {
