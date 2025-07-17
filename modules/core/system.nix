@@ -37,16 +37,13 @@
     (import ../overlays/hyprlock.nix)
     (import ../overlays/mesa.nix)
     inputs.nur.overlays.default
-    (final: prev: {
-      nvchad = inputs.nvchad4nix.packages."${pkgs.system}".nvchad;
-    })
     (final: prev: let
-      fixedPkgs = import inputs.clisp-patch {
+      masterPkgs = import inputs.master-pkgs {
         system = final.system;
         config.allowUnfree = true;  # if needed
       };
     in {
-      clisp = fixedPkgs.clisp;
+      clisp = masterPkgs.clisp;
     })
     (final: prev: {
       jdk8 = final.openjdk8-bootstrap;
