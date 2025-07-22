@@ -1,7 +1,4 @@
-{ pkgs, ... }:
-
-{
-
+{pkgs, ...}: {
   environment.etc."rstudio/rstudio-prefs.json".source = ../../preferences/rstudio-prefs.json;
 
   environment.systemPackages = [
@@ -23,8 +20,8 @@
 
         BiocManager
         clusterProfiler
+        DiffBind
       ];
     })
   ];
 }
-

@@ -34,6 +34,7 @@ in {
     bind =
       [
         "$modifier, Q, killactive,"
+        "$modifier, O, overview:toggle, all"
         "$modifier, E, exec, ${fileManager}"
         "$modifier, R, exec, sleep 0.1 && $menu"
         "$modifier, W, exec, ${browser}"

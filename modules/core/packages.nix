@@ -50,6 +50,7 @@ in {
       easyeffects
       fastfetch
       flatpak
+      fiji
       fish
       gimp3
       git

@@ -60,6 +60,9 @@ in {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    plugins = [
+      inputs.hyprspace.packages.${pkgs.system}.Hyprspace
+    ];
     systemd = {
       enable = true;
       enableXdgAutostart = true;
@@ -212,6 +215,9 @@ in {
     extraConfig = "
       ${hostDependentMonitorConfig}
       ${extraMonitorSettings}
+      plugin:overview {
+        drawActiveWorkspace = true
+      }
     ";
   };
 }
