@@ -215,9 +215,6 @@ in {
     extraConfig = "
       ${hostDependentMonitorConfig}
       ${extraMonitorSettings}
-      plugin:overview {
-        drawActiveWorkspace = true
-      }
     ";
   };
 }
