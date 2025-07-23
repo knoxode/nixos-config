@@ -16,5 +16,6 @@
     ./hyprpanel.nix
     ./stylix.nix
     ./yazi
+    ./television.nix
   ];
 }

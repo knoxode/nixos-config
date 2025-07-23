@@ -78,6 +78,7 @@ in {
       nautilus
       nextflow
       nix-direnv
+      nix-search-tv
       nwg-displays
       nvidia_oc
       obsidian
