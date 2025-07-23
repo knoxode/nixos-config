@@ -2,20 +2,21 @@
   imports = [
     ./bash.nix
     ./btop.nix
-    ./firefox.nix
-    ./hyprland
     ./fastfetch.nix
-    ./kitty.nix
-    ./waypaper.nix
-    ./grim.nix
-    ./wlogout.nix
+    ./firefox.nix
     ./fish.nix
-    ./rofi.nix
+    ./grim.nix
+    ./hyprland
+    ./hyprpanel.nix
+    ./kitty.nix
     ./nvf.nix
     #./helix.nix
-    ./hyprpanel.nix
+    ./rofi.nix
     ./stylix.nix
-    ./yazi
     ./television.nix
+    ./vscode.nix
+    ./waypaper.nix
+    ./wlogout.nix
+    ./yazi
   ];
 }

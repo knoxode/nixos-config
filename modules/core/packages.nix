@@ -110,7 +110,6 @@ in {
       unzip
       virtiofsd
       vlc
-      vscode-fhs
       waypaper
       wl-clipboard
       wlogout

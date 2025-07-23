@@ -37,10 +37,11 @@
     (import ../overlays/hyprlock.nix)
     (import ../overlays/mesa.nix)
     inputs.nur.overlays.default
+    inputs.nix-vscode-extensions.overlays.default
     (final: prev: let
       masterPkgs = import inputs.master-pkgs {
         system = final.system;
-        config.allowUnfree = true;  # if needed
+        config.allowUnfree = true; # if needed
       };
     in {
       clisp = masterPkgs.clisp;
