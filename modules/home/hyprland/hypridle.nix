@@ -31,6 +31,7 @@ in {
           lock_cmd = lock_cmd;
           before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
           after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
+          on_unlock_cmd = "hyprctl reload";
           ignore_dbus_inhibit = false;
         };
         listener =
