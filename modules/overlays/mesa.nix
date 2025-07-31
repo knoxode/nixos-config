@@ -1,12 +1,12 @@
 # overlays/mesa.nix
 self: super: {
   mesa = super.mesa.overrideAttrs (old: {
-    version = "25.1.5";
+    version = "25.1.7";
     src = super.fetchFromGitLab {
       owner = "mesa";
       repo = "mesa";
-      rev = "mesa-25.1.5";
-      sha256 = "0p8s7nvnc8zg2p36mmwg4kpwmbx73gd9nqksjmscgkr2zkbiv401";
+      rev = "mesa-25.1.7";
+      sha256 = "0dkn9mpczl2iam0ijvczzk9n621v42f6k0h190rwnblz90fqrivn";
     };
   });
 }
