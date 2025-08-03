@@ -1,10 +1,10 @@
-{ pkgs
-, username
-, ...
+{
+  pkgs,
+  username,
+  ...
 }: {
   services.greetd = {
     enable = true;
-    vt = 3;
     settings = {
       default_session = {
         user = username;
