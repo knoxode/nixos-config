@@ -36,6 +36,7 @@
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)
     (import ../overlays/mesa.nix)
+    #(import ../overlays/nextflow.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     (final: prev: let
