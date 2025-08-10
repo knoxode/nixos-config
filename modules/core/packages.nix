@@ -79,6 +79,7 @@ in {
       nextflow
       nix-direnv
       nix-search-tv
+      nix-prefetch-git
       nwg-displays
       nvidia_oc
       obsidian
