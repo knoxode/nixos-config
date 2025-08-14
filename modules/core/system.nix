@@ -35,8 +35,6 @@
   };
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)
-    (import ../overlays/mesa.nix)
-    #(import ../overlays/nextflow.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     (final: prev: let
@@ -45,7 +43,7 @@
         config.allowUnfree = true; # if needed
       };
     in {
-      clisp = masterPkgs.clisp;
+      rust-analyzer-unwrapped = masterPkgs.rust-analyzer-unwrapped;
     })
   ];
   security.sudo.wheelNeedsPassword = false;

@@ -2,7 +2,7 @@
   description = "Alex's NixOS flake";
 
   inputs = {
-    master-pkgs.url = "github:NixOS/nixpkgs/1f267934d9bf65e274a3d5ed0390f0a4bf845a3c";
+    master-pkgs.url = "github:NixOS/nixpkgs/db1bb33fc40253b603171a0e25c87056fd4b2631";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     firefox = {
