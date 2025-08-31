@@ -4,18 +4,30 @@ EVENT_SOCKET="$XDG_RUNTIME_DIR/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock
 # Function to configure dual-monitor setup
 configure_dual_monitor() {
 
-  # Configure DP-2 monitor
-  hyprctl monitor $external_monitor,preferred,auto,1
-  
-  echo ""$external_monitor" was detected. Configuring dual monitor."
-  echo "Configuring dual monitor setup..."
-  
-  # Configure eDP-1 monitor
-  hyprctl keyword monitor eDP-1,1920x1080,auto-left,1
-  
+  if [[ "${external_monitor_model}" != "Monitor TV" ]]; then
+    #Configure normal desk monitors
+    hyprctl monitor "${external_monitor_adapter},preferred,auto,1"
+
+    echo "${external_monitor_adapter} was detected. Configuring dual monitor."
+    echo "Configuring dual monitor setup..."
+
+    # Configure eDP-1 monitor
+    hyprctl keyword monitor eDP-1,preferred,auto-left,1
+
+  else
+    #Configure SPV monitor
+    hyprctl monitor "${external_monitor_adapter},highres,auto-up,1"
+
+    echo "${external_monitor_adapter} was detected. Configuring dual monitor."
+    echo "Configuring dual monitor setup..."
+
+    # Configure eDP-1 monitor
+    hyprctl keyword monitor eDP-1,preferred,auto,1
+  fi
+
   # Move workspaces 1-5 to DP-2
   for i in $(seq 1 5); do
-   hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor"
+    hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor_adapter"
   done
 
   # Move workspaces 6-10 to eDP-1
@@ -28,9 +40,9 @@ configure_dual_monitor() {
     hyprctl keyword unbind "SUPER, $i, workspace, $i"
     echo "Removed single monitor keybind $i"
   done
-  
+
   hyprctl keyword unbind "SUPER, 0, workspace, 10"
-  
+
   # Update binds for dual-monitor configuration (moving to both workspace 1 and 6, etc.)
   for i in $(seq 1 5); do
     hyprctl keyword bind "SUPER, $i, exec, ~/.config/hypr/startupscripts/2_workspace.sh $i"
@@ -43,17 +55,13 @@ handle_event() {
   local event="$1"
 
   case "$event" in
-    monitoraddedv2*)
-      # Extract the monitor name from the event
-      local monitor_info=$(echo "$event" | awk -F'>>' '{print $2}')
-      external_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .name' | xargs)
+  monitoraddedv2*)
+    external_monitor_adapter=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .name' | xargs)
+    external_monitor_model=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .model' | xargs)
 
-      # If the added monitor is DP-2, configure the dual-monitor setup
-      if [[ "$external_monitor" = "DP-2" ]] || [[ "$external_monitor" = "HDMI-A-1" ]]; then
-        echo "$external_monitor Connected."
-        configure_dual_monitor
-      fi
-      ;;
+    #Configure the dual-monitor setup
+    configure_dual_monitor
+    ;;
   esac
 }
 
