@@ -42,7 +42,7 @@
   AQConfig =
     if host == "reuby"
     then "AQ_DRM_DEVICES,/dev/dri/card1"
-    else "AQ_DRM_DEVICES,/dev/dri/card0";
+    else "AQ_DRM_DEVICES,/dev/dri/card1";
 in {
   home.packages = with pkgs; [
     swww
@@ -61,7 +61,7 @@ in {
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     plugins = [
-      inputs.hyprspace.packages.${pkgs.system}.Hyprspace
+      #inputs.hyprspace.packages.${pkgs.system}.Hyprspace
     ];
     systemd = {
       enable = true;
@@ -112,8 +112,6 @@ in {
       };
 
       gestures = {
-        workspace_swipe = 1;
-        workspace_swipe_fingers = 3;
         workspace_swipe_distance = 500;
         workspace_swipe_invert = 1;
         workspace_swipe_min_speed_to_force = 30;

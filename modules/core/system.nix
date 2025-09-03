@@ -31,7 +31,7 @@
     };
   };
   nixpkgs.config = {
-    permittedInsecurePackages = ["openssl-1.1.1w"];
+    permittedInsecurePackages = ["openssl-1.1.1w" "qtwebengine-5.15.19"];
   };
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)

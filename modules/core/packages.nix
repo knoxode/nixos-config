@@ -55,7 +55,7 @@ in {
       gimp3
       git
       grim
-      greetd.tuigreet
+      tuigreet
       grimblast
       gparted
       htop
