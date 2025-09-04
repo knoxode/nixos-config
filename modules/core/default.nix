@@ -31,6 +31,7 @@ in {
       ./syncthing.nix
       ./system.nix
       ./systemd.nix
+      ./timezoned.nix
       ./tlp.nix
       ./upower.nix
       ./user.nix

@@ -1,6 +1,6 @@
 {
   host,
-  pkgs,
+  lib,
   inputs,
   ...
 }: {
@@ -52,5 +52,5 @@
     variant = "";
   };
   system.stateVersion = "25.05"; # Do not change!
-  time.timeZone = "Europe/London";
+  time.timeZone = lib.mkDefault "Europe/London";
 }

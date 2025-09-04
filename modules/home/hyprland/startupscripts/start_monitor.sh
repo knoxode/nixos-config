@@ -50,10 +50,6 @@ configure_single_monitor() {
 
 # Main function to determine monitor setup and configure accordingly
 main() {
-  # Ensure all 10 workspaces exist before assigning them
-  for i in $(seq 1 10); do
-    hyprctl dispatch workspace "$i" >/dev/null
-  done
 
   num_monitors=$(hyprctl monitors -j | jq '. | length')
 

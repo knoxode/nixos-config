@@ -13,7 +13,7 @@
     #./helix.nix
     ./rofi.nix
     ./stylix.nix
-    ./television.nix
+    #./television.nix
     ./vscode.nix
     ./waypaper.nix
     ./wlogout.nix
