@@ -36,7 +36,7 @@
           ) (builtins.genList (n: n + 6) 5))
         ]
       )
-    else (map (n: "${toString n}, persistent:true") (builtins.genList (n: n + 1) 10));
+    else [];
 in {
   wayland.windowManager.hyprland.settings = {
     workspace = workspaceConfig;

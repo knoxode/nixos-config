@@ -15,7 +15,16 @@
     gpuDevices
     ;
 
-  #Provides bash scripts for handling external and hotplugged monitors
+  # Use dev Hyprland only on desktops
+  hyprPackage =
+    if hostType == "Desktop"
+    then inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+    else null;
+
+  hyprPortal =
+    if hostType == "Desktop"
+    then inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+    else null;
 
   steamExecForGameComputers =
     if forGaming
@@ -59,8 +68,8 @@ in {
   # Place Files Inside Home Directory
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = hyprPackage;
+    portalPackage = hyprPortal;
     plugins = [] ++ laptopPlugins;
     systemd = {
       enable = true;
