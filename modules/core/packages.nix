@@ -30,6 +30,10 @@ in {
     nerd-fonts.jetbrains-mono
     nerd-fonts.droid-sans-mono
     nerd-fonts.symbols-only
+    roboto
+    roboto-mono
+    roboto-flex
+    roboto-serif
   ];
 
   environment.systemPackages = with pkgs;
@@ -85,6 +89,7 @@ in {
       openconnect
       openssl
       os-prober
+      plexamp
       power-profiles-daemon
       powertop
       python3

@@ -13,9 +13,10 @@
   terminal = "kitty"; # Set Default System Terminal
   fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm)
 
-  # For Nvidia Prime support
-  intelID = "PCI:1:0:0";
-  nvidiaID = "PCI:0:2:0";
+  #Maps the cards to common names, and creates a consistent symlink
+  gpuDevices = {
+    "intel-igpu" = {vendor = "0x8086";};
+  };
 
   # Enable NFS
   enableNFS = true;

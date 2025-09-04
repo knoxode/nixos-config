@@ -12,6 +12,7 @@
     keyboardLayout
     hostType
     forGaming
+    gpuDevices
     ;
 
   #Provides bash scripts for handling external and hotplugged monitors
@@ -39,10 +40,17 @@
     then "monitor=,preferred,auto,auto"
     else "";
 
-  AQConfig =
-    if host == "reuby"
-    then "AQ_DRM_DEVICES,/dev/dri/card1"
-    else "AQ_DRM_DEVICES,/dev/dri/card1";
+  #For setting GPUs properly - ensures that intel-igpu is set as preferred card in hybrid setups
+  priority = ["intel-igpu" "nvidia-dgpu"];
+  names = builtins.attrNames gpuDevices;
+
+  orderedNames =
+    builtins.filter (n: builtins.elem n names) priority
+    ++ builtins.filter (n: !(builtins.elem n priority)) names;
+
+  aqDrmDevices = builtins.concatStringsSep ":" (
+    map (n: "/dev/dri/${n}") orderedNames
+  );
 in {
   home.packages = with pkgs; [
     swww
@@ -204,10 +212,10 @@ in {
         "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
         "SDL_VIDEODRIVER, x11"
         "MOZ_ENABLE_WAYLAND, 1"
-        AQConfig
         "GDK_SCALE,1"
         "QT_SCALE_FACTOR,1"
         "EDITOR,nvim"
+        "AQ_DRM_DEVICES,${aqDrmDevices}"
       ];
     };
     extraConfig = "

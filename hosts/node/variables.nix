@@ -32,9 +32,12 @@ in {
   terminal = "kitty"; # Set Default System Terminal
   fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm)
 
-  # For Nvidia Prime support
-  intelID = "PCI:1:0:0";
-  nvidiaID = "PCI:0:2:0";
+  # GPUs
+  gpuDevices = {
+    "nvidia-dgpu" = {
+      vendor = "0x10de";
+    };
+  };
 
   # Enable NFS
   enableNFS = true;

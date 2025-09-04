@@ -12,6 +12,7 @@ in {
       ./bluetooth.nix
       ./flatpak.nix
       ./greetd.nix
+      ./gpu_symlink.nix
       ./i2c.nix
       ./icons.nix
       ./nautilus-related.nix
