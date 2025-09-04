@@ -13,7 +13,7 @@
     ;
 
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
-  workspaceScriptBinds =
+  switchWorkspaceBinds =
     if hasDefinedMonitors
     then
       builtins.genList
@@ -23,7 +23,37 @@
         in "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
       )
       5
-    else [];
+    else
+      builtins.genList
+      (
+        i: let
+          ws = toString (i + 1);
+        in "$modifier,${ws},vdesk ${ws}"
+      )
+      5;
+
+  moveWorkspaceBinds =
+    if hasDefinedMonitors
+    then
+      builtins.genList
+      (
+        i: let
+          key =
+            if i == 9
+            then "0"
+            else toString (i + 1);
+          ws = toString (i + 1);
+        in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
+      )
+      10
+    else
+      builtins.genList
+      (
+        i: let
+          ws = toString (i + 1);
+        in "$modifier,${ws},movetovdesksilent ${ws}"
+      )
+      5;
 
   safeBrightnessKeybind =
     if hostType == "Laptop"
@@ -44,16 +74,6 @@ in {
         "$modifier, right, movefocus, r"
         "$modifier, up, movefocus, u"
         "$modifier, down, movefocus, d"
-        "$modifier SHIFT, 1, movetoworkspacesilent, 1"
-        "$modifier SHIFT, 2, movetoworkspacesilent, 2"
-        "$modifier SHIFT, 3, movetoworkspacesilent, 3"
-        "$modifier SHIFT, 4, movetoworkspacesilent, 4"
-        "$modifier SHIFT, 5, movetoworkspacesilent, 5"
-        "$modifier SHIFT, 6, movetoworkspacesilent, 6"
-        "$modifier SHIFT, 7, movetoworkspacesilent, 7"
-        "$modifier SHIFT, 8, movetoworkspacesilent, 8"
-        "$modifier SHIFT, 9, movetoworkspacesilent, 9"
-        "$modifier SHIFT, 0, movetoworkspacesilent, 10"
         "$modifier, mouse_down, workspace, e+1"
         "$modifier, mouse_up, workspace, e-1"
         "$modifier ALT, Space, togglefloating,"
@@ -69,7 +89,8 @@ in {
         "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
         # "ALT, X, togglespecialworkspace, outlook"
       ]
-      ++ workspaceScriptBinds;
+      ++ switchWorkspaceBinds
+      ++ moveWorkspaceBinds;
 
     bindel =
       [

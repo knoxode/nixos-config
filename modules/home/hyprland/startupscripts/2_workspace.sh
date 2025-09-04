@@ -13,4 +13,3 @@ workspace_secondary=$((workspace_primary + 5))
 # Dispatch workspaces
 hyprctl dispatch workspace "$workspace_primary"
 hyprctl dispatch workspace "$workspace_secondary"
-

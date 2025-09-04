@@ -16,18 +16,6 @@
     ;
 
   #Provides bash scripts for handling external and hotplugged monitors
-  startMonitorScript =
-    if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
-    else "";
-  handleMonitorConnectScript =
-    if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
-    else "";
-  handleMonitorDisconnectScript =
-    if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
-    else "";
 
   steamExecForGameComputers =
     if forGaming
@@ -39,6 +27,11 @@
     if hostType == "Desktop"
     then "monitor=,preferred,auto,auto"
     else "";
+
+  laptopPlugins =
+    if hostType == "Laptop"
+    then [inputs.hyprland-virtual-desktops.packages.${pkgs.system}.virtual-desktops]
+    else [];
 
   #For setting GPUs properly - ensures that intel-igpu is set as preferred card in hybrid setups
   priority = ["intel-igpu" "nvidia-dgpu"];
@@ -68,9 +61,7 @@ in {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    plugins = [
-      #inputs.hyprspace.packages.${pkgs.system}.Hyprspace
-    ];
+    plugins = [] ++ laptopPlugins;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
@@ -90,16 +81,9 @@ in {
         "timeout 10s bash -c 'sshfs reub0524@arc-login.arc.ox.ac.uk:/data/biol-synoxys-epi/reub0524 /home/shaiikura/biol-synoxys-epi'"
         "sleep 1; pypr &"
         # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
-        startMonitorScript
-        handleMonitorConnectScript
-        handleMonitorDisconnectScript
         steamExecForGameComputers
       ];
-      execr = [
-        startMonitorScript
-        handleMonitorConnectScript
-        handleMonitorDisconnectScript
-      ];
+      execr = [];
       input = {
         kb_layout = "${keyboardLayout}";
         kb_options = [
