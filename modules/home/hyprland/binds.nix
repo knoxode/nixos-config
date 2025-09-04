@@ -28,7 +28,7 @@
       (
         i: let
           ws = toString (i + 1);
-        in "$modifier,${ws},vdesk ${ws}"
+        in "$modifier,${ws},vdesk, ${ws}"
       )
       5;
 
@@ -51,7 +51,7 @@
       (
         i: let
           ws = toString (i + 1);
-        in "$modifier,${ws},movetovdesksilent ${ws}"
+        in "$modifier,${ws},movetodesksilent, ${ws}"
       )
       5;
 
