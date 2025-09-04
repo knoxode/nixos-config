@@ -26,6 +26,19 @@
     then inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
     else null;
 
+  startMonitorScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
+    else "";
+  handleMonitorConnectScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
+    else "";
+  handleMonitorDisconnectScript =
+    if hostType == "Laptop"
+    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
+    else "";
+
   steamExecForGameComputers =
     if forGaming
     then "steam -silent"
@@ -90,9 +103,16 @@ in {
         "timeout 10s bash -c 'sshfs reub0524@arc-login.arc.ox.ac.uk:/data/biol-synoxys-epi/reub0524 /home/shaiikura/biol-synoxys-epi'"
         "sleep 1; pypr &"
         # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
+        startMonitorScript
+        handleMonitorConnectScript
+        handleMonitorDisconnectScript
         steamExecForGameComputers
       ];
-      execr = [];
+      execr = [
+        startMonitorScript
+        handleMonitorConnectScript
+        handleMonitorDisconnectScript
+      ];
       input = {
         kb_layout = "${keyboardLayout}";
         kb_options = [
