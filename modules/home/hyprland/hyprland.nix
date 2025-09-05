@@ -28,15 +28,15 @@
 
   startMonitorScript =
     if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
+    then "bash /home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
     else "";
   handleMonitorConnectScript =
     if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
+    then "bash /home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
     else "";
   handleMonitorDisconnectScript =
     if hostType == "Laptop"
-    then "/home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
+    then "bash /home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
     else "";
 
   steamExecForGameComputers =
