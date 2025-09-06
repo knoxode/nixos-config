@@ -1,23 +1,27 @@
-{ lib
-, pkgs
-, config
-, host
-, ...
-}:
-with lib;
-let
-  cfg = config.drivers.nvidia;
-  powerManagement = if host == "nomad" then false else true;
-  finegPowerManagement = if host == "nomad" then true else false;
-
-in
 {
+  lib,
+  pkgs,
+  config,
+  host,
+  ...
+}:
+with lib; let
+  cfg = config.drivers.nvidia;
+  powerManagement =
+    if host == "nomad"
+    then false
+    else true;
+  finegPowerManagement =
+    if host == "nomad"
+    then true
+    else false;
+in {
   options.drivers.nvidia = {
     enable = mkEnableOption "Enable Nvidia Drivers";
   };
 
   config = mkIf cfg.enable {
-    services.xserver.videoDrivers = [ "nvidia" ];
+    services.xserver.videoDrivers = ["nvidia"];
     hardware.nvidia = {
       # Modesetting is required.
       modesetting.enable = true;
