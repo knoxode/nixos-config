@@ -1,36 +1,43 @@
-{ host, ... }:
-let
+{host, ...}: let
   inherit
     (import ../../hosts/${host}/variables.nix)
     hostType
     ;
 
-  barModules = if hostType == "Desktop" then {
-    left = [ "dashboard" "workspaces" "media" ];
-    middle = [ "clock" ];
-    right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "notifications" ];
-  } else {
-    left = [ "dashboard" "workspaces" "media" ];
-    middle = [ "clock" ];
-    right = [ "systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "battery" "notifications" ];
-  };
+  barModules =
+    if hostType == "Desktop"
+    then {
+      left = ["dashboard" "workspaces" "media"];
+      middle = ["clock"];
+      right = ["systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "notifications"];
+    }
+    else {
+      left = ["dashboard" "workspaces" "media"];
+      middle = ["clock"];
+      right = ["systray" "hypridle" "hyprsunset" "volume" "network" "bluetooth" "battery" "notifications"];
+    };
 
-  clockScroll = if host == "node" then {
-    scrollDown = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 10 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 10";
-    scrollUp = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 100";
-  } else if host == "reuby" then {
-    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
-    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
-  } else if host == "nomad" then {
-    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
-    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
-  } else {
-    scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 0";
-    scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 100";
-  };
-in
-
-{
+  clockScroll =
+    if host == "node"
+    then {
+      scrollDown = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 10 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 10";
+      scrollUp = "ddcutil --bus=8 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --bus=9 --sleep-multiplier=0.001 setvcp 10 100";
+    }
+    else if host == "reuby"
+    then {
+      scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
+      scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
+    }
+    else if host == "nomad"
+    then {
+      scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && brightnessctl set 10%";
+      scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && brightnessctl set 100%";
+    }
+    else {
+      scrollDown = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 0 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 0";
+      scrollUp = "ddcutil --display=1 --sleep-multiplier=0.001 setvcp 10 100 && ddcutil --display=2 --sleep-multiplier=0.001 setvcp 10 100";
+    };
+in {
   programs.hyprpanel = {
     enable = true;
     settings = {
@@ -72,7 +79,7 @@ in
             rateUnit = "MiB";
           };
 
-          storage.paths = [ "/" ];
+          storage.paths = ["/"];
         };
 
         launcher.icon = "";
@@ -119,7 +126,7 @@ in
           };
         };
 
-        dashboard.powermenu.avatar.image = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
+        dashboard.powermenu.avatar.image = "/home/shaiikura/.config/hypr/hyprlockassets/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
 
         dashboard.shortcuts.left.shortcut1 = {
           command = "firefox";
@@ -179,4 +186,3 @@ in
     };
   };
 }
-

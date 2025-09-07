@@ -26,7 +26,7 @@
         {
           #Eddie van halen profile circle
           monitor = "";
-          path = "~/Documents/syncthing/asr/assets_for_desktop/hyprlock/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
+          path = "~/.config/hypr/hyprlockassets/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
           border_color = "0xffdddddd";
           border_size = 0;
           size = 125;
@@ -41,7 +41,7 @@
           #BOTTOM CENTER
           #NIXOS ICON
           monitor = "";
-          path = "/home/shaiikura/Documents/syncthing/asr/assets_for_desktop/hyprlock/nix-snowflake-colours.png";
+          path = "/home/shaiikura/.config/hypr/hyprlockassets/nix-snowflake-colours.png";
           size = 70;
           position = "0%, 2.77%";
           border_size = 0;
