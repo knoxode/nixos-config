@@ -35,6 +35,7 @@
   };
   nixpkgs.overlays = [
     (import ../overlays/hyprlock.nix)
+    (import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     (final: prev: let

@@ -121,7 +121,7 @@ in {
           };
           weather = {
             key = "1999bb6a16f5446db52112222241712";
-            location = "Oxford";
+            location = "auto";
             unit = "metric";
           };
         };
