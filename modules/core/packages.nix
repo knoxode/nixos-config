@@ -67,7 +67,7 @@ in {
       hyprsunset
       igv
       inkscape
-      jellyfin-media-player
+      #jellyfin-media-player
       jq
       kdePackages.dolphin
       kdePackages.gwenview

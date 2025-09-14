@@ -7,16 +7,20 @@
   profile,
   ...
 }: let
-  
 in {
-  imports = [inputs.home-manager.nixosModules.home-manager];
+  imports = [
+    inputs.home-manager.nixosModules.home-manager
+  ];
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {inherit inputs username profile host;};
     users.${username} = {
-      imports = [./../home];
+      imports = [
+        ./../home
+        inputs.caelestia-shell.homeManagerModules.default
+      ];
       home = {
         username = "${username}";
         homeDirectory = "/home/${username}";
@@ -24,7 +28,7 @@ in {
       };
     };
   };
-  
+
   users = {
     mutableUsers = false;
     users = {

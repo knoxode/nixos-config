@@ -60,59 +60,77 @@
     then [",XF86MonBrightnessDown, exec, bash ~/.config/hypr/startupscripts/brightness-down-safe.sh"]
     else [",XF86MonBrightnessDown, exec, brightnessctl s 10%-"];
 in {
-  wayland.windowManager.hyprland.settings = {
-    bind =
-      [
-        "$modifier, Q, killactive,"
-        #"$modifier, O, overview:toggle, all"
-        "$modifier, E, exec, ${fileManager}"
-        "$modifier, R, exec, sleep 0.1 && $menu"
-        "$modifier, W, exec, ${browser}"
-        # "$modifier,Y,exec,kitty -e yazi"
-        "$modifier, return, exec, ${terminal}"
-        "$modifier, left, movefocus, l"
-        "$modifier, right, movefocus, r"
-        "$modifier, up, movefocus, u"
-        "$modifier, down, movefocus, d"
-        "$modifier, mouse_down, workspace, e+1"
-        "$modifier, mouse_up, workspace, e-1"
-        "$modifier ALT, Space, togglefloating,"
-        "$modifier, F, fullscreen, 0"
-        "$modifier,T,exec,pypr toggle term"
-        "$ALT,V,exec,pypr toggle spotify"
-        "$ALT,B,exec,pypr toggle beeper"
-        "$ALT,O,exec,pypr toggle obsidian"
-        "$ALT,F,exec,pypr toggle discord"
-        "$modifier+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
-        "$modifier+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
-        "Ctrl+$modifier+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
-        "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
-        # "ALT, X, togglespecialworkspace, outlook"
-      ]
-      ++ switchWorkspaceBinds
-      ++ moveWorkspaceBinds;
+  wayland.windowManager.hyprland = {
+    extraConfig = ''
+      submap = launcher
+        bindin = $modifier, catchall, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:272, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:273, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:274, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:275, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:276, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse:277, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse_up, global, caelestia:launcherInterrupt
+        bindin = $modifier, mouse_down, global, caelestia:launcherInterrupt
+        bind = $modifier, Q, submap, reset
+      submap = reset
+    '';
+    settings = {
+      bind =
+        [
+          "$modifier, Q, killactive,"
+          #"$modifier, O, overview:toggle, all"
+          "$modifier, E, exec, ${fileManager}"
+          #"$modifier, R, exec, sleep 0.1 && $menu"
+          "$modifier, R, global, caelestia:launcher"
+          "$modifier, R, submap, launcher"
+          "$modifier, W, exec, ${browser}"
+          # "$modifier,Y,exec,kitty -e yazi"
+          "$modifier, return, exec, ${terminal}"
+          "$modifier, left, movefocus, l"
+          "$modifier, right, movefocus, r"
+          "$modifier, up, movefocus, u"
+          "$modifier, down, movefocus, d"
+          "$modifier, mouse_down, workspace, e+1"
+          "$modifier, mouse_up, workspace, e-1"
+          "$modifier ALT, Space, togglefloating,"
+          "$modifier, F, fullscreen, 0"
+          "$modifier,T,exec,pypr toggle term"
+          "$ALT,V,exec,pypr toggle spotify"
+          "$ALT,B,exec,pypr toggle beeper"
+          "$ALT,O,exec,pypr toggle obsidian"
+          "$ALT,F,exec,pypr toggle discord"
+          "$modifier+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
+          "$modifier+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
+          "Ctrl+$modifier+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
+          "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
+          # "ALT, X, togglespecialworkspace, outlook"
+        ]
+        ++ switchWorkspaceBinds
+        ++ moveWorkspaceBinds;
 
-    bindel =
-      [
-        ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
-        ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-        ",XF86MonBrightnessUp, exec, brightnessctl s 10%+"
-      ]
-      ++ safeBrightnessKeybind;
+      bindel =
+        [
+          ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+          ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+          ",XF86MonBrightnessUp, exec, brightnessctl s 10%+"
+        ]
+        ++ safeBrightnessKeybind;
 
-    bindl = [
-      ",XF86AudioNext, exec, playerctl next"
-      ",XF86AudioPause, exec, playerctl play-pause"
-      ",XF86AudioPlay, exec, playerctl play-pause"
-      ",Print,exec,grim - | wl-copy # Screenshot >> clipboard"
-      "Ctrl,Print, exec, mkdir -p ~/Pictures/Screenshots && ~/.config/ags/scripts/grimblast.sh copysave screen ~/Pictures/Screenshots/Screenshot_\"\\$(date '+%Y-%m-%d_%H.%M.%S')\".png # Screenshot >> clipboard & file"
-    ];
+      bindl = [
+        ",XF86AudioNext, exec, playerctl next"
+        ",XF86AudioPause, exec, playerctl play-pause"
+        ",XF86AudioPlay, exec, playerctl play-pause"
+        ",Print,exec,grim - | wl-copy # Screenshot >> clipboard"
+        "Ctrl,Print, exec, mkdir -p ~/Pictures/Screenshots && ~/.config/ags/scripts/grimblast.sh copysave screen ~/Pictures/Screenshots/Screenshot_\"\\$(date '+%Y-%m-%d_%H.%M.%S')\".png # Screenshot >> clipboard & file"
+      ];
 
-    bindm = [
-      "$modifier, mouse:272, movewindow"
-      "$modifier, mouse:273, resizewindow"
-    ];
+      bindm = [
+        "$modifier, mouse:272, movewindow"
+        "$modifier, mouse:273, resizewindow"
+      ];
+    };
   };
 }

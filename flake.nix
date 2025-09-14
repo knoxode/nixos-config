@@ -5,6 +5,10 @@
     master-pkgs.url = "github:NixOS/nixpkgs/db1bb33fc40253b603171a0e25c87056fd4b2631";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";

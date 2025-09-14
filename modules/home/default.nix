@@ -2,6 +2,7 @@
   imports = [
     ./bash.nix
     ./btop.nix
+    ./caelestia.nix
     ./desktop_assets.nix
     ./fastfetch.nix
     ./firefox.nix
