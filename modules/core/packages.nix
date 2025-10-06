@@ -67,7 +67,7 @@ in {
       hyprsunset
       igv
       inkscape
-      jellyfin-media-player
+      #jellyfin-media-player
       jq
       kdePackages.dolphin
       kdePackages.gwenview
@@ -94,7 +94,7 @@ in {
       powertop
       python3
       qalculate-qt
-      rofi-wayland
+      rofi
       rustc
       rustdesk-flutter
       socat
