@@ -94,7 +94,7 @@ in {
     };
     settings = {
       exec-once = [
-        "hyprpanel"
+        "caelestia-shell"
         "waypaper --restore"
         "/home/shaiikura/.config/waypaper/autopicker.sh"
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"

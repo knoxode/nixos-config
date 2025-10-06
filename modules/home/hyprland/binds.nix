@@ -72,7 +72,7 @@ in {
         bindin = $modifier, mouse:277, global, caelestia:launcherInterrupt
         bindin = $modifier, mouse_up, global, caelestia:launcherInterrupt
         bindin = $modifier, mouse_down, global, caelestia:launcherInterrupt
-        bind = $modifier, Q, submap, reset
+        bindin = $modifier, catchall, submap, reset
       submap = reset
     '';
     settings = {

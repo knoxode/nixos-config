@@ -94,7 +94,7 @@ in {
       powertop
       python3
       qalculate-qt
-      rofi-wayland
+      rofi
       rustc
       rustdesk-flutter
       socat

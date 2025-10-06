@@ -39,7 +39,7 @@
     };
 in {
   programs.hyprpanel = {
-    enable = true;
+    enable = false;
     settings = {
       bar = {
         battery = {
