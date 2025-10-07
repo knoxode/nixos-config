@@ -120,6 +120,7 @@ in {
       wlogout
       w3m
       xmlstarlet
+      zoom-us
     ]
     ++ (
       if hasRazer
