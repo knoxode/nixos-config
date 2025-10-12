@@ -134,7 +134,7 @@ in {
     )
     ++ (
       if hostType == "Desktop"
-      then [coolercontrol.coolercontrol-gui]
+      then [coolercontrol.coolercontrol-gui heroic]
       else []
     );
   nixpkgs.config.allowUnfree = true;

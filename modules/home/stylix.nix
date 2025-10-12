@@ -1,14 +1,13 @@
-{ ...
-}:
-{
+{...}: {
   stylix = {
     enable = true;
+    polarity = "dark";
     targets = {
       hyprland.enable = false;
       hyprlock.enable = false;
       firefox = {
         enable = true;
-        profileNames = [ "shaiikura" ];
+        profileNames = ["shaiikura"];
       };
     };
   };
