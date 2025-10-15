@@ -44,8 +44,6 @@
         config.allowUnfree = true; # if needed
       };
     in {
-      rust-analyzer-unwrapped = masterPkgs.rust-analyzer-unwrapped;
-      soci = masterPkgs.soci;
     })
   ];
   security.sudo.wheelNeedsPassword = false;
