@@ -52,5 +52,8 @@
     variant = "";
   };
   system.stateVersion = "25.05"; # Do not change!
-  time.timeZone = lib.mkDefault "Europe/London";
+  time = {
+    timeZone = lib.mkDefault "Europe/London";
+    hardwareClockInLocalTime = true;
+  };
 }
