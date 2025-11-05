@@ -107,7 +107,7 @@ in {
       swww
       temurin-bin-17
       texliveFull
-      texmaker
+      #texmaker
       tmux
       typst
       tree

@@ -1,10 +1,9 @@
-{ inputs
-, pkgs
-, ...
-}:
-
 {
-  imports = [ inputs.stylix.nixosModules.stylix ];
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.stylix.nixosModules.stylix];
   stylix = {
     enable = true;
     # targets = {
@@ -32,7 +31,7 @@
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
     };
