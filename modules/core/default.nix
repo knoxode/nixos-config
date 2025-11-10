@@ -49,6 +49,11 @@ in {
       else []
     )
     ++ (
+      if host == "reuby"
+      then [./cosmic.nix]
+      else []
+    )
+    ++ (
       if hostType == "Desktop"
       then [./nvidia-container-toolkit.nix]
       else [./tlp.nix]
