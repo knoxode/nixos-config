@@ -1,16 +1,13 @@
-{ config
-, pkgs
-, lib
-, modulesPath
-, ...
-}:
-
 {
-  imports =
-    [
-      (modulesPath + "/installer/scan/not-detected.nix")
-    ];
-
+  config,
+  pkgs,
+  lib,
+  modulesPath,
+  ...
+}: {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
@@ -19,7 +16,7 @@
       grub = {
         enable = true;
         efiSupport = true;
-        devices = [ "nodev" ];
+        devices = ["nodev"];
         useOSProber = true;
       };
       efi.canTouchEfiVariables = true;
@@ -27,8 +24,8 @@
     };
     initrd = {
       verbose = false;
-      availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-      kernelModules = [ "dm-snapshot" ];
+      availableKernelModules = ["xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
+      kernelModules = ["dm-snapshot"];
       luks.devices.luks-root = {
         device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
         preLVM = true;
@@ -45,34 +42,31 @@
     ];
   };
 
-  fileSystems."/" =
-    {
-      device = "/dev/vg/root";
-      fsType = "ext4";
-    };
-
-  fileSystems."/boot" =
-    {
-      device = "/dev/disk/by-uuid/1A2E-3DAB";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
-
-  # For mount.cifs, required unless domain name resolution is not needed.
-  fileSystems."/mnt/geldoc" = {
-    device = "//10.200.62.89/Share";
-    fsType = "cifs";
-    options =
-      let
-        # this line prevents hanging on network split
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-
-      in
-      [ "${automount_opts},credentials=/run/secrets/geldoc" ];
+  fileSystems."/" = {
+    device = "/dev/vg/root";
+    fsType = "ext4";
   };
 
-  swapDevices =
-    [{ device = "/dev/vg/swap"; }];
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/1A2E-3DAB";
+    fsType = "vfat";
+    options = ["fmask=0022" "dmask=0022"];
+  };
+
+  # # For mount.cifs, required unless domain name resolution is not needed.
+  # fileSystems."/mnt/geldoc" = {
+  #   device = "//10.200.62.89/Share";
+  #   fsType = "cifs";
+  #   options =
+  #     let
+  #       # this line prevents hanging on network split
+  #       automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+  #
+  #     in
+  #     [ "${automount_opts},credentials=/run/secrets/geldoc" ];
+  # };
+
+  swapDevices = [{device = "/dev/vg/swap";}];
 
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

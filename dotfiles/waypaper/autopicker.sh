@@ -10,7 +10,7 @@ cp "$INIT_IMAGE" "$DYNAMIC_WALLPAPER_FILE"
 sleep $INTERVAL
 
 while true; do
-  for IMAGE in $(find "$WALLPAPER_DIR" -type f | shuf); do
+  for IMAGE in $(find -L "$WALLPAPER_DIR" -type f | shuf); do
     cp "$IMAGE" "$DYNAMIC_WALLPAPER_FILE"
     waypaper --fill fill --wallpaper "$IMAGE" --backend swww
     sleep $INTERVAL

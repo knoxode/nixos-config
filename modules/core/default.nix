@@ -50,7 +50,7 @@ in {
     )
     ++ (
       if host == "reuby"
-      then [./cosmic.nix]
+      then []
       else []
     )
     ++ (

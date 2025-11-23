@@ -23,14 +23,7 @@
         in "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
       )
       5
-    else
-      builtins.genList
-      (
-        i: let
-          ws = toString (i + 1);
-        in "$modifier,${ws},vdesk, ${ws}"
-      )
-      5;
+    else [];
 
   moveWorkspaceBinds =
     if hasDefinedMonitors
@@ -46,14 +39,7 @@
         in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
       )
       10
-    else
-      builtins.genList
-      (
-        i: let
-          ws = toString (i + 1);
-        in "$modifier,${ws},movetodesksilent, ${ws}"
-      )
-      5;
+    else [];
 
   safeBrightnessKeybind =
     if hostType == "Laptop"

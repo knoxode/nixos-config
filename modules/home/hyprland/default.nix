@@ -15,7 +15,6 @@ in {
     ./hyprland.nix
     ./hyprlock.nix
     ./keyboards.nix
-    ./plugins.nix
     ./pyprland.nix
     ./scripts.nix
     ./windowrules.nix

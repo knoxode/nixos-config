@@ -13,6 +13,7 @@
         rmarkdown
         stringi
         stringr
+        optparse
 
         ggVennDiagram
         ggridges

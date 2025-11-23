@@ -12,10 +12,6 @@
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    hyprland-virtual-desktops = {
-      url = "github:levnikmyskin/hyprland-virtual-desktops";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";

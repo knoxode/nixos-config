@@ -52,7 +52,7 @@
 
   laptopPlugins =
     if hostType == "Laptop"
-    then [inputs.hyprland-virtual-desktops.packages.${pkgs.system}.virtual-desktops]
+    then []
     else [];
 
   #For setting GPUs properly - ensures that intel-igpu is set as preferred card in hybrid setups
