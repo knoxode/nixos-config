@@ -20,7 +20,7 @@ in {
         "border, 0, 1, liner"
         "fade, 0, 10, default"
         "workspaces, 0, 5, wind"
-        "borderangle, 1, 30, default, loop"
+        "borderangle, 1, 30, default, once"
       ];
     };
   };
