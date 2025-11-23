@@ -26,20 +26,17 @@
     else [];
 
   moveWorkspaceBinds =
-    if hasDefinedMonitors
-    then
-      builtins.genList
-      (
-        i: let
-          key =
-            if i == 9
-            then "0"
-            else toString (i + 1);
-          ws = toString (i + 1);
-        in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
-      )
-      10
-    else [];
+    builtins.genList
+    (
+      i: let
+        key =
+          if i == 9
+          then "0"
+          else toString (i + 1);
+        ws = toString (i + 1);
+      in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
+    )
+    1;
 
   safeBrightnessKeybind =
     if hostType == "Laptop"
