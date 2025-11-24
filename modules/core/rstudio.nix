@@ -22,6 +22,7 @@
         BiocManager
         clusterProfiler
         DiffBind
+        csaw
       ];
     })
   ];

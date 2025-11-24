@@ -57,7 +57,7 @@ configure_dual_monitor() {
 
   # Update binds for dual-monitor configuration (moving to both workspace 1 and 6, etc.)
   for i in $(seq 1 5); do
-    hyprctl keyword bind "SUPER, $i, exec, ~/.config/hypr/startupscripts/2_workspace.sh $i"
+    hyprctl keyword bind "SUPER, $i, exec, bash ~/.config/hypr/startupscripts/2_workspace.sh $i"
     echo "Added dual-monitor keybind $i"
   done
 }

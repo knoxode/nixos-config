@@ -27,7 +27,7 @@ configure_dual_monitor() {
 
   # Set up keybinds to use external script for switching
   for i in $(seq 1 5); do
-    hyprctl keyword bind "SUPER, $i, exec, ~/.config/hypr/startupscripts/2_workspace.sh $i"
+    hyprctl keyword bind "SUPER, $i, exec, bash ~/.config/hypr/startupscripts/2_workspace.sh $i"
   done
 }
 
