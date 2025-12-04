@@ -21,6 +21,18 @@
       kb_layout = "gb";
     }
     {
+      name = "razer-razer-blade-1";
+      kb_layout = "gb";
+    }
+    {
+      name = "razer-razer-blade-2";
+      kb_layout = "gb";
+    }
+    {
+      name = "razer-razer-blade-3";
+      kb_layout = "gb";
+    }
+    {
       name = "razer-razer-blade-keyboard";
       kb_layout = "gb";
     }
