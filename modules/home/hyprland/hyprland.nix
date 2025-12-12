@@ -1,5 +1,4 @@
 {
-  config,
   host,
   inputs,
   pkgs,
@@ -16,16 +15,6 @@
     ;
 
   # Use dev Hyprland only on desktops
-  hyprPackage =
-    if hostType == "Desktop"
-    then inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
-    else null;
-
-  hyprPortal =
-    if hostType == "Desktop"
-    then inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-    else null;
-
   startMonitorScript =
     if hostType == "Laptop"
     then "bash /home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
@@ -81,8 +70,6 @@ in {
   # Place Files Inside Home Directory
   wayland.windowManager.hyprland = {
     enable = true;
-    package = hyprPackage;
-    portalPackage = hyprPortal;
     plugins = [] ++ laptopPlugins;
     systemd = {
       enable = true;

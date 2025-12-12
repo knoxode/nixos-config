@@ -16,7 +16,7 @@
   sha256 =
     {
       "x86_64-linux" = "1waf4czq0ck104w3w2y0gargkra6iwfy1jir0y9riha6pg1zsryb";
-    }."${stdenv.system}";
+    }."${stdenv.hostPlatform.system}";
 in
   stdenv.mkDerivation rec {
     pname = "snapgene";

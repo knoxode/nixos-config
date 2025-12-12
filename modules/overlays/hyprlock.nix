@@ -6,7 +6,7 @@ self: super: {
       owner = "hyprwm";
       repo = "hyprlock";
       rev = "main";
-      hash = "sha256-Et1jNDB2d3e0b4okIKuyAMktECS+5hk+vMAA7X598ao=";
+      hash = "sha256-1hIq5gSfV0xc7gaBQDVk3XPv47vjhlc8qbAskOqT4b0=";
     };
   });
 }

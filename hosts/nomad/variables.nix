@@ -47,7 +47,7 @@
 
   #Maps the cards to common names, and creates a consistent symlink
   gpuDevices = {
-    "nvidia-dgpu" = {vendor = "0x10de";};
+    # "nvidia-dgpu" = {vendor = "0x10de";};
     "intel-igpu" = {vendor = "0x8086";};
   };
 

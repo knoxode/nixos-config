@@ -12,6 +12,7 @@ in {
       ./bluetooth.nix
       ./flatpak.nix
       ./greetd.nix
+      ./hyprPkgOpts.nix
       ./gpu_symlink.nix
       ./i2c.nix
       ./icons.nix

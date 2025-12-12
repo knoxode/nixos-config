@@ -11,7 +11,9 @@
     };
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
+    hyprlock.url = "github:hyprwm/Hyprlock";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";

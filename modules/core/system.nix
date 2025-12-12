@@ -34,17 +34,10 @@
     permittedInsecurePackages = ["openssl-1.1.1w" "qtwebengine-5.15.19"];
   };
   nixpkgs.overlays = [
-    (import ../overlays/hyprlock.nix)
+    inputs.nix-cachyos-kernel.overlays.default
     (import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
-    (final: prev: let
-      masterPkgs = import inputs.master-pkgs {
-        system = final.system;
-        config.allowUnfree = true; # if needed
-      };
-    in {
-    })
   ];
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {
