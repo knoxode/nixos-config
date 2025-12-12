@@ -10,9 +10,9 @@ in {
     [
       ./avahi.nix
       ./bluetooth.nix
+      ./customOptions
       ./flatpak.nix
       ./greetd.nix
-      ./hyprPkgOpts.nix
       ./gpu_symlink.nix
       ./i2c.nix
       ./icons.nix

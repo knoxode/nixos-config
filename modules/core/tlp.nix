@@ -11,8 +11,8 @@
       CPU_MIN_PERF_ON_AC = 0;
       CPU_MAX_PERF_ON_AC = 100;
       #
-      START_CHARGE_THRESH_BAT0 = 70; # Charges when below 75
-      STOP_CHARGE_THRESH_BAT0 = 80; # Stops charging at 80
+      # START_CHARGE_THRESH_BAT0 = 70; # Charges when below 75
+      # STOP_CHARGE_THRESH_BAT0 = 80; # Stops charging at 80
 
       #Regulates the state of Intel Dynamic Boosting - 1 is allowed, 0 is disallowed.
       CPU_HWP_DYN_BOOST_ON_AC = 1;
