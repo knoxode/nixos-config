@@ -23,7 +23,7 @@ in {
       ./packages.nix
       ./audio.nix
       ./printing.nix
-      ./rstudio.nix
+      # ./rstudio.nix
       ./security.nix
       ./sops.nix
       ./spicetify.nix

@@ -1,5 +1,6 @@
 {
   host,
+  config,
   lib,
   pkgs,
   inputs,
@@ -7,7 +8,6 @@
   profile,
   ...
 }: let
-  
 in {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
@@ -24,7 +24,7 @@ in {
       };
     };
   };
-  
+
   users = {
     mutableUsers = false;
     users = {
@@ -43,7 +43,7 @@ in {
           "scanner"
           "wheel"
         ];
-        shell = pkgs.bash;
+        shell = pkgs.zsh;
         ignoreShellProgramCheck = true;
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
