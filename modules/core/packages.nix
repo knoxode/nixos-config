@@ -1,5 +1,6 @@
 {
   host,
+  inputs,
   pkgs,
   ...
 }: let
@@ -116,6 +117,7 @@ in {
       virtiofsd
       vlc
       waypaper
+      winboat
       wl-clipboard
       wlogout
       w3m

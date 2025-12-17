@@ -1,22 +1,21 @@
-{ host
-, inputs
-, pkgs
-, ...
-}:
-let
+{
+  host,
+  inputs,
+  pkgs,
+  ...
+}: let
   hostSecrets = {
-    "syncthing/${host}/key" = { };
-    "syncthing/${host}/cert" = { };
-    "wireguard/${host}/privatekey" = { };
+    "syncthing/${host}/key" = {};
+    "syncthing/${host}/cert" = {};
+    "wireguard/${host}/privatekey" = {};
   };
 
   commonSecrets = {
-    "wireguard/publickey" = { };
-    "wireguard/presharedkey" = { };
-    "geldoc" = { };
+    "wireguard/publickey" = {};
+    "wireguard/presharedkey" = {};
+    "geldoc" = {};
   };
-in
-{
+in {
   imports = [
     inputs.sops-nix.nixosModules.sops
   ];

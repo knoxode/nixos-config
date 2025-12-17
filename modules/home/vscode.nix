@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   programs.vscode = {
-    enable = true;
+    enable = false;
     profiles = {
       default = {
         extensions = with pkgs.nix-vscode-extensions.vscode-marketplace; [
