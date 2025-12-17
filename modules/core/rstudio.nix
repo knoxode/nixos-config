@@ -19,7 +19,7 @@
         ggridges
         showtext
 
-        BiocManager
+        # BiocManager
         clusterProfiler
         DiffBind
         csaw

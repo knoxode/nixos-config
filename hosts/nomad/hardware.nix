@@ -1,6 +1,6 @@
 {
   lib,
-  inputs,
+  pkgs,
   modulesPath,
   ...
 }: {
@@ -9,7 +9,7 @@
   ];
 
   boot = {
-    kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest-lto;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto;
 
     loader = {
       grub = {

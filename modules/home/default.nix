@@ -19,5 +19,6 @@
     ./waypaper.nix
     ./wlogout.nix
     ./yazi
+    ./zsh
   ];
 }

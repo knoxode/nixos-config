@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -20,6 +19,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+    drivers.nvidia.enable = true;
     hardware.nvidia = {
       prime = {
         offload = {
