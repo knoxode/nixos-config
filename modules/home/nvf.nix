@@ -8,7 +8,6 @@
 
   programs.nvf = {
     enable = true;
-
     settings.vim = {
       vimAlias = true;
       viAlias = true;
@@ -21,17 +20,10 @@
         shiftwidth = 2;
         wrap = false;
       };
-
       extraPlugins = with pkgs.vimPlugins; {
-        vimtex = {
-          package = vimtex;
-          setup = ''
-            vim.g.vimtex_view_method = "zathura"
-          '';
-        };
       };
 
-      extraPackages = with pkgs; [texlab zathura];
+      extraPackages = with pkgs; [];
 
       clipboard = {
         enable = true;
@@ -158,11 +150,6 @@
         lspSignature.enable = true;
         otter-nvim.enable = false;
         nvim-docs-view.enable = false;
-        servers = {
-          texlab = {
-            package = ["texlab"];
-          };
-        };
       };
 
       languages = {
@@ -243,6 +230,9 @@
         images = {
           image-nvim.enable = false;
         };
+        smart-splits = {
+          enable = true;
+        };
       };
       ui = {
         borders.enable = true;
@@ -268,29 +258,15 @@
     };
   };
 
-  # Source custom Lua explicitly
-  home.file.".config/nvim/init.lua" = {
-    text = ''
-      vim.notify("Main init.lua loaded", vim.log.levels.INFO)
-      pcall(require, "custom.init")
-    '';
-  };
+  home.activation = {
+    dirtytalkUpdate = ''
+      # Create the spell directory if it doesn't exist
+      mkdir -p "$HOME/.local/share/nvim/site/spell"
 
-  home.file.".config/nvim/lua/custom/init.lua" = {
-    text = ''
-      -- Debug notification
-      vim.notify("Custom Lua loaded", vim.log.levels.INFO)
-      -- Diagnostics configuration (fallback)
-      vim.diagnostic.config({
-        virtual_text = {
-          spacing = 4,
-          prefix = "●"
-        },
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true
-      })
+      # Try to run DirtytalkUpdate in headless mode with better error handling
+      if ! ${config.programs.nvf.finalPackage}/bin/nvim --headless -c "DirtytalkUpdate" -c "qa!" 2>/dev/null; then
+        echo "Note: DirtytalkUpdate will run automatically on first Neovim startup"
+      fi
     '';
   };
 }

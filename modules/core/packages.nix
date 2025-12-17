@@ -109,7 +109,6 @@ in {
       temurin-bin-17
       texliveFull
       #texmaker
-      tmux
       typst
       tree
       typst
