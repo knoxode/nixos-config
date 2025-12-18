@@ -126,7 +126,7 @@ in {
           };
         };
 
-        dashboard.powermenu.avatar.image = "/home/shaiikura/.config/hypr/hyprlockassets/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
+        dashboard.powermenu.avatar.image = "~/.config/hypr/hyprlockassets/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
 
         dashboard.shortcuts.left.shortcut1 = {
           command = "firefox";

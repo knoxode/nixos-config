@@ -6,10 +6,7 @@
     ./zsh
     ./bash.nix
     ./btop.nix
-    ./desktop_assets.nix
     ./fastfetch.nix
-    ./firefox.nix
-    ./fish.nix
     ./grim.nix
     #./helix.nix
     ./hyprpanel.nix

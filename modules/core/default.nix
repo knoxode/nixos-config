@@ -27,7 +27,6 @@ in {
       ./security.nix
       ./sops.nix
       ./spicetify.nix
-      ./starship.nix
       ./stylix.nix
       ./syncthing.nix
       ./system.nix

@@ -1,5 +1,6 @@
 {
   host,
+  config,
   osConfig,
   pkgs,
   ...
@@ -16,15 +17,15 @@
   # Use dev Hyprland only on desktops
   startMonitorScript =
     if hostType == "Laptop"
-    then "bash /home/shaiikura/.config/hypr/startupscripts/start_monitor.sh"
+    then "bash ~/.config/hypr/startupscripts/start_monitor.sh"
     else "";
   handleMonitorConnectScript =
     if hostType == "Laptop"
-    then "bash /home/shaiikura/.config/hypr/startupscripts/handle_monitor_connect.sh"
+    then "bash ~/.config/hypr/startupscripts/handle_monitor_connect.sh"
     else "";
   handleMonitorDisconnectScript =
     if hostType == "Laptop"
-    then "bash /home/shaiikura/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
+    then "bash ~/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
     else "";
 
   steamExecForGameComputers =
@@ -41,6 +42,12 @@
   laptopPlugins =
     if hostType == "Laptop"
     then []
+    else [];
+  userDependentExecOnce =
+    if config.home.username == "kuchikopi"
+    then []
+    else if config.home.username == "shaiikura"
+    then ["timeout 10s bash -c 'sshfs reub0524@arc-login.arc.ox.ac.uk:/data/biol-synoxys-epi/reub0524 /home/shaiikura/biol-synoxys-epi'"]
     else [];
 in {
   home.packages = with pkgs; [
@@ -67,21 +74,21 @@ in {
       enable = true;
     };
     settings = {
-      exec-once = [
-        "hyprpanel"
-        "waypaper --restore"
-        "/home/shaiikura/.config/waypaper/autopicker.sh"
-        "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user start hyprpolkitagent"
-        "timeout 10s bash -c 'sshfs reub0524@arc-login.arc.ox.ac.uk:/data/biol-synoxys-epi/reub0524 /home/shaiikura/biol-synoxys-epi'"
-        "sleep 1; pypr &"
-        # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
-        startMonitorScript
-        handleMonitorConnectScript
-        handleMonitorDisconnectScript
-        steamExecForGameComputers
-      ];
+      exec-once =
+        [
+          "hyprpanel"
+          "~/.config/waypaper/autopicker.sh"
+          "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "systemctl --user start hyprpolkitagent"
+          "sleep 1; pypr &"
+          # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
+          startMonitorScript
+          handleMonitorConnectScript
+          handleMonitorDisconnectScript
+          steamExecForGameComputers
+        ]
+        ++ userDependentExecOnce;
       execr = [
         startMonitorScript
         handleMonitorConnectScript

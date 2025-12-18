@@ -1,4 +1,6 @@
-{_, ...}: {
+{config, ...}: let
+  mainUserProfile = builtins.toString config.home.username;
+in {
   stylix = {
     enable = true;
     polarity = "dark";
@@ -7,7 +9,7 @@
       hyprlock.enable = false;
       firefox = {
         enable = true;
-        profileNames = ["shaiikura"];
+        profileNames = [mainUserProfile];
       };
     };
   };

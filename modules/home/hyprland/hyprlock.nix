@@ -1,4 +1,4 @@
-{username, ...}: {
+{_, ...}: {
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -8,7 +8,7 @@
       background = [
         {
           monitor = "";
-          path = "/home/${username}/.cache/.wallpaper";
+          path = "~/.cache/.wallpaper";
           color = "rgba(25, 20, 20, 1.0)";
 
           # all these options are taken from hyprland, see https://wiki.hyprland.org/Configuring/Variables/#blur for explanations
