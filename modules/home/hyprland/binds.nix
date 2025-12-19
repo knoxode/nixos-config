@@ -36,7 +36,7 @@
         ws = toString (i + 1);
       in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
     )
-    1;
+    10;
 
   safeBrightnessKeybind =
     if hostType == "Laptop"

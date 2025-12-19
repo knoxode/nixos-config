@@ -4,6 +4,7 @@
   ...
 }: let
   inherit (osConfig.users.users.${config.home.username}) description firstname;
+  # path = "~/Documents/syncthing/asr/assets_for_desktop/profilePictures/IMG_1300.png";
 in {
   programs.hyprlock = {
     enable = true;
