@@ -4,25 +4,25 @@
   environment.systemPackages = [
     (pkgs.rstudioWrapper.override {
       packages = with pkgs.rPackages; [
-        # ggplot2
-        # dplyr
-        #
-        # xts
-        # knitr
-        # magrittr
-        # rmarkdown
-        # stringi
-        # stringr
-        # optparse
-        #
-        # ggVennDiagram
-        # ggridges
-        # showtext
-        #
-        # # BiocManager
-        # clusterProfiler
-        # DiffBind
-        # csaw
+        ggplot2
+        dplyr
+
+        xts
+        knitr
+        magrittr
+        rmarkdown
+        stringi
+        stringr
+        optparse
+
+        ggVennDiagram
+        ggridges
+        showtext
+
+        # BiocManager
+        clusterProfiler
+        DiffBind
+        csaw
       ];
     })
   ];

@@ -16,7 +16,7 @@ in {
     amdgpu.enable = false;
     nvidia.enable = false;
     nvidia-prime.enable = false;
-    enable = true;
+    intel.enable = true;
   };
   vm.guest-services.enable = false;
   hyprland.aqDrmDevices = preaqDrmDevices;
