@@ -40,7 +40,7 @@ in {
       shaiikura = {
         hashedPassword = "$6$14MwOQmWC/c0B5Uf$asW2FXs8oG8imtSPs9nLaXnZk1VKduLYz5l6TGBqLS8H64sWmONDOhUlTpHZ8HEl/UsKjD1SoGPyUECAju55z0";
         isNormalUser = true;
-        description = "Alex";
+        description = "Alex Ryder";
         extraGroups = [
           "docker"
           "gamemode"
@@ -60,9 +60,10 @@ in {
         ];
       };
       kuchikopi = {
+        createHome = true;
         hashedPassword = "$6$VmLAW3ghkUab0nTH$PTKoixhdumNZV6zdZ0T8A7iwpfpanzwdF4fs2Ey08VPtViL/91hlfIIz2c7REKS9Zu09J6r7S1Wgqi8izDfcz.";
         isNormalUser = true;
-        description = "Hajrah";
+        description = "Hajrah Shafique";
         extraGroups = [
           "docker"
           "gamemode"

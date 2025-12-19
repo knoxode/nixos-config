@@ -178,7 +178,7 @@ in {
 
       wallpaper = {
         enable = false;
-        image = "/home/shaiikura/Documents/syncthing/asr/DesktopBackground/wallhaven-jx2q3w.jpg";
+        image = "~/Documents/syncthing/asr/DesktopBackground/wallhaven-jx2q3w.jpg";
         pywal = false;
       };
 

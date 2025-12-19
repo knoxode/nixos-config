@@ -1,4 +1,10 @@
-{_, ...}: {
+{
+  osConfig,
+  config,
+  ...
+}: let
+  inherit (osConfig.users.users.${config.home.username}) description firstname;
+in {
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -41,7 +47,7 @@
           #BOTTOM CENTER
           #NIXOS ICON
           monitor = "";
-          path = "/home/shaiikura/.config/hypr/hyprlockassets/nix-snowflake-colours.png";
+          path = "~/.config/hypr/hyprlockassets/nix-snowflake-colours.png";
           size = 70;
           position = "0%, 2.77%";
           border_size = 0;
@@ -84,7 +90,7 @@
       label = [
         {
           monitor = "";
-          text = "Hi there, Alex!";
+          text = "Hi there, ${firstname}!";
           color = "rgba(200, 200, 200, 1.0)";
           font_size = 24;
           font_family = "JetBrains Mono Nerd Font";
@@ -119,7 +125,7 @@
         {
           monitor = "";
           text = ''
-            cmd[update:1000] echo "<b><big> Alex Ryder </big></b>"
+            cmd[update:1000] echo "<b><big> ${description} </big></b>"
           '';
           color = "rgba(255,255,255,1)";
           font_size = 12;
