@@ -9,7 +9,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
+    kernelPackages = pkgs.linuxPackages_zen;
 
     loader = {
       grub = {

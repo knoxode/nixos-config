@@ -5,10 +5,12 @@
 }: let
   inherit (osConfig.users.users.${config.home.username}) description firstname;
   # path = "~/Documents/syncthing/asr/assets_for_desktop/profilePictures/IMG_1300.png";
-  profileFileExt =
+  avatarImageExt =
     if config.home.username == "shaiikura"
     then "jpg"
     else "png";
+
+  avatar.image = "~/.profilePic.${avatarImageExt}";
 in {
   programs.hyprlock = {
     enable = true;
@@ -37,7 +39,7 @@ in {
         {
           #Eddie van halen profile circle
           monitor = "";
-          path = "~/.config/hypr/hyprlockassets/profile.${profileFileExt}";
+          path = avatar.image;
           border_color = "0xffdddddd";
           border_size = 0;
           size = 125;

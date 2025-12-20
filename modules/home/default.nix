@@ -20,4 +20,5 @@
     ./waypaper.nix
     ./wlogout.nix
   ];
+  xdg.userDirs.createDirectories = true;
 }

@@ -1,14 +1,12 @@
 {
   host,
-  config,
   lib,
   pkgs,
   inputs,
   username,
   profile,
   ...
-}: let
-in {
+}: {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
     sharedModules = [./../home];
@@ -60,7 +58,6 @@ in {
         ];
       };
       kuchikopi = {
-        createHome = true;
         hashedPassword = "$6$VmLAW3ghkUab0nTH$PTKoixhdumNZV6zdZ0T8A7iwpfpanzwdF4fs2Ey08VPtViL/91hlfIIz2c7REKS9Zu09J6r7S1Wgqi8izDfcz.";
         isNormalUser = true;
         description = "Hajrah Shafique";

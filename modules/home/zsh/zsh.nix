@@ -4,7 +4,24 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  initExtraFirst =
+    lib.mkOrder 500 ''
+    '';
+  initExtraBeforeCompInit = lib.mkOrder 550 ''
+    # put this before completion initialization
+    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+    zstyle ':completion:*' list-colors "$${s(.:.)LS_COLORS}"
+    zstyle ':completion:*' menu no
+  '';
+  initExtraLate = lib.mkOrder 1000 ''
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+  '';
+  initExtraLast =
+    lib.mkOrder 1500 ''
+    '';
+in {
   programs = {
     zsh = {
       enable = true;
@@ -35,14 +52,7 @@
         append = true;
         path = "${config.xdg.dataHome}/zsh/history";
       };
-      initContent = lib.mkOrder 550 ''
-        # put this before completion initialization
-        zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-        zstyle ':completion:*' list-colors "$${s(.:.)LS_COLORS}"
-        zstyle ':completion:*' menu no
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-        zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-      '';
+      initContent = lib.mkMerge [initExtraFirst initExtraBeforeCompInit initExtraLate initExtraLast];
       shellAliases = {
         c = "clear";
         fr = "nh os switch --hostname ${host}";

@@ -1,9 +1,16 @@
-{host, ...}: let
+{
+  host,
+  config,
+  ...
+}: let
   inherit
     (import ../../hosts/${host}/variables.nix)
     hostType
     ;
-
+  avatarImageExt =
+    if config.home.username == "shaiikura"
+    then "jpg"
+    else "png";
   barModules =
     if hostType == "Desktop"
     then {
@@ -126,7 +133,7 @@ in {
           };
         };
 
-        dashboard.powermenu.avatar.image = "~/.config/hypr/hyprlockassets/GettyImages-1278848447-32a8c2139b6741b6978d0bfb97839dde.jpg";
+        dashboard.powermenu.avatar.image = "~/.profilePic.${avatarImageExt}";
 
         dashboard.shortcuts.left.shortcut1 = {
           command = "firefox";

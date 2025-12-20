@@ -12,6 +12,7 @@
     hostType
     ;
 
+  preTerminalBind = "$modifier, return, exec, ${terminal}";
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
   switchWorkspaceBinds =
     if hasDefinedMonitors

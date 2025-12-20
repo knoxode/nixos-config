@@ -12,7 +12,7 @@
     else "png";
   userHashes = {
     shaiikura = {
-      wallpapers = "1nijq95bhvsymnqn33ca7ahdc9r8mj6wvlkigq911c7mrgr6f4y4";
+      wallpapers = "1crgh0rmraj0jysshxw51v39982yh9qw2ynylvjvhnk65yg235bm";
       profile = "0kxjiyn0yh6fsijc0m6mscwy1vivi8pv7pixsbjx2idwwss6l30z";
     };
     kuchikopi = {
@@ -54,5 +54,5 @@ in {
     mkdir -p $out
     tar -xzf ${hyprlockAssets} -C $out
   '';
-  xdg.configFile."hypr/hyprlockassets/${username}.${profileFileExt}".source = profilePic;
+  home.file.".profilePic.${profileFileExt}".source = profilePic;
 }
