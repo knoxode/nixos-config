@@ -34,7 +34,7 @@
     permittedInsecurePackages = ["openssl-1.1.1w" "qtwebengine-5.15.19"];
   };
   nixpkgs.overlays = [
-    inputs.nix-cachyos-kernel.overlays.default
+    inputs.nix-cachyos-kernel.overlays.pinned
     (import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
