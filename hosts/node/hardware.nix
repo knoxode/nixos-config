@@ -13,7 +13,7 @@
     extraModprobeConfig = ''
       options it87 force_id=0x8622
     '';
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto;
+    kernelPackages = pkgs.linuxPackages_zen;
 
     loader = {
       grub = {

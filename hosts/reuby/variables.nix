@@ -35,6 +35,18 @@
       name = "royuan-gaming-kb";
       kb_layout = "us";
     }
+    {
+      name = "dell-kb216-wired-keyboard";
+      kb_layout = "gb";
+    }
+    {
+      name = "dell-kb216-wired-keyboard-consumer-control";
+      kb_layout = "gb";
+    }
+    {
+      name = "dell-kb216-wired-keyboard-system-control";
+      kb_layout = "gb";
+    }
   ];
 
   extraMonitorSettings = "

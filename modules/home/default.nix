@@ -6,6 +6,7 @@
     ./zsh
     ./bash.nix
     ./btop.nix
+    ./desktop_assets.nix
     ./fastfetch.nix
     ./grim.nix
     #./helix.nix

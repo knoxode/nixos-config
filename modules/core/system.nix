@@ -38,6 +38,14 @@
     (import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
+    (final: prev: let
+      oldPkgs = import inputs.nixpkgs-old {
+        system = final.system;
+        config.allowUnfree = true; # if needed
+      };
+    in {
+      docker-compose = oldPkgs.docker-compose;
+    })
   ];
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {

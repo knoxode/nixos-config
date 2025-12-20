@@ -1073,6 +1073,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-old": {
+      "locked": {
+        "lastModified": 1758751986,
+        "narHash": "sha256-0G82tRU3qbdJ8XK7oEY7B8uI2Rm6tl2vAGkBlxDJCPM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "03bcfc09f877ed28d9bcab4f8772ec15599cbc37",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "03bcfc09f877ed28d9bcab4f8772ec15599cbc37",
+        "type": "github"
+      }
+    },
     "nixpkgs_10": {
       "locked": {
         "lastModified": 1764517877,
@@ -1320,6 +1336,7 @@
         "nix-flatpak": "nix-flatpak",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs_6",
+        "nixpkgs-old": "nixpkgs-old",
         "nur": "nur",
         "nvf": "nvf",
         "sops-nix": "sops-nix",
