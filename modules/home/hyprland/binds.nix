@@ -13,6 +13,10 @@
     ;
 
   preTerminalBind = "$modifier, return, exec, ${terminal}";
+  terminalBind =
+    if terminal == "kitty"
+    then "${preTerminalBind} -e tmux new-session -A -s mainSesh"
+    else "${preTerminalBind}";
   #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
   switchWorkspaceBinds =
     if hasDefinedMonitors
@@ -53,7 +57,7 @@ in {
         "$modifier, R, exec, sleep 0.1 && $menu"
         "$modifier, W, exec, ${browser}"
         # "$modifier,Y,exec,kitty -e yazi"
-        "$modifier, return, exec, ${terminal}"
+        "${terminalBind}"
         "$modifier, left, movefocus, l"
         "$modifier, right, movefocus, r"
         "$modifier, up, movefocus, u"

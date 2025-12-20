@@ -9,7 +9,7 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
 
     loader = {
       grub = {
