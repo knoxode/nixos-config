@@ -38,7 +38,7 @@ in {
         peers = [
           {
             presharedKeyFile = "/run/secrets/wireguard/presharedkey";
-            publicKey = "xp86oULOebte00nmBkBtt7Blq2HwBJqR/pxfVdE7ECo=";
+            publicKey = "kjkXw+oCZqNPHB/m9GxOg2urWTH58f02jxvsBVD6SDY=";
             allowedIPs =
               [
                 "10.7.0.1/32"
@@ -52,71 +52,71 @@ in {
               ++ selfIP
               ++ allowedPeerIPs;
             name = vpnConnectionName;
-            endpoint = "knoxode.duckdns.org:51820";
+            endpoint = "knoxvpn.duckdns.org:51820";
             persistentKeepalive = 25;
           }
         ];
-        postSetup = ''
-          printf "nameserver 192.168.1.118" | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0
-        '';
+        # postSetup = ''
+        #   printf "nameserver 192.168.1.118" | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0
+        # '';
       };
     };
 
-    networkmanager.dispatcherScripts = [
-      {
-        type = "basic";
-        source = pkgs.writeShellScript "nm-wg-policy" ''
-          #!/bin/sh
-          IFACE="$1"
-          ACTION="$2"
-
-          case "$IFACE" in
-            lo|wg0|docker*) exit 0;;
-          esac
-
-          case "$ACTION" in
-            up)
-              PROFILE="''${CONNECTION_ID:-}"
-              GATEWAY="''${IP4_GATEWAY:-$(nmcli -t -f IP4.GATEWAY device show "$IFACE" 2>/dev/null | cut -d: -f2)}"
-
-              HOME_WIRED_PROFILE="Wired connection 1"
-              HOME_GATEWAY="10.10.10.1"
-              BLOCKED_SSIDS="AR Nucleus"
-
-              block=0
-
-              if [ "$PROFILE" = "$HOME_WIRED_PROFILE" ] && [ "$GATEWAY" = "$HOME_GATEWAY" ]; then
-                block=1
-              fi
-
-              if nmcli -t -f GENERAL.TYPE device show "$IFACE" 2>/dev/null | grep -q ':wifi$'; then
-                for s in $BLOCKED_SSIDS; do
-                  [ "$PROFILE" = "$s" ] && block=1
-                done
-              fi
-
-              if [ "$block" -eq 1 ]; then
-                touch /run/no-wireguard
-                systemctl stop wireguard-wg0.service
-              else
-                rm -f /run/no-wireguard
-                systemctl start wireguard-wg0.service
-              fi
-              ;;
-            down|pre-down)
-              rm -f /run/no-wireguard
-              ;;
-          esac
-        '';
-      }
-    ];
+    # networkmanager.dispatcherScripts = [
+    #   {
+    #     type = "basic";
+    #     source = pkgs.writeShellScript "nm-wg-policy" ''
+    #       #!/bin/sh
+    #       IFACE="$1"
+    #       ACTION="$2"
+    #
+    #       case "$IFACE" in
+    #         lo|wg0|docker*) exit 0;;
+    #       esac
+    #
+    #       case "$ACTION" in
+    #         up)
+    #           PROFILE="''${CONNECTION_ID:-}"
+    #           GATEWAY="''${IP4_GATEWAY:-$(nmcli -t -f IP4.GATEWAY device show "$IFACE" 2>/dev/null | cut -d: -f2)}"
+    #
+    #           HOME_WIRED_PROFILE="Wired connection 1"
+    #           HOME_GATEWAY="10.10.10.1"
+    #           BLOCKED_SSIDS="A+H Nucleus Nucleus-Private"
+    #
+    #           block=0
+    #
+    #           if [ "$PROFILE" = "$HOME_WIRED_PROFILE" ] && [ "$GATEWAY" = "$HOME_GATEWAY" ]; then
+    #             block=1
+    #           fi
+    #
+    #           if nmcli -t -f GENERAL.TYPE device show "$IFACE" 2>/dev/null | grep -q ':wifi$'; then
+    #             for s in $BLOCKED_SSIDS; do
+    #               [ "$PROFILE" = "$s" ] && block=1
+    #             done
+    #           fi
+    #
+    #           if [ "$block" -eq 1 ]; then
+    #             touch /run/no-wireguard
+    #             systemctl stop wireguard-wg0.service
+    #           else
+    #             rm -f /run/no-wireguard
+    #             systemctl start wireguard-wg0.service
+    #           fi
+    #           ;;
+    #         down|pre-down)
+    #           rm -f /run/no-wireguard
+    #           ;;
+    #       esac
+    #     '';
+    #   }
+    # ];
   };
 
-  # Prevent WireGuard from auto-starting, gate on /run/no-wireguard
-  systemd.targets."wireguard-wg0".wantedBy = lib.mkForce [];
-  systemd.services."wireguard-wg0".unitConfig = {
-    ConditionPathExists = "!/run/no-wireguard";
-    After = ["NetworkManager.service" "NetworkManager-wait-online.service"];
-    Wants = ["NetworkManager-wait-online.service"];
-  };
+  # # Prevent WireGuard from auto-starting, gate on /run/no-wireguard
+  # systemd.targets."wireguard-wg0".wantedBy = lib.mkForce [];
+  # systemd.services."wireguard-wg0".unitConfig = {
+  #   ConditionPathExists = "!/run/no-wireguard";
+  #   After = ["NetworkManager.service" "NetworkManager-wait-online.service"];
+  #   Wants = ["NetworkManager-wait-online.service"];
+  # };
 }
