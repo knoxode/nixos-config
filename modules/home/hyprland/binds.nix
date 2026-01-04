@@ -12,12 +12,12 @@
     hostType
     ;
 
-  preTerminalBind = "$modifier, return, exec, ${terminal}";
+  preTerminalBind = "SUPER, return, exec, ${terminal}";
   terminalBind =
     if terminal == "kitty"
     then "${preTerminalBind} -e tmux new-session -A -s mainSesh"
     else "${preTerminalBind}";
-  #Defines a set of keybinds mapping $modifier, x to the shell script with different numbers
+  #Defines a set of keybinds mapping SUPER, x to the shell script with different numbers
   switchWorkspaceBinds =
     if hasDefinedMonitors
     then
@@ -25,7 +25,7 @@
       (
         i: let
           ws = toString (i + 1);
-        in "$modifier,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
+        in "SUPER,${ws},exec,~/.config/hypr/startupscripts/2_workspace.sh ${ws}"
       )
       5
     else [];
@@ -39,7 +39,7 @@
           then "0"
           else toString (i + 1);
         ws = toString (i + 1);
-      in "$modifier SHIFT,${key},movetoworkspacesilent,${ws}"
+      in "SUPER_SHIFT,${key},movetoworkspacesilent,${ws}"
     )
     10;
 
@@ -51,29 +51,29 @@ in {
   wayland.windowManager.hyprland.settings = {
     bind =
       [
-        "$modifier, Q, killactive,"
-        #"$modifier, O, overview:toggle, all"
-        "$modifier, E, exec, ${fileManager}"
-        "$modifier, R, exec, sleep 0.1 && $menu"
-        "$modifier, W, exec, ${browser}"
-        # "$modifier,Y,exec,kitty -e yazi"
+        "SUPER, Q, killactive,"
+        #"SUPER, O, overview:toggle, all"
+        "SUPER, E, exec, ${fileManager}"
+        "SUPER, R, exec, sleep 0.1 && $menu"
+        "SUPER, W, exec, ${browser}"
+        # "SUPER,Y,exec,kitty -e yazi"
         "${terminalBind}"
-        "$modifier, left, movefocus, l"
-        "$modifier, right, movefocus, r"
-        "$modifier, up, movefocus, u"
-        "$modifier, down, movefocus, d"
-        "$modifier, mouse_down, workspace, e+1"
-        "$modifier, mouse_up, workspace, e-1"
-        "$modifier ALT, Space, togglefloating,"
-        "$modifier, F, fullscreen, 0"
-        "$modifier,T,exec,pypr toggle term"
+        "SUPER, left, movefocus, l"
+        "SUPER, right, movefocus, r"
+        "SUPER, up, movefocus, u"
+        "SUPER, down, movefocus, d"
+        "SUPER, mouse_down, workspace, e+1"
+        "SUPER, mouse_up, workspace, e-1"
+        "SUPER ALT, Space, togglefloating,"
+        "SUPER, F, fullscreen, 0"
+        "SUPER,T,exec,pypr toggle term"
         "$ALT,V,exec,pypr toggle spotify"
         "$ALT,B,exec,pypr toggle beeper"
         "$ALT,O,exec,pypr toggle obsidian"
         "$ALT,F,exec,pypr toggle discord"
-        "$modifier+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
-        "$modifier+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
-        "Ctrl+$modifier+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
+        "SUPER+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
+        "SUPER+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
+        "Ctrl+SUPER+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
         "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
         # "ALT, X, togglespecialworkspace, outlook"
       ]
@@ -99,8 +99,8 @@ in {
     ];
 
     bindm = [
-      "$modifier, mouse:272, movewindow"
-      "$modifier, mouse:273, resizewindow"
+      "SUPER, mouse:272, movewindow"
+      "SUPER, mouse:273, resizewindow"
     ];
   };
 }

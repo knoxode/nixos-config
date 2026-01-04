@@ -37,6 +37,7 @@ in {
       ./user.nix
       ./virtualisation.nix
       ./wireguard.nix
+      ./wireshark.nix
     ]
     ++ (
       if forGaming
