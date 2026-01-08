@@ -4,6 +4,7 @@
   environment.systemPackages = [
     (pkgs.rstudioWrapper.override {
       packages = with pkgs.rPackages; [
+        rio
         ggplot2
         dplyr
 
@@ -20,6 +21,9 @@
         showtext
 
         # BiocManager
+        ChIPseeker
+        txdbmaker
+        GenomeInfoDb
         clusterProfiler
         DiffBind
         csaw
