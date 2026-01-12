@@ -1,0 +1,6 @@
+{...}: {
+  imports = [
+    ./vim
+    ./entry.nix
+  ];
+}
