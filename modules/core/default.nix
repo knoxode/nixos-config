@@ -11,6 +11,7 @@ in {
       ./avahi.nix
       ./bluetooth.nix
       ./customOptions
+      ./customPackages
       ./flatpak.nix
       ./greetd.nix
       ./gpu_symlink.nix

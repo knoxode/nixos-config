@@ -20,10 +20,11 @@ in {
         "match:class ^winboat.*$, match:xwayland 1, no_dim on"
         "match:class ^winboat.*$, match:xwayland 1, force_rgbx on"
 
-        # assign tags by matching class
         "match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt)$, tag +file-manager"
         "match:class ^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$, tag +terminal"
         "match:class ^(discord|obsidian|spotify|Texts|kitty-dropterm)$, float on, center on, size 70% 60%"
+        #Snapgene rule - to prevent dialog boxes from going top-left
+        "match:class ^(?![Ss]nap[Gg]ene$).*, match:title ^([Ss]nap[Gg]ene)$, center on, size 50% 50%"
 
         "match:class ^(Brave-browser(-beta|-dev|-unstable)?)$, tag +browser"
         "match:class ^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$, tag +browser"
