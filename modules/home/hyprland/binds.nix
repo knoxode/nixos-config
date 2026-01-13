@@ -54,7 +54,7 @@ in {
         "SUPER, Q, killactive,"
         #"SUPER, O, overview:toggle, all"
         "SUPER, E, exec, ${fileManager}"
-        "SUPER, R, exec, sleep 0.1 && $menu"
+        "SUPER, R, exec, sleep 0.1 && rofi -show drun"
         "SUPER, W, exec, ${browser}"
         # "SUPER,Y,exec,kitty -e yazi"
         "${terminalBind}"
