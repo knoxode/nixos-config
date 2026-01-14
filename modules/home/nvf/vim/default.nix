@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./assistant.nix
     ./autoActions.nix
     ./binds.nix
     ./clipboard.nix
@@ -8,7 +9,9 @@
     ./git.nix
     ./keymaps.nix
     ./languages.nix
+    ./minimap.nix
     ./neotree.nix
+    ./notes.nix
     ./notify.nix
     ./plugins.nix
     ./projects.nix

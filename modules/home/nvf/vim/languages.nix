@@ -11,12 +11,13 @@
         enable = true;
         formatOnSave = true;
         lspkind.enable = false;
-        lightbulb.enable = false;
+        lightbulb.enable = true;
         lspsaga.enable = false;
         trouble.enable = true;
-        lspSignature.enable = false;
-        otter-nvim.enable = false;
-        nvim-docs-view.enable = false;
+        lspSignature.enable = false; # conflicts with blink in maximal
+        otter-nvim.enable = true;
+        nvim-docs-view.enable = true;
+        harper-ls.enable = true;
       };
 
       languages = {

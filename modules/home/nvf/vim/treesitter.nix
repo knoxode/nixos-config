@@ -1,7 +1,7 @@
 {...}: {
   programs.nvf = {
     settings.vim = {
-      treesitter.context.enable = false;
+      treesitter.context.enable = true;
     };
   };
 }
