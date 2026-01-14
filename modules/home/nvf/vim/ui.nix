@@ -5,7 +5,7 @@
         borders.enable = true;
         noice.enable = true;
         colorizer.enable = true;
-        modes-nvim.enable = false; # the theme looks terrible with catppuccin
+        modes-nvim.enable = false; # The theme looks terrible with catppuccin
         illuminate.enable = true;
         breadcrumbs = {
           enable = true;

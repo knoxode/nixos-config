@@ -56,6 +56,4 @@ in {
   environment.systemPackages = lib.mkDefault [
     dynamicWallpaper
   ];
-
-  # optional: you can also expose the path or add a systemd unit that uses it
 }
