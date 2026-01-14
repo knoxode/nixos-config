@@ -1,7 +1,9 @@
 {...}: {
   programs.nvf = {
     settings.vim = {
-      dashboard.dashboard-nvim.enable = true;
+      dashboard.dashboard-nvim = {
+        enable = true;
+      };
     };
   };
 }

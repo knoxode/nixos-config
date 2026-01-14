@@ -15,6 +15,7 @@
     ./snippets.nix
     ./statusline.nix
     ./telescope.nix
+    ./toggleterm.nix
     ./treesitter.nix
     ./ui.nix
     ./utility.nix
