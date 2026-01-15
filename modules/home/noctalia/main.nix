@@ -88,10 +88,10 @@
       #     telemetryEnabled = true;
       #   };
       ui = {
-        fontDefault = lib.mkForce "JetBrainsMono Nerd Font";
-        fontFixed = lib.mkForce "JetBrainsMono Nerd Font Mono";
-        fontDefaultScale = 1;
-        fontFixedScale = 1;
+        fontDefault = lib.mkForce "Roboto Medium";
+        fontFixed = lib.mkForce "Roboto Mono Medium";
+        fontDefaultScale = 1.1;
+        fontFixedScale = 1.1;
         tooltipsEnabled = true;
         panelBackgroundOpacity = lib.mkForce 0.85;
         panelsAttachedToBar = true;
