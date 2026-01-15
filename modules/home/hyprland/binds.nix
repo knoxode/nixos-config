@@ -74,7 +74,7 @@ in {
         "SUPER+Shift, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
         "SUPER+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
         "Ctrl+SUPER+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
-        "Ctrl+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell # [hidden]"
+        "Ctrl+Alt, Delete, exec, noctalia-shell ipc call sessionMenu toggle"
         # "ALT, X, togglespecialworkspace, outlook"
       ]
       ++ switchWorkspaceBinds

@@ -15,7 +15,7 @@
         showOutline = false;
         showCapsule = true;
         capsuleOpacity = 1.0;
-        backgroundOpacity = lib.mkForce 0.85;
+        backgroundOpacity = lib.mkForce 0.50;
         useSeparateOpacity = false;
         floating = false;
         marginVertical = 4;
@@ -93,7 +93,7 @@
         fontDefaultScale = 1.1;
         fontFixedScale = 1.1;
         tooltipsEnabled = true;
-        panelBackgroundOpacity = lib.mkForce 0.85;
+        panelBackgroundOpacity = lib.mkForce 0.50;
         panelsAttachedToBar = true;
         settingsPanelMode = "attached";
         wifiDetailsViewMode = "grid";
@@ -356,7 +356,7 @@
         # location = "top_right";
         # autoHideMs = 2000;
         # overlayLayer = true;
-        backgroundOpacity = lib.mkForce 0.85;
+        backgroundOpacity = lib.mkForce 0.50;
         #   enabledTypes = [
         #     0
         #     1
@@ -423,20 +423,20 @@
       #     manualSunrise = "06:30";
       #     manualSunset = "18:30";
       #   };
-      #   hooks = {
-      #     enabled = false;
-      #     wallpaperChange = "";
-      #     darkModeChange = "";
-      #     screenLock = "";
-      #     screenUnlock = "";
-      #     performanceModeEnabled = "";
-      #     performanceModeDisabled = "";
-      #   };
-      #   desktopWidgets = {
-      #     enabled = false;
-      #     gridSnap = false;
-      #     monitorWidgets = [];
-      #   };
+      hooks = {
+        enabled = false;
+        wallpaperChange = "";
+        darkModeChange = "";
+        screenLock = "";
+        screenUnlock = "";
+        performanceModeEnabled = "";
+        performanceModeDisabled = "";
+      };
+      # desktopWidgets = {
+      #   enabled = false;
+      #   gridSnap = false;
+      #   monitorWidgets = [];
+      # };
     };
   };
 }

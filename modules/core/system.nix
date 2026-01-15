@@ -35,7 +35,6 @@
   };
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
-    #(import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     (final: prev: let
@@ -44,7 +43,7 @@
         config.allowUnfree = true; # if needed
       };
     in {
-      docker-compose = oldPkgs.docker-compose;
+      # docker-compose = oldPkgs.docker-compose;
     })
   ];
   security.sudo.wheelNeedsPassword = false;

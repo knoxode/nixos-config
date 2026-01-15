@@ -22,7 +22,6 @@
     # default / fallback entry optional
     default = {
       wallpapers = "0000000000000000000000000000000000000000000000000000";
-      hyprlock = "0000000000000000000000000000000000000000000000000000";
     };
   };
   # choose the hashes for this username (or fallback/throw)
@@ -32,10 +31,6 @@
     else lib.throw "No asset hashes configured for user: ${username}";
 
   mainUrl = "https://pub-5091b3de9360409687d69cad055e35dc.r2.dev";
-  hyprlockAssets = pkgs.fetchurl {
-    url = "${mainUrl}/hyprlock.tar.gz";
-    sha256 = "0sssngsc417yj0hzdcqwm2j5idiqg00c9aq47d1sjlrp0cjvwhc8";
-  };
   wallpapers = pkgs.fetchurl {
     url = "${mainUrl}/${username}/DesktopBackground.tar.gz";
     sha256 = hashes.wallpapers;
@@ -49,10 +44,5 @@ in {
     mkdir -p $out
     tar -xzf ${wallpapers} -C $out
   '';
-
-  xdg.configFile."hypr/hyprlockassets".source = pkgs.runCommand "extractHyprlockAssets" {} ''
-    mkdir -p $out
-    tar -xzf ${hyprlockAssets} -C $out
-  '';
-  home.file.".profilePic.${profileFileExt}".source = profilePic;
+  home.file.".face".source = profilePic;
 }

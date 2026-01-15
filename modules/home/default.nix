@@ -19,7 +19,6 @@
     #./television.nix
     ./vscode.nix
     ./waypaper.nix
-    ./wlogout.nix
   ];
   xdg.userDirs.createDirectories = true;
 }

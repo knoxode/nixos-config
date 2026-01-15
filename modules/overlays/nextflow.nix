@@ -1,4 +1,3 @@
-# overlays/hyprlock.nix
 self: super: {
   nextflow = super.nextflow.overrideAttrs (old: {
     version = "25.06.0-edge";

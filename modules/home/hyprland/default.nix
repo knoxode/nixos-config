@@ -13,7 +13,6 @@ in {
     ./binds.nix
     ./hypridle.nix
     ./hyprland.nix
-    ./hyprlock.nix
     ./keyboards.nix
     ./layerrules.nix
     ./pyprland.nix

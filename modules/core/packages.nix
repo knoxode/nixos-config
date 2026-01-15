@@ -117,7 +117,6 @@ in {
       waypaper
       winboat
       wl-clipboard
-      wlogout
       w3m
       xmlstarlet
       zoom-us

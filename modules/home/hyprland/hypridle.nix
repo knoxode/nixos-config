@@ -3,8 +3,8 @@
     (import ../../../hosts/${host}/variables.nix)
     hostType
     ;
-  #Setting hyprlock
-  lock_cmd = "pidof hyprlock || hyprlock";
+  #Setting noctalia lock screen
+  lock_cmd = "noctalia-shell ipc call lockScreen lock";
   suspend_cmd = "systemctl suspend ||  loginctl suspend";
 
   # Command to lower all DDC monitor brightness to 10 percent

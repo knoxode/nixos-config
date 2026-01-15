@@ -15,9 +15,5 @@ _: {
         })
       '';
     };
-    pam.services.hyprlock = {
-      text = ''auth include login '';
-    };
   };
 }
-
