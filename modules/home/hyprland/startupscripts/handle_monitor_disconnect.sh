@@ -38,7 +38,7 @@ handle_event() {
       echo "${monitor_name} Removed."
       move_workspaces_to_edp1
       reset_single_monitor
-      reload_hyprpanel
+      #reload_hyprpanel
     fi
     ;;
   esac

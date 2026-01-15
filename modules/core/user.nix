@@ -9,7 +9,10 @@
 }: {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
-    sharedModules = [./../home];
+    sharedModules = [
+      ./../home
+      inputs.noctalia.homeModules.default
+    ];
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";

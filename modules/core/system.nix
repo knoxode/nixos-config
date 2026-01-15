@@ -35,7 +35,7 @@
   };
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
-    (import ../overlays/hyprpanel.nix)
+    #(import ../overlays/hyprpanel.nix)
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     (final: prev: let

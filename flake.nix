@@ -15,6 +15,10 @@
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     stylix.url = "github:danth/stylix/master";
 

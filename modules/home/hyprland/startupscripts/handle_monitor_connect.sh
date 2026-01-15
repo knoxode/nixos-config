@@ -74,7 +74,7 @@ handle_event() {
 
     #Configure the dual-monitor setup
     configure_dual_monitor
-    reload_hyprpanel
+    #reload_hyprpanel
     ;;
   esac
 }

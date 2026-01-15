@@ -1,6 +1,7 @@
 {...}: {
   imports = [
     ./hyprland
+    ./noctalia
     ./nvf
     ./tmux
     ./yazi
@@ -11,7 +12,7 @@
     ./fastfetch.nix
     ./grim.nix
     #./helix.nix
-    ./hyprpanel.nix
+    #./hyprpanel.nix
     ./kitty.nix
     ./rofi.nix
     ./stylix.nix
