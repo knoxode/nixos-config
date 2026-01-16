@@ -27,12 +27,15 @@
           left = [
             {
               id = "ControlCenter";
+              useDistroLogo = true;
+              enableColorization = true;
             }
             {
               id = "SystemMonitor";
-            }
-            {
-              id = "MediaMini";
+              compactMode = false;
+              diskPath = "/";
+              usePrimaryColor = true;
+              showDiskUsage = false;
             }
             {
               id = "Workspace";
@@ -40,7 +43,8 @@
           ];
           center = [
             {
-              id = "Clock";
+              id = "MediaMini";
+              hideWhenIdle = true;
             }
           ];
           right = [
@@ -58,6 +62,11 @@
             }
             {
               id = "Battery";
+            }
+            {
+              id = "Clock";
+              formatHorizontal = "dddd | MMM dd yyyy | HH:mm";
+              usePrimaryColor = true;
             }
           ];
         };
