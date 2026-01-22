@@ -67,7 +67,7 @@ in {
       hyprsunset
       igv
       inkscape
-      #jellyfin-media-player
+      jellyfin-desktop
       jq
       kdePackages.dolphin
       kdePackages.gwenview
@@ -90,6 +90,7 @@ in {
       openssl
       os-prober
       plexamp
+      plex-desktop
       power-profiles-daemon
       powertop
       python3

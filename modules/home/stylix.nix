@@ -10,6 +10,7 @@ in {
         enable = true;
         profileNames = [mainUserProfile];
       };
+      nvf.enable = false;
     };
   };
 }

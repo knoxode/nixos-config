@@ -18,6 +18,7 @@
     ./snippets.nix
     ./statusline.nix
     ./telescope.nix
+    ./theme.nix
     ./toggleterm.nix
     ./treesitter.nix
     ./ui.nix

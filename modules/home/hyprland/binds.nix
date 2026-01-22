@@ -57,8 +57,6 @@ in {
         "SUPER, right, movefocus, r"
         "SUPER, up, movefocus, u"
         "SUPER, down, movefocus, d"
-        "SUPER, mouse_down, workspace, e+1"
-        "SUPER, mouse_up, workspace, e-1"
         "SUPER ALT, Space, togglefloating,"
         "SUPER, F, fullscreen, 0"
         "SUPER,T,exec,pypr toggle term"
