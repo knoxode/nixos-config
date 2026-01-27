@@ -18,9 +18,9 @@
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
     zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
   '';
-  initExtraLast =
-    lib.mkOrder 1500 ''
-    '';
+  initExtraLast = lib.mkOrder 1500 ''
+    eval "$(direnv hook zsh)"
+  '';
 in {
   programs = {
     zsh = {

@@ -4,7 +4,18 @@
       spellcheck = {
         enable = true;
         languages = ["en"];
+        # Alias'd to dirtyTalk in the manual
         programmingWordlist.enable = true;
+        extraSpellWords = {
+          "en.utf-8" = [
+            "nvf"
+          ];
+        };
+        ignoredFiletypes = [
+          "toggleterm"
+          "gitcommit"
+          "text"
+        ];
       };
 
       lsp = {
@@ -40,7 +51,6 @@
         lua.enable = true;
         css.enable = true;
         typst.enable = true;
-        r.enable = true;
         rust = {
           enable = true;
           extensions = {

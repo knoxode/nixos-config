@@ -7,6 +7,9 @@
     prefix = "C-Space";
     sensibleOnTop = true;
     extraConfig = ''
+      set-option -sg escape-time 10
+      set-option -g focus-events on
+      set-option -g default-terminal "screen-256color"
       set-option -sa terminal-overrides ",xterm*:Tc"
 
       set -g base-index 1

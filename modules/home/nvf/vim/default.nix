@@ -7,6 +7,7 @@
     ./dashboard.nix
     ./diagnostics.nix
     ./git.nix
+    ./harperSpellCheck.nix
     ./keymaps.nix
     ./languages.nix
     ./minimap.nix
@@ -15,6 +16,7 @@
     ./notify.nix
     ./plugins.nix
     ./projects.nix
+    ./rSpecificSettings.nix
     ./snippets.nix
     ./statusline.nix
     ./telescope.nix

@@ -95,6 +95,7 @@ in {
       powertop
       python3
       qalculate-qt
+      ripgrep
       rofi
       rustc
       rustdesk-flutter
