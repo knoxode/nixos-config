@@ -40,7 +40,14 @@
         clang.enable = true;
         zig.enable = true;
         python.enable = true;
-        markdown.enable = true;
+        markdown = {
+          enable = true;
+          extensions = {
+            render-markdown-nvim = {
+              enable = true;
+            };
+          };
+        };
         ts = {
           enable = true;
           lsp.enable = true;
