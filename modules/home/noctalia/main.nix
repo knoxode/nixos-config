@@ -1,9 +1,22 @@
 {
-  pkgs,
+  host,
   lib,
-  inputs,
   ...
-}: {
+}: let
+  inherit (import ../../../hosts/${host}/variables.nix) hostType;
+  clockSet = {
+    id = "Clock";
+    formatHorizontal = "dddd | MMM dd yyyy | HH:mm";
+    usePrimaryColor = true;
+  };
+
+  hostDepBattery =
+    if hostType == "Desktop"
+    then {}
+    else {
+      id = "Battery";
+    };
+in {
   programs.noctalia-shell = {
     enable = true;
     settings = {
@@ -47,28 +60,22 @@
               hideWhenIdle = true;
             }
           ];
-          right = [
-            {
-              id = "Tray";
-            }
-            {
-              id = "NotificationHistory";
-            }
-            {
-              id = "Volume";
-            }
-            {
-              id = "Brightness";
-            }
-            {
-              id = "Battery";
-            }
-            {
-              id = "Clock";
-              formatHorizontal = "dddd | MMM dd yyyy | HH:mm";
-              usePrimaryColor = true;
-            }
-          ];
+          right =
+            [
+              {
+                id = "Tray";
+              }
+              {
+                id = "NotificationHistory";
+              }
+              {
+                id = "Volume";
+              }
+              {
+                id = "Brightness";
+              }
+            ]
+            ++ [hostDepBattery clockSet];
         };
       };
       #   general = {
