@@ -45,6 +45,9 @@
           extensions = {
             render-markdown-nvim = {
               enable = true;
+              setupOpts = {
+                file_types = ["markdown"];
+              };
             };
           };
         };
