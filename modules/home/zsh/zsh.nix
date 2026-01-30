@@ -35,10 +35,6 @@ in {
           name = "fzf-tab";
           src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
         }
-        {
-          name = "fzf-tab";
-          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-        }
       ];
       defaultKeymap = "emacs";
       syntaxHighlighting.enable = true;

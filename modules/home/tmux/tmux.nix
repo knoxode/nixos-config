@@ -30,6 +30,12 @@
       # Shift Alt vim keys to switch windows
       bind -n M-H previous-window
       bind -n M-L next-window
+
+      # Change resize to prefix + Ctrl-h/j/k/l
+      bind-key -r C-h resize-pane -L 5
+      bind-key -r C-j resize-pane -D 5
+      bind-key -r C-k resize-pane -U 5
+      bind-key -r C-l resize-pane -R 5
     '';
     plugins = with pkgs; [
       {
