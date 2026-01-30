@@ -15,6 +15,7 @@
     #./hyprpanel.nix
     ./kitty.nix
     ./rofi.nix
+    ./shellAliases.nix
     ./stylix.nix
     #./television.nix
     ./vscode.nix
