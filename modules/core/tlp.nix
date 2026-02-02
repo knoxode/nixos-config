@@ -1,4 +1,13 @@
-{...}: {
+{host, ...}: let
+  cpuEnergyPerfonBat =
+    if host == "nomad"
+    then "balance_power"
+    else "power";
+  platProfOnBat =
+    if host == "nomad"
+    then "balanced"
+    else "low-power";
+in {
   services.tlp = {
     enable = true;
     settings = {
@@ -8,10 +17,10 @@
       RUNTIME_PROFILE_ON_BAT = "auto";
       RUNTIME_PROFILE_ON_AC = "auto";
       #
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = cpuEnergyPerfonBat;
       CPU_ENERGY_PERF_POLICY_ON_AC = "balance_power";
 
-      PLATFORM_PROFILE_ON_BAT = "low-power";
+      PLATFORM_PROFILE_ON_BAT = platProfOnBat;
       PLATFORM_PROFILE_ON_AC = "balanced";
 
       WIFI_PWR_ON_AC = "on";
