@@ -19,6 +19,9 @@
     setup_nix_env = "echo 'use nix' > .envrc && direnv allow";
     arc-login = "ssh -X reub0524@arc-login.arc.ox.ac.uk || ssh -X reub0524@gateway.arc.ox.ac.uk 'ssh -X reub0524@arc-login.arc.ox.ac.uk'";
     arc-htc = "ssh -X reub0524@htc-login.arc.ox.ac.uk || ssh -X reub0524@gateway.arc.ox.ac.uk 'ssh -X reub0524@arc-login.arc.ox.ac.uk'";
+    node-login = "ssh shaiikura@10.7.0.3";
+    nomad-login = "ssh shaiikura@10.7.0.4";
+    reuby-login = "ssh shaiikura@10.7.0.5";
 
     #Git related aliases
     ggpur = "ggu";

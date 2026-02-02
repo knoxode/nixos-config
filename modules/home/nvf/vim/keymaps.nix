@@ -24,6 +24,12 @@
           desc = "Clear search highlights";
         }
         {
+          key = "<leader>nb";
+          mode = ["n"];
+          action = ":Navbuddy<CR>";
+          desc = "Open Navbuddy";
+        }
+        {
           key = "<leader>ff";
           mode = ["n"];
           action = "<cmd>Telescope find_files<cr>";

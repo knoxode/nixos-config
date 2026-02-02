@@ -12,7 +12,7 @@ in {
       ./bluetooth.nix
       ./customOptions
       ./customPackages
-      ./flatpak.nix
+      # ./flatpak.nix
       ./greetd.nix
       ./gpu_symlink.nix
       ./i2c.nix
