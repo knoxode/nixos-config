@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./displayHotplugMonitor
     ./hyprland
     ./noctalia
     ./nvf
@@ -17,6 +18,7 @@
     ./rofi.nix
     ./shellAliases.nix
     ./stylix.nix
+    ./systemd.nix
     #./television.nix
     ./vscode.nix
     ./waypaper.nix

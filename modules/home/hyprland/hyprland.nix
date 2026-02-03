@@ -14,20 +14,6 @@
     forGaming
     ;
 
-  # Use dev Hyprland only on desktops
-  startMonitorScript =
-    if hostType == "Laptop"
-    then "bash ~/.config/hypr/startupscripts/start_monitor.sh"
-    else "";
-  handleMonitorConnectScript =
-    if hostType == "Laptop"
-    then "bash ~/.config/hypr/startupscripts/handle_monitor_connect.sh"
-    else "";
-  handleMonitorDisconnectScript =
-    if hostType == "Laptop"
-    then "bash ~/.config/hypr/startupscripts/handle_monitor_disconnect.sh"
-    else "";
-
   steamExecForGameComputers =
     if forGaming
     then "steam -silent"
@@ -76,24 +62,13 @@ in {
     settings = {
       exec-once =
         [
-          #"hyprpanel"
-          #"~/.config/waypaper/autopicker.sh"
           "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "systemctl --user start hyprpolkitagent"
           "sleep 1; pypr &"
-          # "[workspace special:outlook silent] firefox -P outlook -no-remote -new-instance https://outlook.office.com/mail/ https://unioxfordnexus-my.sharepoint.com/my"
-          startMonitorScript
-          handleMonitorConnectScript
-          handleMonitorDisconnectScript
           steamExecForGameComputers
         ]
         ++ userDependentExecOnce;
-      execr = [
-        startMonitorScript
-        handleMonitorConnectScript
-        handleMonitorDisconnectScript
-      ];
       input = {
         kb_layout = "${keyboardLayout}";
         kb_options = [
@@ -179,8 +154,8 @@ in {
         sync_gsettings_theme = true;
         no_hardware_cursors = 2; # change to 1 if want to disable
         enable_hyprcursor = false;
-        warp_on_change_workspace = 2;
-        no_warps = true;
+        warp_on_change_workspace = 1;
+        no_warps = false;
       };
 
       render = {

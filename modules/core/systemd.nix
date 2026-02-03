@@ -1,17 +1,29 @@
-{ host, ... }:
-let
+{host, ...}: let
   inherit (import ../../hosts/${host}/variables.nix) hostType;
-in
-{
-  systemd.services.nvidia_oc = if hostType == "Desktop" then {
-    description = "NVIDIA Overclocking Service";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
+in {
+  systemd.services = {
+    nvidia_oc =
+      if hostType == "Desktop"
+      then {
+        description = "NVIDIA Overclocking Service";
+        after = ["network.target"];
+        wantedBy = ["multi-user.target"];
 
-    serviceConfig = {
-      ExecStart = "/run/current-system/sw/bin/nvidia_oc set --index 0 --power-limit 373000 --freq-offset 160 --mem-offset 1000 --min-clock 0 --max-clock 2075";
-      User = "root";
-      Restart = "on-failure";
+        serviceConfig = {
+          ExecStart = "/run/current-system/sw/bin/nvidia_oc set --index 0 --power-limit 373000 --freq-offset 160 --mem-offset 1000 --min-clock 0 --max-clock 2075";
+          User = "root";
+          Restart = "on-failure";
+        };
+      }
+      else {};
+    display_hotplug_monitor = {
+      description = "A self-made display hotplugging monitor script";
+      after = ["hyprland-session.target"];
+      serviceConfig = {
+        ExecStart = "";
+        User = "";
+        Restart = "on-failure";
+      };
     };
-  } else {};
+  };
 }

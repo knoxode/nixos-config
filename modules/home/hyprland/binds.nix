@@ -47,16 +47,14 @@ in {
     bind =
       [
         "SUPER, Q, killactive,"
-        #"SUPER, O, overview:toggle, all"
         "SUPER, E, exec, ${fileManager}"
         "SUPER, R, exec, sleep 0.1 && noctalia-shell ipc call launcher toggle"
         "SUPER, W, exec, ${browser}"
-        # "SUPER,Y,exec,kitty -e yazi"
         "${terminalBind}"
-        "SUPER, left, movefocus, l"
-        "SUPER, right, movefocus, r"
-        "SUPER, up, movefocus, u"
-        "SUPER, down, movefocus, d"
+        "SUPER, h, movefocus, l"
+        "SUPER, j, movefocus, d"
+        "SUPER, k, movefocus, u"
+        "SUPER, l, movefocus, r"
         "SUPER ALT, Space, togglefloating,"
         "SUPER, F, fullscreen, 0"
         "SUPER,T,exec,pypr toggle term"
@@ -68,7 +66,6 @@ in {
         "SUPER+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | swappy -f - # Screen snip >> edit"
         "Ctrl+SUPER+Shift,S,exec,grim -g \"$(slurp $SLURP_ARGS)\" \"tmp.png\" && tesseract \"tmp.png\" - | wl-copy && rm \"tmp.png\" # [hidden]"
         "Ctrl+Alt, Delete, exec, noctalia-shell ipc call sessionMenu toggle"
-        # "ALT, X, togglespecialworkspace, outlook"
       ]
       ++ switchWorkspaceBinds
       ++ moveWorkspaceBinds;
