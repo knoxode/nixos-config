@@ -28,7 +28,7 @@ in {
       ./rstudio.nix
       ./security.nix
       ./sops.nix
-      ./spicetify.nix
+      # ./spicetify.nix
       ./stylix.nix
       ./syncthing.nix
       ./system.nix

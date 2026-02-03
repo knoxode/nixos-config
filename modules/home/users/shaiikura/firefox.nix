@@ -6,7 +6,7 @@
   # Enable Firefox
   programs.firefox = {
     enable = true;
-    package = inputs.firefox.packages.${pkgs.system}.firefox-nightly-bin;
+    package = inputs.firefox.packages.${pkgs.stdenv.hostPlatform.system}.firefox-nightly-bin;
 
     # Define a profile named 'shaiikura' with extensions
     profiles = {

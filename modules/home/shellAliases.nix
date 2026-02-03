@@ -6,7 +6,9 @@
   shellAliases = {
     c = "clear";
     fr = "nh os switch --hostname ${host}";
+    fraow = "nh os switch --hostname ${host} -- --option abort-on-warn true --show-trace";
     fu = "nh os switch --hostname ${host} --update";
+    fuaow = "nh os switch --hostname ${host} --update -- --option abort-on-warn true --show-trace";
     frb = "nh os boot --hostname ${host}";
     fub = "nh os boot --hostname ${host} --update";
     nhc = "nh clean all";
