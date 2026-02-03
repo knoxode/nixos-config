@@ -36,7 +36,10 @@
         enableTreesitter = true;
         enableExtraDiagnostics = true;
         bash.enable = true;
-        nix.enable = true;
+        nix = {
+          enable = true;
+          lsp.servers = ["nixd"];
+        };
         clang.enable = true;
         zig.enable = true;
         python.enable = true;

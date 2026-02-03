@@ -21,11 +21,11 @@ in {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
     hyprland.enable = true;
-    starship.enable = true;
   };
 
   fonts.packages = with pkgs; [
     #Fonts
+    corefonts
     gelasio
     nerd-fonts.jetbrains-mono
     nerd-fonts.droid-sans-mono

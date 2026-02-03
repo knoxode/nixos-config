@@ -9,6 +9,7 @@
     fu = "nh os switch --hostname ${host} --update";
     frb = "nh os boot --hostname ${host}";
     fub = "nh os boot --hostname ${host} --update";
+    nhc = "nh clean all";
     ncg = "nix-collect-garbage --delete-old && sudo nix-collect-garbage -d && sudo /run/current-system/bin/switch-to-configuration boot";
     ls = "ls --color=auto";
     ll = "ls -la";

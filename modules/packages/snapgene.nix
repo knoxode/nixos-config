@@ -12,22 +12,24 @@
   openssl_1_1,
   dbus,
 }: let
-  #To obtain this string, obtain via nix-prefetch-url followed by the URL in quotes
+  pname = "SnapGene";
+  version = "8.2.2";
+  versionList = lib.versions.splitVersion version;
+  major = builtins.elemAt versionList 0;
+  majorMinor = lib.versions.majorMinor version;
+  # patch = builtins.elemAt versionList 2;
+
+  url = "https://cdn.snapgene.com/downloads/SnapGene/${major}.x/${majorMinor}/${version}/snapgene_${version}_linux.deb";
+  name = builtins.concatStringsSep "-" [pname version];
   sha256 =
     {
-      "x86_64-linux" = "1waf4czq0ck104w3w2y0gargkra6iwfy1jir0y9riha6pg1zsryb";
+      "x86_64-linux" = "1nfw1mrgmi4a95w2qf6c2c0mk8dz6kxlyl44inmzvdd89ybi91wp";
     }."${stdenv.hostPlatform.system}";
 in
-  stdenv.mkDerivation rec {
-    pname = "snapgene";
-    version = "8.2.0";
-    versionMajor = "8";
-    versionMiddle = "2";
-    versionMinor = "0";
-
+  stdenv.mkDerivation {
+    inherit name pname version;
     src = fetchurl {
-      url = "https://cdn.snapgene.com/downloads/SnapGene/${versionMajor}.x/${versionMajor}.${versionMiddle}/${version}/snapgene_${version}_linux.deb";
-      inherit sha256;
+      inherit url sha256;
     };
 
     buildInputs = [

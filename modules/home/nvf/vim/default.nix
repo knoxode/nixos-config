@@ -6,6 +6,7 @@
     ./clipboard.nix
     ./dashboard.nix
     ./diagnostics.nix
+    ./extendedNixdOpts.nix
     ./git.nix
     ./harperSpellCheck.nix
     ./keymaps.nix
