@@ -8,7 +8,7 @@
     if hostType == "Desktop"
     then {}
     else {
-      displayHotPlugMonitor = {
+      display_hotplug_monitor = {
         Unit = {
           Description = "A self-made display hotplugging monitor script";
           After = ["hyprland-session.target"];
