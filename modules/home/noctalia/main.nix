@@ -58,6 +58,7 @@ in {
             {
               id = "MediaMini";
               hideWhenIdle = true;
+              maxWidth = true;
             }
           ];
           right =

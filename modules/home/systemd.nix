@@ -1,4 +1,5 @@
 {
+  lib,
   host,
   config,
   ...
@@ -26,4 +27,7 @@
     };
 in {
   systemd.user.services = {} // displayHotPlugMonitor;
+  home.activation.restartDisplayHotplug = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    systemctl --user restart display_hotplug_monitor.service || true
+  '';
 }
