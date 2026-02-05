@@ -1,30 +1,67 @@
 #!/usr/bin/env bash
-#Move workspaces 1-5 to eDP-1
-handle_keybinds_single_mon() {
-  # Resets silent move-to-workspace binds to single monitor
-  for i in $(seq 1 5); do
-    hyprctl keyword unbind "SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
-    echo "[LOG - SINGLE MON KEYBIND HELPER]: UNSET 2_workspace.sh keybindings."
-    hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
-  done
+set +e
 
-  for i in $(seq 6 10); do
-    hyprctl dispatch moveworkspacetomonitor "$i" "eDP-1"
-  done
-  echo "[LOG - SINGLE MON HELPER]: SET all workspace ownership to eDP-1."
+# ------------------------------------------------------------------
+# Batch builder helpers
+# ------------------------------------------------------------------
+BATCH_CMDS=""
 
-  for i in $(seq 1 9); do
-    hyprctl keyword bind "SUPER, $i, workspace, $i"
-  done
-  hyprctl keyword bind "SUPER, 0, workspace, 10"
-  echo "[LOG - SINGLE MON HELPER]: SET workspace keybindings to SUPER+X."
+batch() {
+  BATCH_CMDS+="$1;"
 }
 
-# Reset to single monitor configuration
+commit_batch() {
+  [[ -z "$BATCH_CMDS" ]] && return 0
+  hyprctl --batch "$BATCH_CMDS" >/dev/null 2>&1
+  BATCH_CMDS=""
+}
+
+# ------------------------------------------------------------------
+# Single-monitor workspace + keybind handling (batched)
+# ------------------------------------------------------------------
+handle_keybinds_single_mon() {
+  echo "[LOG - SINGLE MON HELPER]: Reconfiguring to single monitor."
+
+  # Ensure a valid focused workspace before any mutation
+  batch "dispatch workspace 1"
+
+  # Move all workspaces to eDP-1
+  for i in $(seq 1 10); do
+    batch "dispatch moveworkspacetomonitor $i eDP-1"
+  done
+
+  # Remove dual-monitor keybinds (exec-based)
+  for i in $(seq 1 5); do
+    batch "keyword unbind SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
+    echo "[LOG - SINGLE MON KEYBIND HELPER]: UNSET 2_workspace.sh keybinding $i."
+  done
+
+  # Restore standard workspace keybinds
+  for i in $(seq 1 9); do
+    batch "keyword bind SUPER,$i,workspace,$i"
+  done
+  batch "keyword bind SUPER,0,workspace,10"
+
+  echo "[LOG - SINGLE MON KEYBIND HELPER]: SET workspace keybindings to SUPER+X."
+
+  # Final focus sanity
+  batch "dispatch workspace 1"
+}
+
+# ------------------------------------------------------------------
+# Entry point
+# ------------------------------------------------------------------
 single_monitor_setup() {
+  BATCH_CMDS=""
+
   handle_keybinds_single_mon
-  # Configure eDP-1 monitor
-  hyprctl keyword monitor eDP-1,preferred,auto,1
-  echo "[LOG - SINGLE MONITOR]: Reset Display Resolution, Placement and Refresh Rate."
-  restart_noctalia_shell
+  echo "[LOG - SINGLE MONITOR]: Set Keybinds for Single Monitor Setup."
+
+  # Configure internal display
+  batch "keyword monitor eDP-1,preferred,auto,1"
+
+  # Apply everything atomically
+  commit_batch
+
+  echo "[LOG - SINGLE MONITOR]: Reset display resolution, placement, and refresh rate."
 }

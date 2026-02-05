@@ -1,5 +1,9 @@
 {...}: {
   home.file = {
+    ".config/monitorHotplug/reconcileMonitors.sh" = {
+      source = ./reconcileMonitors.sh;
+      executable = true;
+    };
     ".config/monitorHotplug/handle_monitor_disconnect.sh" = {
       source = ./handle_monitor_disconnect.sh;
       executable = true;

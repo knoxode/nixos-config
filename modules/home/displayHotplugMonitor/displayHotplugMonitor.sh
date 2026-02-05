@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$HOME"/.config/monitorHotplug/reconcileMonitors.sh
 source "$HOME"/.config/monitorHotplug/handle_monitor_connect.sh
 source "$HOME"/.config/monitorHotplug/handle_monitor_disconnect.sh
 
@@ -30,28 +31,6 @@ restart_noctalia_shell() {
   fi
 }
 
-# Reconcile monitor state based on *current* reality
-reconcile_monitors() {
-  local num_monitors
-  num_monitors=$(hyprctl monitors -j | jq length)
-
-  # If Dual Monitor - then start dual monitor function.
-  if ((num_monitors > 1)); then
-    external_monitor_adapter=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .name' | xargs)
-    external_monitor_model=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .model' | xargs)
-    external_monitor_preferred_mode=$(hyprctl monitors -j | jq -r '.[] | select(.name != "eDP-1") | .availableModes[0]' | xargs)
-    echo "[LOG - EXT. MON. FT. DETECT]: Detected Preferred Mode: ${external_monitor_preferred_mode}."
-    export external_monitor_adapter
-    export external_monitor_model
-    export external_monitor_preferred_mode
-
-    dual_monitor_setup
-  else
-    # Do functions related to single monitor (dynamic, not init)
-    single_monitor_setup
-  fi
-}
-
 debounce() {
   local now_ns
   now_ns=$(date +%s%N)
@@ -73,10 +52,12 @@ handle_monitor_event() {
   case "$event" in
   monitoraddedv2* | monitorremoved*)
     debounce || return 0
-    reconcile_monitors
+    if reconcile_monitors; then
+      restart_noctalia_shell
+    fi
     ;;
   reload* | configreloaded*)
-    echo "[LOG - IPC]: Hyprland reload detected, reconciling state."
+    echo "[LOG - IPC]: Hyprland reload detected; reconciling without restart."
     reconcile_monitors
     ;;
   esac

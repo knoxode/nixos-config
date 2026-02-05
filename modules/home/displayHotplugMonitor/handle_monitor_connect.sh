@@ -1,98 +1,118 @@
 #!/usr/bin/env bash
+set +e
 
-# Function to configure dual-monitor setup
+# ------------------------------------------------------------------
+# Batch builder helpers
+# ------------------------------------------------------------------
+BATCH_CMDS=""
+
+batch() {
+  BATCH_CMDS+="$1;"
+}
+
+commit_batch() {
+  [[ -z "$BATCH_CMDS" ]] && return 0
+  hyprctl --batch "$BATCH_CMDS" >/dev/null 2>&1
+  BATCH_CMDS=""
+}
+
+# ------------------------------------------------------------------
+# Monitor-specific helpers
+# ------------------------------------------------------------------
+prefers_fourkay() {
+  # Expected format: WIDTHxHEIGHT@REFRESH
+  local mode height
+
+  mode="${external_monitor_preferred_mode}"
+
+  height="$(printf '%s\n' "$mode" | cut -d'x' -f2 | cut -d'@' -f1)"
+
+  if [[ -z "$height" || ! "$height" =~ ^[0-9]+$ ]]; then
+    echo "[LOG - PREFERS_4K]: Failed to parse height from mode: $mode"
+    return 1
+  fi
+
+  echo "[LOG - PREFERS_4K]: Detected Resolution is ${height}p."
+  ((height > 1440))
+}
+
 monitor_specific_actions() {
-  helper_function() {
-    echo "[LOG - GENERAL]: ${external_monitor_model} was detected. Configuring dual monitor.."
-    echo "[LOG - GENERAL]: Configuring dual monitor setup...."
+  echo "[LOG - GENERAL]: ${external_monitor_model} was detected. Configuring dual monitor.."
+  echo "[LOG - GENERAL]: Configuring dual monitor setup...."
 
-    # Configure eDP-1 monitor
-    hyprctl keyword monitor eDP-1,preferred,auto-left,1
+  # Always ensure a valid focused workspace before mutating monitors
+  batch "dispatch workspace 1"
 
-  }
-  prefers_fourkay() {
-    # Expected format: WIDTHxHEIGHT@REFRESH
-    # Example: 1920x1080@60.00Hz
-
-    local mode height
-
-    mode="${external_monitor_preferred_mode}"
-
-    # Extract HEIGHT:
-    # 1) cut at 'x' → 1080@60.00Hz
-    # 2) cut at '@' → 1080
-    height="$(printf '%s\n' "$mode" | cut -d'x' -f2 | cut -d'@' -f1)"
-
-    # Defensive check
-    if [[ -z "$height" || ! "$height" =~ ^[0-9]+$ ]]; then
-      echo "[LOG - PREFERS_4K]: Failed to parse height from mode: $mode"
-      return 1
-    fi
-
-    echo "[LOG - PREFERS_4K]: Detected Resolution is ${height}p."
-    if ((height > 1440)); then
-      return 0 # true
-    else
-      return 1 # false
-    fi
-  }
-
+  # Configure external monitor
   if [[ "${external_monitor_model}" == "Monitor TV" ]]; then
-    #Configure SPV monitor
-    hyprctl keyword monitor "${external_monitor_adapter},highres,auto-up,1"
-    helper_function
+    batch "keyword monitor ${external_monitor_adapter},highres,auto-up,1"
 
   elif [[ "${external_monitor_model}" == "DELL P3425WE" ]]; then
+    batch "keyword monitor ${external_monitor_adapter},highrr,auto,1"
 
-    #Configure normal desk monitors
-    hyprctl keyword monitor "${external_monitor_adapter},highrr,auto,1"
-    helper_function
   else
-    #Configure normal desk monitors
     if prefers_fourkay; then
-      hyprctl keyword monitor "${external_monitor_adapter},preferred,auto,1.5"
-      helper_function
+      batch "keyword monitor ${external_monitor_adapter},preferred,auto,1.5"
     else
-      hyprctl keyword monitor "${external_monitor_adapter},preferred,auto,1"
-      helper_function
+      batch "keyword monitor ${external_monitor_adapter},preferred,auto,1"
     fi
   fi
 
+  # Configure internal display
+  batch "keyword monitor eDP-1,preferred,auto-left,1"
 }
 
-# monitor_probe() {
-#
-# }
+# ------------------------------------------------------------------
+# Workspace + keybind handling (batch-safe)
+# ------------------------------------------------------------------
+apply_dual_monitor_keybinds() {
+  # Remove all existing SUPER+number binds (single or dual)
+  for i in $(seq 0 9); do
+    batch "keyword unbind SUPER,$i"
+  done
+
+  # Restore exec-based dual-monitor binds
+  for i in $(seq 1 5); do
+    batch "keyword bind SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
+  done
+}
 
 generic_dual_mon_helper() {
-  # Move workspaces 1-5 to DP-2
+  # Move workspaces 1–5 to external monitor
   for i in $(seq 1 5); do
-    hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor_adapter"
+    batch "dispatch moveworkspacetomonitor $i ${external_monitor_adapter}"
   done
 
-  # Move workspaces 6-10 to eDP-1
+  # Move workspaces 6–10 to internal display
   for i in $(seq 6 10); do
-    hyprctl dispatch moveworkspacetomonitor "$i" eDP-1
+    batch "dispatch moveworkspacetomonitor $i eDP-1"
   done
 
-  #Remove stale keybinds 1-10 that only move to one workspace at a time
-  for i in $(seq 1 9); do
-    hyprctl keyword unbind "SUPER, $i, workspace, $i"
-    echo "[LOG - DUAL MONITOR]: Removed single monitor keybind $i."
-  done
-  hyprctl keyword unbind "SUPER, 0, workspace, 10"
-  echo "[LOG - DUAL MONITOR]: Removed single monitor keybind 10."
+  # Ensure focus ends somewhere sane
+  batch "dispatch workspace 1"
+}
 
-  # Update binds for dual-monitor configuration (moving to both workspace 1 and 6, etc.)
-  for i in $(seq 1 5); do
-    hyprctl keyword bind "SUPER, $i, exec, bash ~/.config/hypr/startupscripts/2_workspace.sh $i"
-    echo "[LOG - DUAL MONITOR]: Added dual-monitor keybind $i."
-  done
+# ------------------------------------------------------------------
+# Entry point
+# ------------------------------------------------------------------
+dual_monitor_topology_setup() {
+  BATCH_CMDS=""
+  monitor_specific_actions
+  echo "[LOG - DUAL MONITOR]: Detected and queued monitor-specific actions."
+  generic_dual_mon_helper
+  echo "[LOG - DUAL MONITOR]: Reset monitor-wise ownership of workspaces."
+  commit_batch
+}
+
+dual_monitor_keybind_setup() {
+  BATCH_CMDS=""
+  apply_dual_monitor_keybinds
+  echo "[LOG - DUAL MONITOR]: Set Keybinds for Dual Monitor setup (2_workspace.sh)."
+  commit_batch
 }
 
 dual_monitor_setup() {
-  monitor_specific_actions
-  # monitor_probe
-  generic_dual_mon_helper
-  restart_noctalia_shell
+  dual_monitor_topology_setup
+  sleep 0.05
+  dual_monitor_keybind_setup
 }
