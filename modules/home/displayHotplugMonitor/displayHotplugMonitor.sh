@@ -75,6 +75,10 @@ handle_monitor_event() {
     debounce || return 0
     reconcile_monitors
     ;;
+  reload* | configreloaded*)
+    echo "[LOG - IPC]: Hyprland reload detected, reconciling state."
+    reconcile_monitors
+    ;;
   esac
 }
 

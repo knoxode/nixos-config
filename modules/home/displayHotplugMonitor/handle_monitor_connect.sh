@@ -60,6 +60,10 @@ monitor_specific_actions() {
 
 }
 
+# monitor_probe() {
+#
+# }
+
 generic_dual_mon_helper() {
   # Move workspaces 1-5 to DP-2
   for i in $(seq 1 5); do
@@ -88,6 +92,7 @@ generic_dual_mon_helper() {
 
 dual_monitor_setup() {
   monitor_specific_actions
+  # monitor_probe
   generic_dual_mon_helper
   restart_noctalia_shell
 }
