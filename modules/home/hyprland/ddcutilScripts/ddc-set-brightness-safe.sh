@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 MAX_WAIT_MS=30000
 INTERVAL_MS=500
@@ -22,15 +22,28 @@ warn() {
 
 wait_for_outputs() {
   local elapsed=0
-  log "Waiting for external outputs to become available"
+  local stable_ms=0
+  local last_state=""
+  local curr_state=""
+
+  log "Waiting for Hyprland outputs to stabilise"
 
   while ((elapsed < MAX_WAIT_MS)); do
-    # Condition 1: Hyprland IPC is alive and shows monitors
-    if hyprctl monitors -j >/dev/null 2>&1; then
-      # Condition 2: At least one non-eDP output exists
-      if hyprctl monitors -j 2>/dev/null | grep -q '"name": "[^"]*-'; then
-        log "Hyprland outputs detected"
-        return 0
+    curr_state="$(hyprctl monitors -j 2>/dev/null || true)"
+
+    if [[ -n "$curr_state" ]]; then
+      # Require at least one non-eDP output
+      if echo "$curr_state" | grep -q '"name": "[^"]*-'; then
+        if [[ "$curr_state" == "$last_state" ]]; then
+          ((stable_ms += INTERVAL_MS))
+          if ((stable_ms >= 2000)); then
+            log "Hyprland outputs stable"
+            return 0
+          fi
+        else
+          stable_ms=0
+          last_state="$curr_state"
+        fi
       fi
     fi
 
@@ -38,7 +51,7 @@ wait_for_outputs() {
     ((elapsed += INTERVAL_MS))
   done
 
-  log "Outputs not ready, skipping DDC"
+  warn "Outputs never stabilised, skipping DDC"
   return 1
 }
 

@@ -24,7 +24,7 @@
     {
       timeout = shortWait;
       on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # Turn off keyboard backlight.
-      on-resume = "brightnessctl -rd rgb:kbd_backlight"; # Turn on keyboard backlight.
+      on-resume = "brightnessctl -l | grep -q rgb:kbd_backlight && brightnessctl -rd rgb:kbd_backlight"; # Turn on keyboard backlight. Now GUARDED if keyboard backlight doesn't exist
     }
     {
       timeout = shortWait;
