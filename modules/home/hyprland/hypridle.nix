@@ -1,4 +1,5 @@
-{...}: let
+{host, ...}: let
+  inherit (import ./../../../hosts/${host}/variables.nix) hostType;
   ddcScriptPath = ".local/bin/ddc-set-brightness-safe.sh";
   #Setting noctalia lock screen
   lock_cmd = "noctalia-shell ipc call lockScreen lock";
@@ -38,12 +39,15 @@
     }
   ];
 
-  longWaitListeners = [
-    {
-      timeout = longWait;
-      on-timeout = suspend_cmd;
-    }
-  ];
+  longWaitListeners =
+    if hostType != "Desktop"
+    then [
+      {
+        timeout = longWait;
+        on-timeout = suspend_cmd;
+      }
+    ]
+    else [];
 in {
   home.file."${ddcScriptPath}" = {
     source = ./ddcutilScripts/ddc-set-brightness-safe.sh;
