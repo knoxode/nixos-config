@@ -73,7 +73,7 @@ apply_dual_monitor_keybinds() {
 
   # Restore exec-based dual-monitor binds
   for i in $(seq 1 5); do
-    batch "keyword bind SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
+    batch "keyword bind SUPER,$i,exec,bash $HOME/.config/hypr/startupscripts/2_workspace.sh $i"
   done
 }
 

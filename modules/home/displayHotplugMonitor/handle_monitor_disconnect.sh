@@ -32,7 +32,7 @@ handle_keybinds_single_mon() {
 
   # Remove dual-monitor keybinds (exec-based)
   for i in $(seq 1 5); do
-    batch "keyword unbind SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
+    batch "keyword unbind SUPER,$i,exec,bash $HOME/.config/hypr/startupscripts/2_workspace.sh $i"
     echo "[LOG - SINGLE MON KEYBIND HELPER]: UNSET 2_workspace.sh keybinding $i."
   done
 

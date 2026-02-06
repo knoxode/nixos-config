@@ -46,12 +46,15 @@ reconcile_monitors() {
   fi
   export RESTART_NOCTALIA
 
-  monitors_changed="No"
-  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
+  if [[ -z "$prev_count" ]]; then
+    monitors_changed="Baseline"
+  elif [[ "$prev_count" != "$curr_count" ]]; then
     monitors_changed="Yes"
+  else
+    monitors_changed="No"
   fi
 
-  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Has Monitor Count Changed? $monitors_changed"
+  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Monitor State = $monitors_changed (prev=${prev_count:-Not known}, curr=$curr_count)"
   echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Noctalia restart decision = $FRIENDLY_NOC_OUT"
 
   # ---------------------------------------------------------------------------
