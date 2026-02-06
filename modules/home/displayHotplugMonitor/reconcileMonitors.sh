@@ -40,10 +40,18 @@ reconcile_monitors() {
 
   RESTART_NOCTALIA=0
   FRIENDLY_NOC_OUT="Not Restarting."
-  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
-    FRIENDLY_NOC_OUT="Restarting."
+
+  # No previous state → force restart
+  if [[ -z "$prev_count" ]]; then
+    FRIENDLY_NOC_OUT="Restarting (no previous monitor state)."
+    RESTART_NOCTALIA=1
+
+  # Previous state exists, but topology changed → restart
+  elif [[ "$prev_count" != "$curr_count" ]]; then
+    FRIENDLY_NOC_OUT="Restarting (monitor count changed: $prev_count → $curr_count)."
     RESTART_NOCTALIA=1
   fi
+
   export RESTART_NOCTALIA
 
   if [[ -z "$prev_count" ]]; then
@@ -135,26 +143,29 @@ reconcile_monitors() {
     fi
 
   else
-    # Dual monitor
     if ((last_ws >= 1 && last_ws <= 5)); then
       paired_ws=$((last_ws + 5))
 
+      hyprctl dispatch focusmonitor "$EXTERNAL_MONITOR"
       workspace_exists "$last_ws" &&
-        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$last_ws"
 
+      hyprctl dispatch focusmonitor "$INTERNAL_MONITOR"
       workspace_exists "$paired_ws" &&
-        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$paired_ws"
 
       echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($last_ws,$paired_ws)"
 
     elif ((last_ws >= 6 && last_ws <= 10)); then
       paired_ws=$((last_ws - 5))
 
+      hyprctl dispatch focusmonitor "$EXTERNAL_MONITOR"
       workspace_exists "$paired_ws" &&
-        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$paired_ws"
 
+      hyprctl dispatch focusmonitor "$INTERNAL_MONITOR"
       workspace_exists "$last_ws" &&
-        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$last_ws"
 
       echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($paired_ws,$last_ws)"
 

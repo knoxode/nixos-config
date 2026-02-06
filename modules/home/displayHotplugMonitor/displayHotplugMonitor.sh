@@ -72,6 +72,7 @@ handle_monitor_event() {
 
   case "$event" in
   monitoraddedv2* | monitorremoved*)
+    echo "[LOG - IPC]: IPC Event Detected: $event"
     debounce || return 0
 
     reconcile_monitors
@@ -134,6 +135,9 @@ initJob() {
   export USE_CACHED_WORKSPACE
 
   reconcile_monitors
+  if [[ "${RESTART_NOCTALIA:-0}" -eq 1 ]]; then
+    restart_noctalia_shell
+  fi
   persist_state
 }
 
