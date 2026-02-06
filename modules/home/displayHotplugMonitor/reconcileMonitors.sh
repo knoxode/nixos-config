@@ -1,225 +1,174 @@
 #!/usr/bin/env bash
 set +e
-LAST_TOPOLOGY=""
+external_monitor_adapter=""
+external_monitor_model=""
+external_monitor_preferred_mode=""
 
-current_monitor_topology() {
-  hyprctl monitors -j |
-    jq -r '.[] | "\(.name)|\(.model)"' |
-    sort |
-    tr '\n' ';'
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+
+current_monitor_count() {
+  hyprctl monitors -j | jq length
 }
 
 snapshot_workspaces() {
+  # Only real workspaces (exclude scratchpads / special)
   hyprctl workspaces -j |
     jq -r '.[] | select(.id > 0) | "\(.id) \(.monitor)"'
 }
 
-wait_for_transient_workspaces() {
-  local tries=20
-  local delay=0.05
-
-  while ((tries-- > 0)); do
-    if hyprctl workspaces -j |
-      jq -e '.[].id | select(. > 10)' >/dev/null; then
-      return 0
-    fi
-    sleep "$delay"
-  done
-
-  return 1
-}
+# -----------------------------------------------------------------------------
+# Main reconcile function
+# -----------------------------------------------------------------------------
 
 reconcile_monitors() {
-  local topology topology_changed=0
+  local prev_count curr_count
   local last_ws
-  local pre_ws post_ws
   local monitor_count
+  local post_ws_json
 
-  # ------------------------------------------------------------------
-  # Phase 0 — snapshot monitor topology (restart decision)
-  # ------------------------------------------------------------------
-  topology=$(current_monitor_topology)
+  # ---------------------------------------------------------------------------
+  # Phase 0 — restart decision (monitor COUNT only)
+  # ---------------------------------------------------------------------------
 
-  if [[ "$topology" != "$LAST_TOPOLOGY" ]]; then
-    topology_changed=1
-    LAST_TOPOLOGY="$topology"
+  prev_count="${LAST_MONITOR_COUNT:-}"
+  curr_count="$(current_monitor_count)"
+
+  LAST_MONITOR_COUNT="$curr_count"
+  export LAST_MONITOR_COUNT
+
+  RESTART_NOCTALIA=0
+  FRIENDLY_NOC_OUT="Not Restarting."
+  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
+    FRIENDLY_NOC_OUT="Restarting."
+    RESTART_NOCTALIA=1
+  fi
+  export RESTART_NOCTALIA
+
+  monitors_changed="No"
+  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
+    monitors_changed="Yes"
   fi
 
-  # ------------------------------------------------------------------
-  # Phase 1 — snapshot workspace state + intent
-  # ------------------------------------------------------------------
+  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Has Monitor Count Changed? $monitors_changed"
+  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Noctalia restart decision = $FRIENDLY_NOC_OUT"
 
-  # Workspace → monitor mapping before changes
-  pre_ws="$(snapshot_workspaces)"
+  # ---------------------------------------------------------------------------
+  # Phase 1 — snapshot intent
+  # ---------------------------------------------------------------------------
 
-  # Last focused workspace (single integer)
-  read -r last_ws < <(
-    hyprctl clients -j |
-      jq -r '
-        sort_by(.focusHistoryID)
-        | reverse
-        | map(select(.workspace.id > 0))
-        | .[0].workspace.id // 1
-      '
-  )
+  if [[ "${USE_CACHED_WORKSPACE:-0}" -eq 1 &&
+    -n "${LAST_WORKSPACE:-}" ]]; then
+    last_ws="$LAST_WORKSPACE"
+    echo "[LOG - RECONCILE MONITORS] PRE-CONFIG-SET : USING CACHED WORKSPACE=$last_ws"
+
+    USE_CACHED_WORKSPACE=0
+    LAST_WORKSPACE=""
+    export USE_CACHED_WORKSPACE
+    export LAST_WORKSPACE
+  else
+    read -r last_ws < <(
+      hyprctl activeworkspace -j |
+        jq -r '.id // 1'
+    )
+    echo "[LOG - RECONCILE MONITORS] PRE-CONFIG-SET : USING LIVE WORKSPACE=$last_ws"
+  fi
 
   if ((last_ws <= 0)); then
-    echo "[WARN]: Ignoring invalid last_ws=$last_ws; defaulting to workspace 1"
     last_ws=1
   fi
 
-  echo "[LOG - LAST WS. CHECK. ]: Detected last workspace = $last_ws."
+  # ---------------------------------------------------------------------------
+  # Phase 2 — apply topology
+  # ---------------------------------------------------------------------------
 
-  # ------------------------------------------------------------------
-  # Phase 2 — apply topology (batched elsewhere)
-  # ------------------------------------------------------------------
-  monitor_count=$(hyprctl monitors -j | jq length)
+  monitor_count="$curr_count"
 
   if ((monitor_count > 1)); then
     external_monitor_adapter=$(
       hyprctl monitors -j |
-        jq -r '.[] | select(.name != "eDP-1") | .name' | xargs
+        jq -r '.[] | select(.name != "eDP-1") | .name'
     )
 
     external_monitor_model=$(
       hyprctl monitors -j |
-        jq -r '.[] | select(.name != "eDP-1") | .model' | xargs
+        jq -r '.[] | select(.name != "eDP-1") | .model'
     )
 
     external_monitor_preferred_mode=$(
       hyprctl monitors -j |
-        jq -r '.[] | select(.name != "eDP-1") | .availableModes[0]' | xargs
+        jq -r '.[] | select(.name != "eDP-1") | .availableModes[0]'
     )
 
     export external_monitor_adapter
     export external_monitor_model
     export external_monitor_preferred_mode
 
-    echo "[LOG - DUAL MONITOR]: Dual Monitor Adapter Detected. $external_monitor_adapter."
-    echo "[LOG - DUAL MONITOR]: Dual Monitor Model Detected. $external_monitor_model."
-    echo "[LOG - DUAL MONITOR]: Dual Monitor Preferred Mode Detected: $external_monitor_preferred_mode."
-
-    echo "[LOG - DUAL MONITOR]: Dual Monitor Detected. Beginning Configuration."
+    echo "[LOG - RECONCILE MONITORS] TOPOLOGY : DUAL MONITOR - ADAPTER = $external_monitor_adapter"
     dual_monitor_setup
   else
-    echo "[LOG - SINGLE MONITOR]: Single Monitor Detected. Beginning Configuration."
+    echo "[LOG - RECONCILE MONITORS] TOPOLOGY : SINGLE MONITOR"
     single_monitor_setup
   fi
 
-  # ------------------------------------------------------------------
-  # Phase 3 — re-snapshot workspaces after mutation
-  # ------------------------------------------------------------------
-  if ! wait_for_transient_workspaces; then
-    echo "[WARN]: No transient workspaces detected; skipping remediation"
-  fi
+  # ---------------------------------------------------------------------------
+  # Phase 3 — restore focus (dual-monitor aware, no remediation)
+  # ---------------------------------------------------------------------------
 
-  # post_ws_raw is a newline list "id monitor"
-  post_ws_raw="$(snapshot_workspaces)"
-
-  # Build quick lookup lists (IDs only)
-  pre_ids=$(printf '%s\n' "$pre_ws" | awk '$1 > 0 {print $1}' | sort -n | tr '\n' ' ')
-  post_ids=$(printf '%s\n' "$post_ws_raw" | awk '$1 > 0 {print $1}' | sort -n | tr '\n' ' ')
-  echo "[LOG]: Detected WS' before applied changes: $pre_ids"
-  echo "[LOG]: Detected WS' before applied changes: $post_ids"
-
-  # Compute new ids: present in post but not in pre
-  new_ids=()
-  for id in $post_ids; do
-    if ! grep -qw -- "$id" <<<"$pre_ids"; then
-      new_ids+=("$id")
-    fi
-  done
-
-  if ((${#new_ids[@]} > 0)); then
-    echo "[INFO]: Detected new/transient workspace IDs: ${new_ids[*]} — attempting remediation"
-
-    remap_canonical_workspaces() {
-      # Put canonical mapping back:
-      # - 1..5 -> external monitor (your earlier scheme)
-      # - 6..10 -> eDP-1
-      # Adjust if your intended pairing differs.
-      for i in $(seq 1 5); do
-        hyprctl dispatch moveworkspacetomonitor "$i" "$external_monitor_adapter" >/dev/null 2>&1 || true
-      done
-      for i in $(seq 6 10); do
-        hyprctl dispatch moveworkspacetomonitor "$i" "eDP-1" >/dev/null 2>&1 || true
-      done
-
-      # Ensure keybinds are consistent (optional: call your helper that sets binds)
-      # generic_dual_mon_helper  # <-- if you want the helper to reapply binds
-
-      echo "[INFO]: Canonical workspaces 1-10 remapped to expected monitors."
-    }
-
-    remap_canonical_workspaces
-
-    # Re-snapshot after remediation (best-effort)
-    post_ws_raw="$(snapshot_workspaces)"
-    echo "[INFO]: Workspace layout following remediation: $post_ws_raw"
-  fi
-
-  # Create post_ws JSON object to use with workspace_exists()
-  post_ws="$(hyprctl workspaces -j)"
+  post_ws_json="$(hyprctl workspaces -j)"
   workspace_exists() {
-    jq -e ".[] | select(.id == $1)" <<<"$post_ws" >/dev/null
+    jq -e ".[] | select(.id == $1)" <<<"$post_ws_json" >/dev/null
   }
 
-  # ------------------------------------------------------------------
-  # Phase 4 — restore focus & enforce paired workspace layout
-  # ------------------------------------------------------------------
-
-  monitor_count=$(hyprctl monitors -j | jq length)
-
   if ((monitor_count == 1)); then
-    echo "[LOG - SINGLE MONITOR]: Attempting to restore focus to workspace $last_ws on eDP-1."
-
+    # Single monitor
     if workspace_exists "$last_ws"; then
-      hyprctl dispatch workspace "$last_ws"
-      echo "[LOG - SINGLE MONITOR]: Focus restored to workspace $last_ws on eDP-1."
+      hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+      echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED SINGLE WORKSPACE=$last_ws"
     else
-      hyprctl dispatch workspace 1
-      echo "[LOG - SINGLE MONITOR]: Workspace $last_ws missing; fell back to workspace 1 on eDP-1."
+      hyprctl dispatch workspace 1 >/dev/null 2>&1
+      echo "[LOG - RECONCILE MONITORS] FOCUS : FALLBACK SINGLE WORKSPACE=1"
     fi
 
   else
-    # Dual monitor: restore focus and ensure paired workspace exists
-
+    # Dual monitor
     if ((last_ws >= 1 && last_ws <= 5)); then
       paired_ws=$((last_ws + 5))
 
-      echo "[LOG - DUAL MONITOR]: Restoring focus to workspace $last_ws on external monitor."
-      hyprctl dispatch workspace "$last_ws"
+      workspace_exists "$last_ws" &&
+        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
 
-      echo "[LOG - DUAL MONITOR]: Ensuring paired workspace $paired_ws exists on eDP-1."
-      if workspace_exists "$paired_ws"; then
-        echo "[LOG - DUAL MONITOR]: Paired workspace $paired_ws already present on eDP-1."
-      else
-        hyprctl dispatch moveworkspacetomonitor "$paired_ws" eDP-1
-        echo "[LOG - DUAL MONITOR]: Paired workspace $paired_ws moved to eDP-1."
-      fi
+      workspace_exists "$paired_ws" &&
+        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
+
+      echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($last_ws,$paired_ws)"
 
     elif ((last_ws >= 6 && last_ws <= 10)); then
       paired_ws=$((last_ws - 5))
 
-      echo "[LOG - DUAL MONITOR]: Restoring focus to workspace $last_ws on eDP-1."
-      hyprctl dispatch workspace "$last_ws"
+      workspace_exists "$paired_ws" &&
+        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
 
-      echo "[LOG - DUAL MONITOR]: Ensuring paired workspace $paired_ws exists on $external_monitor_adapter."
-      if workspace_exists "$paired_ws"; then
-        echo "[LOG - DUAL MONITOR]: Paired workspace $paired_ws already present on $external_monitor_adapter."
-      else
-        hyprctl dispatch moveworkspacetomonitor "$paired_ws" "$external_monitor_adapter"
-        echo "[LOG - DUAL MONITOR]: Paired workspace $paired_ws moved to $external_monitor_adapter."
-      fi
+      workspace_exists "$last_ws" &&
+        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+
+      echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($paired_ws,$last_ws)"
 
     else
-      hyprctl dispatch workspace 1
-      echo "[LOG - DUAL MONITOR]: FALLBACK: Invalid last_ws=$last_ws; focused workspace 1."
+      hyprctl dispatch workspace 1 >/dev/null 2>&1
+      echo "[LOG - RECONCILE MONITORS] FOCUS : FALLBACK DUAL WORKSPACE=1 INVALID_LAST_WS=$last_ws"
     fi
   fi
 
-  # ------------------------------------------------------------------
-  # Phase 5 — return topology change status
-  # ------------------------------------------------------------------
-  return "$topology_changed"
+  # ---------------------------------------------------------------------------
+  # Phase 4 — persist focus intent
+  # ---------------------------------------------------------------------------
+
+  LAST_WORKSPACE="$last_ws"
+  export LAST_WORKSPACE
+
+  echo "[LOG - RECONCILE MONITORS] POST-CONFIG-SET : Persisting Workspace = $LAST_WORKSPACE"
+
+  return 0
 }
