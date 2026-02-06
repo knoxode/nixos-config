@@ -20,10 +20,6 @@ NOCTALIA_RESTART_LOCK="$XDG_RUNTIME_DIR/noctalia-shell-restarting.lock"
 # Helpers
 # -----------------------------------------------------------------------------
 
-current_boot_id() {
-  cat /proc/sys/kernel/random/boot_id
-}
-
 restart_noctalia_shell() {
   [[ -e "$NOCTALIA_RESTART_LOCK" ]] && return 0
 
@@ -54,7 +50,6 @@ debounce() {
 
 persist_state() {
   {
-    echo "BOOT_ID=$(current_boot_id)"
     echo "MONITOR_COUNT=$LAST_MONITOR_COUNT"
     echo "LAST_WORKSPACE=$LAST_WORKSPACE"
     echo "INVOCATION_ID_CACHED=${INVOCATION_ID:-}"
@@ -97,8 +92,7 @@ handle_monitor_event() {
 # -----------------------------------------------------------------------------
 
 initJob() {
-  local current_boot current_invocation
-  current_boot="$(current_boot_id)"
+  local current_invocation
   current_invocation="${INVOCATION_ID:-}"
 
   LAST_MONITOR_COUNT=""
@@ -109,24 +103,20 @@ initJob() {
     # shellcheck disable=SC1090
     source "$STATE_FILE"
 
-    if [[ "${BOOT_ID:-}" == "$current_boot" ]]; then
-      LAST_MONITOR_COUNT="${MONITOR_COUNT:-}"
+    LAST_MONITOR_COUNT="${MONITOR_COUNT:-}"
 
-      if [[ -n "${INVOCATION_ID_CACHED:-}" &&
-        "${INVOCATION_ID_CACHED}" != "$current_invocation" ]]; then
-        # This is a restart, not a fresh start
-        USE_CACHED_WORKSPACE=1
-        LAST_WORKSPACE="${LAST_WORKSPACE:-}"
-        echo "[LOG - INIT] SERVICE RESTART DETECTED — USING CACHED WORKSPACE=$LAST_WORKSPACE"
-      else
-        echo "[LOG - INIT] FRESH SERVICE START — IGNORING CACHED WORKSPACE"
-        LAST_WORKSPACE=""
-      fi
+    if [[ -n "${INVOCATION_ID_CACHED:-}" &&
+      "${INVOCATION_ID_CACHED}" != "$current_invocation" ]]; then
+      # systemd restarted the service within the same session
+      USE_CACHED_WORKSPACE=1
+      LAST_WORKSPACE="${LAST_WORKSPACE:-}"
+      echo "[LOG - INIT] SERVICE RESTART DETECTED — USING CACHED WORKSPACE=$LAST_WORKSPACE"
     else
-      echo "[LOG - INIT] BOOT CHANGED — IGNORING ALL CACHE"
+      echo "[LOG - INIT] FRESH SERVICE START — IGNORING CACHED WORKSPACE"
+      LAST_WORKSPACE=""
     fi
   else
-    echo "[LOG - INIT] NO CACHE FOUND"
+    echo "[LOG - INIT] NO RUNTIME STATE FOUND"
   fi
 
   export LAST_MONITOR_COUNT
