@@ -5,7 +5,6 @@ set +e
 # Globals / constants
 # ================================================================
 INTERNAL_MONITOR="eDP-1"
-EXTERNAL_MONITOR="${external_monitor_adapter}"
 BATCH_CMDS=""
 
 log() {
@@ -42,16 +41,16 @@ configure_monitors() {
   log "Configuring monitor layout for model: ${external_monitor_model}"
   case "${external_monitor_model}" in
   "Monitor TV")
-    batch "keyword monitor ${EXTERNAL_MONITOR},highres,auto-up,1"
+    batch "keyword monitor ${external_monitor_adapter},highres,auto-up,1"
     ;;
   "DELL P3425WE")
-    batch "keyword monitor ${EXTERNAL_MONITOR},highrr,auto,1"
+    batch "keyword monitor ${external_monitor_adapter},highrr,auto,1"
     ;;
   *)
     if prefers_fourkay; then
-      batch "keyword monitor ${EXTERNAL_MONITOR},preferred,auto,1.5"
+      batch "keyword monitor ${external_monitor_adapter},preferred,auto,1.5"
     else
-      batch "keyword monitor ${EXTERNAL_MONITOR},preferred,auto,1"
+      batch "keyword monitor ${external_monitor_adapter},preferred,auto,1"
     fi
     ;;
   esac
@@ -66,7 +65,7 @@ move_workspaces_dual() {
   log "Assigning workspaces to monitors"
   # Move workspaces 1–5 to external monitor
   for i in $(seq 1 5); do
-    batch "dispatch moveworkspacetomonitor $i ${EXTERNAL_MONITOR}"
+    batch "dispatch moveworkspacetomonitor $i ${external_monitor_adapter}"
   done
 
   # Move workspaces 6–10 to internal display

@@ -73,12 +73,11 @@ handle_monitor_event() {
   case "$event" in
   monitoraddedv2* | monitorremoved*)
     echo "[LOG - IPC]: IPC Event Detected: $event"
-    debounce || return 0
 
     reconcile_monitors
     echo "[LOG - NOCTALIA]: Restart decision = ${RESTART_NOCTALIA:-0}"
 
-    if [[ "${RESTART_NOCTALIA:-0}" -eq 1 ]]; then
+    if debounce && [[ "${RESTART_NOCTALIA:-0}" -eq 1 ]]; then
       restart_noctalia_shell
     fi
 
@@ -149,8 +148,10 @@ hyprland_monitor_event_listener() {
   while true; do
     socat -u UNIX-CONNECT:"$EVENT_SOCKET" - |
       while IFS= read -r event; do
-        handle_monitor_event "$event"
-      done || true
+        if ! handle_monitor_event "$event"; then
+          echo "[ERROR] Failed to handle event: $event" >&2
+        fi
+      done
 
     echo "[LOG - IPC]: HYPR IPC DISCONNECTED, RECONNECTING..."
     sleep 1

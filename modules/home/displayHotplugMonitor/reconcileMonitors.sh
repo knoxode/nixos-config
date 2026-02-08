@@ -3,6 +3,7 @@ set +e
 external_monitor_adapter=""
 external_monitor_model=""
 external_monitor_preferred_mode=""
+INTERNAL_MONITOR="eDP-1"
 
 # -----------------------------------------------------------------------------
 # Helpers
@@ -146,7 +147,7 @@ reconcile_monitors() {
     if ((last_ws >= 1 && last_ws <= 5)); then
       paired_ws=$((last_ws + 5))
 
-      hyprctl dispatch focusmonitor "$EXTERNAL_MONITOR"
+      hyprctl dispatch focusmonitor "$external_monitor_adapter"
       workspace_exists "$last_ws" &&
         hyprctl dispatch workspace "$last_ws"
 
@@ -159,7 +160,7 @@ reconcile_monitors() {
     elif ((last_ws >= 6 && last_ws <= 10)); then
       paired_ws=$((last_ws - 5))
 
-      hyprctl dispatch focusmonitor "$EXTERNAL_MONITOR"
+      hyprctl dispatch focusmonitor "$external_monitor_adapter"
       workspace_exists "$paired_ws" &&
         hyprctl dispatch workspace "$paired_ws"
 
