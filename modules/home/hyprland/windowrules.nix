@@ -87,6 +87,7 @@ in {
         "match:initial_title (wants to save), float on"
         "match:initial_title (Open Files), size 70% 60%"
         "match:initial_title (Add Folder to Workspace), size 70% 60%"
+        "match:initial_title (Select what to share), pin on"
 
         "match:tag settings, size 70% 70%"
         "match:class ^([Ff]erdium)$, size 60% 70%"

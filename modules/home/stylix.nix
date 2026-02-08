@@ -1,8 +1,13 @@
-{config, ...}: let
-  mainUserProfile = builtins.toString config.home.username;
+{
+  config,
+  pkgs,
+  ...
+}: let
+  mainUserProfile = toString config.home.username;
 in {
   stylix = {
     enable = true;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     polarity = "dark";
     targets = {
       hyprland.enable = false;
