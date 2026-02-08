@@ -5,7 +5,7 @@
       vimAlias = true;
       viAlias = true;
       withNodeJs = true;
-      lineNumberMode = "number";
+      lineNumberMode = "relNumber";
       enableLuaLoader = true;
       preventJunkFiles = true;
       options = {

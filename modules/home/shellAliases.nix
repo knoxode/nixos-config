@@ -29,6 +29,7 @@
     #Git related aliases
     ggpur = "ggu";
     g = "git";
+    gs = "git status";
     ga = "git add";
     gaa = "git add --all";
     gapa = "git add --patch";
