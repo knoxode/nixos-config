@@ -58,9 +58,9 @@ reconcile_monitors() {
   if [[ -z "$prev_count" ]]; then
     monitors_changed="Baseline"
   elif [[ "$prev_count" != "$curr_count" ]]; then
-    monitors_changed="Yes"
+    monitors_changed="Monitors Changed"
   else
-    monitors_changed="No"
+    monitors_changed="No change detected."
   fi
 
   echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Monitor State = $monitors_changed (prev=${prev_count:-Not known}, curr=$curr_count)"
@@ -70,6 +70,7 @@ reconcile_monitors() {
   # Phase 1 — snapshot intent
   # ---------------------------------------------------------------------------
 
+  # Ability to use cached workspaces in the event of service restart.
   if [[ "${USE_CACHED_WORKSPACE:-0}" -eq 1 &&
     -n "${LAST_WORKSPACE:-}" ]]; then
     last_ws="$LAST_WORKSPACE"
@@ -87,7 +88,8 @@ reconcile_monitors() {
     echo "[LOG - RECONCILE MONITORS] PRE-CONFIG-SET : USING LIVE WORKSPACE=$last_ws"
   fi
 
-  if ((last_ws <= 0)); then
+  #Guard against non-sensical workspaces.
+  if ((last_ws <= 0 || last_ws > 10)); then
     last_ws=1
   fi
 

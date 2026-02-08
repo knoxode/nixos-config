@@ -22,9 +22,6 @@ commit_batch() {
 handle_keybinds_single_mon() {
   echo "[LOG - SINGLE MON HELPER]: Reconfiguring to single monitor."
 
-  # Ensure a valid focused workspace before any mutation
-  batch "dispatch workspace 1"
-
   # Move all workspaces to eDP-1
   for i in $(seq 1 10); do
     batch "dispatch moveworkspacetomonitor $i eDP-1"
@@ -44,8 +41,6 @@ handle_keybinds_single_mon() {
 
   echo "[LOG - SINGLE MON KEYBIND HELPER]: SET workspace keybindings to SUPER+X."
 
-  # Final focus sanity
-  batch "dispatch workspace 1"
 }
 
 # ------------------------------------------------------------------
