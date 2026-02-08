@@ -156,7 +156,7 @@
   ];
   commonWordsFile =
     pkgs.writeText "harper-common-words.txt"
-    (builtins.concatStringsSep "\n" commonWords);
+    ((builtins.concatStringsSep "\n" commonWords) + "\n");
   sharedHarpDictGen = pkgs.writeShellScript "harper-shared-dict-gen" ''
     #! ${pkgs.runtimeShell}
     set -euo pipefail
