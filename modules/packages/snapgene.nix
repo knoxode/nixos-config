@@ -8,7 +8,15 @@
   kdePackages,
   llvmPackages,
   libcxx,
-  xorg,
+  libxcb,
+  xcbutil,
+  libx11,
+  libxkbfile,
+  xcbutilkeysyms,
+  xcbutilrenderutil,
+  libice,
+  libXcursor,
+  libXext,
   openssl_1_1,
   dbus,
 }: let
@@ -40,15 +48,15 @@ in
       kdePackages.qtpositioning
       kdePackages.qtsvg
       kdePackages.qtwebengine
-      xorg.libxcb
-      xorg.xcbutil
-      xorg.libX11
-      xorg.libxkbfile
-      xorg.xcbutilkeysyms
-      xorg.xcbutilrenderutil
-      xorg.libICE
-      xorg.libXcursor
-      xorg.libXext
+      libxcb
+      xcbutil
+      libx11
+      libxkbfile
+      xcbutilkeysyms
+      xcbutilrenderutil
+      libice
+      libXcursor
+      libXext
       libcxx
       libtiff
       openssl_1_1

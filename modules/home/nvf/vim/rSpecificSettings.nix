@@ -1,6 +1,6 @@
 {...}: {
   programs.nvf.settings.vim.languages.r = {
-    enable = false;
+    enable = true;
     lsp.enable = false;
     treesitter.enable = false;
   };

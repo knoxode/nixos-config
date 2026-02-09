@@ -102,19 +102,21 @@ dual_monitor_topology_setup() {
   configure_monitors
   commit_batch
 
-  log "Monitor configuration stabilized"
+  log "Monitor configuration Set."
 }
 
 dual_monitor_keybind_setup() {
   BATCH_CMDS=""
   apply_dual_monitor_keybinds
   commit_batch
+  log "Monitor keybinds Set."
 }
 
 dual_monitor_workspace_setup() {
   BATCH_CMDS=""
   move_workspaces_dual
   commit_batch
+  log "Monitor workspaces Set."
 }
 
 # ================================================================
