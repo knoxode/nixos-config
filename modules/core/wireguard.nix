@@ -60,8 +60,4 @@ in {
       };
     };
   };
-  systemd.services."wireguard-wg0".unitConfig = {
-    Wants = ["sops-install-secrets.service"];
-    After = ["sops-install-secrets.service"];
-  };
 }

@@ -3,6 +3,7 @@ set +e
 external_monitor_adapter=""
 external_monitor_model=""
 external_monitor_preferred_mode=""
+INTERNAL_MONITOR="eDP-1"
 
 # -----------------------------------------------------------------------------
 # Helpers
@@ -40,24 +41,36 @@ reconcile_monitors() {
 
   RESTART_NOCTALIA=0
   FRIENDLY_NOC_OUT="Not Restarting."
-  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
-    FRIENDLY_NOC_OUT="Restarting."
+
+  # No previous state → force restart
+  if [[ -z "$prev_count" ]]; then
+    FRIENDLY_NOC_OUT="Restarting (no previous monitor state)."
+    RESTART_NOCTALIA=1
+
+  # Previous state exists, but topology changed → restart
+  elif [[ "$prev_count" != "$curr_count" ]]; then
+    FRIENDLY_NOC_OUT="Restarting (monitor count changed: $prev_count → $curr_count)."
     RESTART_NOCTALIA=1
   fi
+
   export RESTART_NOCTALIA
 
-  monitors_changed="No"
-  if [[ -n "$prev_count" && "$prev_count" != "$curr_count" ]]; then
-    monitors_changed="Yes"
+  if [[ -z "$prev_count" ]]; then
+    monitors_changed="Baseline"
+  elif [[ "$prev_count" != "$curr_count" ]]; then
+    monitors_changed="Monitors Changed"
+  else
+    monitors_changed="No change detected."
   fi
 
-  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Has Monitor Count Changed? $monitors_changed"
+  echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Monitor State = $monitors_changed (prev=${prev_count:-Not known}, curr=$curr_count)"
   echo "[LOG - RECONCILE MONITORS] RESTART_CHECK : Noctalia restart decision = $FRIENDLY_NOC_OUT"
 
   # ---------------------------------------------------------------------------
   # Phase 1 — snapshot intent
   # ---------------------------------------------------------------------------
 
+  # Ability to use cached workspaces in the event of service restart.
   if [[ "${USE_CACHED_WORKSPACE:-0}" -eq 1 &&
     -n "${LAST_WORKSPACE:-}" ]]; then
     last_ws="$LAST_WORKSPACE"
@@ -75,7 +88,8 @@ reconcile_monitors() {
     echo "[LOG - RECONCILE MONITORS] PRE-CONFIG-SET : USING LIVE WORKSPACE=$last_ws"
   fi
 
-  if ((last_ws <= 0)); then
+  #Guard against non-sensical workspaces.
+  if ((last_ws <= 0 || last_ws > 10)); then
     last_ws=1
   fi
 
@@ -132,26 +146,29 @@ reconcile_monitors() {
     fi
 
   else
-    # Dual monitor
     if ((last_ws >= 1 && last_ws <= 5)); then
       paired_ws=$((last_ws + 5))
 
+      hyprctl dispatch focusmonitor "$external_monitor_adapter"
       workspace_exists "$last_ws" &&
-        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$last_ws"
 
+      hyprctl dispatch focusmonitor "$INTERNAL_MONITOR"
       workspace_exists "$paired_ws" &&
-        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$paired_ws"
 
       echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($last_ws,$paired_ws)"
 
     elif ((last_ws >= 6 && last_ws <= 10)); then
       paired_ws=$((last_ws - 5))
 
+      hyprctl dispatch focusmonitor "$external_monitor_adapter"
       workspace_exists "$paired_ws" &&
-        hyprctl dispatch workspace "$paired_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$paired_ws"
 
+      hyprctl dispatch focusmonitor "$INTERNAL_MONITOR"
       workspace_exists "$last_ws" &&
-        hyprctl dispatch workspace "$last_ws" >/dev/null 2>&1
+        hyprctl dispatch workspace "$last_ws"
 
       echo "[LOG - RECONCILE MONITORS] FOCUS : RESTORED DUAL PAIR=($paired_ws,$last_ws)"
 

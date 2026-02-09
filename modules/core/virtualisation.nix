@@ -5,9 +5,6 @@
     docker.enable = true;
     podman.enable = false;
   };
-  programs = {
-    virt-manager.enable = true;
-  };
   environment.systemPackages = with pkgs; [
     docker-compose
     # distrobox

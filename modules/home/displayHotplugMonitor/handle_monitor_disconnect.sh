@@ -22,9 +22,6 @@ commit_batch() {
 handle_keybinds_single_mon() {
   echo "[LOG - SINGLE MON HELPER]: Reconfiguring to single monitor."
 
-  # Ensure a valid focused workspace before any mutation
-  batch "dispatch workspace 1"
-
   # Move all workspaces to eDP-1
   for i in $(seq 1 10); do
     batch "dispatch moveworkspacetomonitor $i eDP-1"
@@ -32,7 +29,7 @@ handle_keybinds_single_mon() {
 
   # Remove dual-monitor keybinds (exec-based)
   for i in $(seq 1 5); do
-    batch "keyword unbind SUPER,$i,exec,~/.config/hypr/startupscripts/2_workspace.sh $i"
+    batch "keyword unbind SUPER,$i,exec,bash $HOME/.config/hypr/startupscripts/2_workspace.sh $i"
     echo "[LOG - SINGLE MON KEYBIND HELPER]: UNSET 2_workspace.sh keybinding $i."
   done
 
@@ -44,8 +41,6 @@ handle_keybinds_single_mon() {
 
   echo "[LOG - SINGLE MON KEYBIND HELPER]: SET workspace keybindings to SUPER+X."
 
-  # Final focus sanity
-  batch "dispatch workspace 1"
 }
 
 # ------------------------------------------------------------------

@@ -9,9 +9,11 @@
     ./zsh
     ./bash.nix
     ./btop.nix
+    ./defaultApps.nix
     ./desktop_assets.nix
     ./fastfetch.nix
     ./grim.nix
+    ./harperSharedLib.nix
     #./helix.nix
     #./hyprpanel.nix
     ./kitty.nix
