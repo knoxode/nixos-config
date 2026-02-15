@@ -63,6 +63,10 @@
         html.enable = false;
         lua.enable = true;
         css.enable = true;
+        tailwind = {
+          enable = true;
+          lsp.enable = true;
+        };
         typst.enable = true;
         rust = {
           enable = true;
