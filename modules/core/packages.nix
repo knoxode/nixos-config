@@ -59,6 +59,7 @@ in {
       fiji
       fish
       gamescope
+      ghostty
       gimp3
       git
       grim
