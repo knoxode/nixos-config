@@ -56,6 +56,7 @@ in {
       flatpak
       fiji
       fish
+      ghostty
       gimp3
       git
       grim

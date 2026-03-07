@@ -15,6 +15,8 @@
     then {}
     else {
       id = "Battery";
+      "showPowerProfiles" = true;
+      "showNoctaliaPerformance" = true;
     };
 in {
   programs.noctalia-shell = {

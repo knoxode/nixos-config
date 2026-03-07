@@ -9,7 +9,7 @@
     else "low-power";
 in {
   services.tlp = {
-    enable = true;
+    enable = false;
     settings = {
       # CPU_SCALING_GOVERNOR_ON_AC = "performance";
       # CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
@@ -39,4 +39,5 @@ in {
       CPU_HWP_DYN_BOOST_ON_BAT = 0;
     };
   };
+  services.power-profiles-daemon.enable = true;
 }
