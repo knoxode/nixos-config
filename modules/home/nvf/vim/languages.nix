@@ -41,7 +41,7 @@
           lsp.servers = ["nixd"];
         };
         clang.enable = true;
-        zig.enable = true;
+        zig.enable = false;
         python.enable = true;
         markdown = {
           enable = true;
@@ -60,9 +60,13 @@
           format.type = ["prettierd"];
           extensions.ts-error-translator.enable = true;
         };
-        html.enable = true;
+        html.enable = false;
         lua.enable = true;
         css.enable = true;
+        tailwind = {
+          enable = true;
+          lsp.enable = true;
+        };
         typst.enable = true;
         rust = {
           enable = true;

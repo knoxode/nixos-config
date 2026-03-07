@@ -22,7 +22,6 @@
       txdbmaker
       GenomeInfoDb
       clusterProfiler
-      DiffBind
       csaw
     ];
   };

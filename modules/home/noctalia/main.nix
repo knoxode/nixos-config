@@ -60,7 +60,7 @@ in {
             {
               id = "MediaMini";
               hideWhenIdle = true;
-              maxWidth = true;
+              maxWidth = 250;
             }
           ];
           right =
@@ -73,6 +73,9 @@ in {
               }
               {
                 id = "Volume";
+              }
+              {
+                id = "Bluetooth";
               }
               {
                 id = "Brightness";
