@@ -24,6 +24,7 @@ in {
       ./openssh.nix
       ./packages.nix
       ./audio.nix
+      ./power-settings.nix
       ./printing.nix
       ./rstudio.nix
       ./security.nix
@@ -34,7 +35,6 @@ in {
       ./system.nix
       ./systemd.nix
       ./timezoned.nix
-      ./tlp.nix
       ./upower.nix
       ./user.nix
       ./virtualisation.nix
