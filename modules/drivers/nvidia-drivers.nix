@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -12,27 +11,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # set a low-priority default kernelPackages that contains our patched nvidia beta
-    boot.kernelPackages = lib.mkDefault (
-      pkgs.linuxPackages.extend (_: lpprev: {
-        nvidiaPackages =
-          lpprev.nvidiaPackages
-          // {
-            beta = lpprev.nvidiaPackages.beta.overrideAttrs (old: {
-              patches =
-                (old.patches or [])
-                ++ [
-                  pkgs.fetchpatch
-                  {
-                    url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/495704.patch";
-                    sha256 = "sha256-SNfUtTacK6/cEr9movVeOkHhDfP6MIiP1KuV/1IzYQg=";
-                  }
-                ];
-            });
-          };
-      })
-    );
-
     services.xserver.videoDrivers = ["nvidia"];
     hardware.nvidia = {
       # Modesetting is required.
@@ -42,7 +20,7 @@ in {
       # Fine-grained power management. Turns off GPU when not in use.
       # Experimental and only works on modern Nvidia GPUs (Turing or newer).
       powerManagement.finegrained = false;
-      # Use the NVidia open source kernel module (not to be confused with the
+      # Use the NVIDIA open source kernel module (not to be confused with the
       # independent third-party "nouveau" open source driver).
       # Support is limited to the Turing and later architectures. Full list of
       # supported GPUs is at:
@@ -54,6 +32,7 @@ in {
       # accessible via `nvidia-settings`.
       nvidiaSettings = true;
       # Optionally, you may need to select the appropriate driver version for your specific GPU.
+      package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
   };
 }
