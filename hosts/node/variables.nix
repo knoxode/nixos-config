@@ -52,9 +52,15 @@ in {
       position = auto
       scale = 1
       bitdepth = 10
-      supports_hdr = 1
-      sdrbrightness = 250
-      max_luminance = 400
+      cm = hdr
+      sdrbrightness = 1.1
+      sdrsaturation = 1.0
+      sdr_min_luminance = 0.005
+      sdr_max_luminance = 360
+      min_luminance = 0.005
+      max_luminance = 415
+      max_avg_luminance = 350
+      sdr_eotf = srgb
     }
     monitor=desc:${leftMonitor},highrr,auto-left,1
   ";

@@ -43,7 +43,7 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix ./coolercontrol.nix]
+      then [./steam.nix ./gamemode.nix ./gamescope.nix ./coolercontrol.nix]
       else []
     )
     ++ (

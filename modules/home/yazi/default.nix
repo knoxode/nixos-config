@@ -8,6 +8,7 @@ in {
     settings = settings;
     keymap = keymap;
     theme = theme;
+    shellWrapperName = "y";
     plugins = {
       lazygit = pkgs.yaziPlugins.lazygit;
       full-border = pkgs.yaziPlugins.full-border;
