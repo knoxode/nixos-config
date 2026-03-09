@@ -29,7 +29,7 @@ in {
 
   # Program Options
   browser = "firefox-nightly"; # Set Default Browser (google-chrome-stable for google-chrome)
-  terminal = "kitty"; # Set Default System Terminal
+  terminal = "ghostty"; # Set Default System Terminal
   fileManager = "nautilus"; # Set Default File Manager (nemo, thunar, dolphin, pcmanfm)
 
   # GPUs
@@ -52,9 +52,15 @@ in {
       position = auto
       scale = 1
       bitdepth = 10
-      supports_hdr = 1
-      sdrbrightness = 250
-      max_luminance = 400
+      cm = hdr
+      sdrbrightness = 1.1
+      sdrsaturation = 1.0
+      sdr_min_luminance = 0.005
+      sdr_max_luminance = 360
+      min_luminance = 0.005
+      max_luminance = 415
+      max_avg_luminance = 350
+      sdr_eotf = srgb
     }
     monitor=desc:${leftMonitor},highrr,auto-left,1
   ";

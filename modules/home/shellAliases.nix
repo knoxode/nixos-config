@@ -16,6 +16,7 @@
     ls = "ls --color=auto";
     ll = "ls -la";
     lt = "ls -lat";
+    icat = "kitten icat";
     logout = "hyprctl dispatch exit";
     man-nixos = "man configuration.nix";
     man-hm = "man home-configuration.nix";

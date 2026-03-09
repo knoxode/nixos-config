@@ -14,6 +14,8 @@
     extraPkgs = pkgs: [
       # e.g., pkgs.wineWowPackages.stable
       pkgs.proton-ge-bin
+      pkgs.gamescope
+      pkgs.gamemode
     ];
   };
 in {
@@ -56,6 +58,8 @@ in {
       flatpak
       fiji
       fish
+      gamescope
+      ghostty
       gimp3
       git
       grim
@@ -75,7 +79,6 @@ in {
       libreoffice
       lm_sensors
       lsof
-      lutris
       lxqt.lxqt-policykit
       mendeley
       mupdf

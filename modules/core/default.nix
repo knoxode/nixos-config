@@ -24,6 +24,7 @@ in {
       ./openssh.nix
       ./packages.nix
       ./audio.nix
+      ./power-settings.nix
       ./printing.nix
       ./rstudio.nix
       ./security.nix
@@ -34,7 +35,6 @@ in {
       ./system.nix
       ./systemd.nix
       ./timezoned.nix
-      ./tlp.nix
       ./upower.nix
       ./user.nix
       ./virtualisation.nix
@@ -43,7 +43,7 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix ./coolercontrol.nix]
+      then [./steam.nix ./gamemode.nix ./gamescope.nix ./coolercontrol.nix]
       else []
     )
     ++ (
@@ -59,6 +59,6 @@ in {
     ++ (
       if hostType == "Desktop"
       then [./nvidia-container-toolkit.nix]
-      else [./tlp.nix]
+      else []
     );
 }
