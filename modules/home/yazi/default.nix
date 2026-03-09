@@ -1,13 +1,10 @@
-{pkgs, ...}: let
-  settings = import ./yazi.nix;
-  keymap = import ./keymap.nix;
-  theme = import ./theme.nix;
-in {
+{pkgs, ...}: {
   programs.yazi = {
     enable = true;
-    settings = settings;
-    keymap = keymap;
-    theme = theme;
+    inherit (import ./yazi.nix) settings;
+    inherit (import ./keymap.nix) keymap;
+    inherit (import ./theme.nix) theme;
+    shellWrapperName = "y";
     plugins = {
       lazygit = pkgs.yaziPlugins.lazygit;
       full-border = pkgs.yaziPlugins.full-border;
