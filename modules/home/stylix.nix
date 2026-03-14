@@ -11,6 +11,7 @@ in {
     polarity = "dark";
     targets = {
       hyprland.enable = false;
+      ghostty.enable = false;
       firefox = {
         enable = true;
         profileNames = [mainUserProfile];
