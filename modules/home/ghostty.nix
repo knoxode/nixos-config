@@ -51,7 +51,6 @@
 
       keybind = [
         # Unbinds
-        "ctrl+shift+c=unbind"
         "ctrl+shift+f=unbind"
         "ctrl+alt+arrow_left=unbind"
         "ctrl+alt+arrow_right=unbind"
@@ -69,8 +68,8 @@
         "ctrl+shift+l=goto_split:right"
 
         # Splits
-        "ctrl+v=new_split:right"
-        "ctrl+s=new_split:down"
+        "ctrl+shift+v=new_split:right"
+        "ctrl+shift+s=new_split:down"
 
         "ctrl+t=new_tab"
         "ctrl+q=close_tab"
@@ -86,7 +85,7 @@
         "ctrl+]=scroll_page_down"
 
         # Tab naming
-        "ctrl+shift+c=prompt_tab_title"
+        "ctrl+c=prompt_tab_title"
 
         # Moving tabs
         "ctrl+shift+f=move_tab:1"
