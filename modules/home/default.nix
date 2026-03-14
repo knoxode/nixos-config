@@ -12,6 +12,7 @@
     ./defaultApps.nix
     ./desktop_assets.nix
     ./fastfetch.nix
+    ./ghostty.nix
     ./grim.nix
     ./harperSharedLib.nix
     #./helix.nix
