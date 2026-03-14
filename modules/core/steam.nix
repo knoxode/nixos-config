@@ -4,7 +4,8 @@
       enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = false;
-      extraPackages = [pkgs.gamescope];
+      gamescopeSession.enable = true;
+      extraPackages = [];
       extraCompatPackages = [pkgs.proton-ge-bin];
       localNetworkGameTransfers.openFirewall = true;
     };

@@ -52,7 +52,7 @@ in {
       position = auto
       scale = 1
       bitdepth = 10
-      cm = hdr
+      cm = auto
       sdrbrightness = 1.1
       sdrsaturation = 1.0
       sdr_min_luminance = 0.005

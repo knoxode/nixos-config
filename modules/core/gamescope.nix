@@ -1,6 +1,8 @@
 {pkgs, ...}: {
-  programs.gamescope = {
-    enable = true;
-    capSysNice = false;
+  programs = {
+    gamescope = {
+      enable = false;
+      capSysNice = false;
+    };
   };
 }
