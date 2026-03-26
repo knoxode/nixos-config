@@ -71,7 +71,7 @@
         "ctrl+alt+v=new_split:right"
         "ctrl+alt+s=new_split:down"
 
-        "ctrl+t=new_tab"
+        "ctrl+shift+t=new_tab"
         "ctrl+q=close_tab"
 
         # Scrollback selection
@@ -85,7 +85,7 @@
         "ctrl+]=scroll_page_down"
 
         # Tab naming
-        "ctrl+c=prompt_tab_title"
+        "ctrl+n=prompt_tab_title"
 
         # Moving tabs
         "ctrl+shift+f=move_tab:1"
