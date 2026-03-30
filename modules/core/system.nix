@@ -31,7 +31,7 @@
     };
   };
   nixpkgs.config = {
-    permittedInsecurePackages = ["openssl-1.1.1w" "qtwebengine-5.15.19"];
+    permittedInsecurePackages = ["openssl-1.1.1w" "electron-38.8.4"];
   };
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
@@ -44,6 +44,14 @@
       };
     in {
       # docker-compose = oldPkgs.docker-compose;
+    })
+    (final: prev: let
+      fixed = import inputs.nixpkgs-winboat-fixed {
+        system = final.system;
+        config.allowUnfree = true;
+      };
+    in {
+      winboat = fixed.winboat;
     })
   ];
   security.sudo.wheelNeedsPassword = false;
