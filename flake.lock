@@ -962,6 +962,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-winboat-fixed": {
+      "locked": {
+        "lastModified": 1774462507,
+        "narHash": "sha256-MRWyQuOUGOeafkIxizpL+P23G1O5ylKhEcYZrksjQOE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e3c7fb832554d581a4c078862f094980b3ca4423",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/503185/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1750776420,
@@ -1232,6 +1248,7 @@
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-old": "nixpkgs-old",
+        "nixpkgs-winboat-fixed": "nixpkgs-winboat-fixed",
         "noctalia": "noctalia",
         "nur": "nur",
         "nvf": "nvf",

@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-winboat-fixed.url = "github:NixOS/nixpkgs/pull/503185/head";
     nixpkgs-old.url = "github:NixOS/nixpkgs/03bcfc09f877ed28d9bcab4f8772ec15599cbc37";
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
