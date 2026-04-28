@@ -37,22 +37,14 @@
     inputs.nix-cachyos-kernel.overlays.pinned
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
-    (final: prev: let
-      oldPkgs = import inputs.nixpkgs-old {
-        system = final.system;
-        config.allowUnfree = true; # if needed
-      };
-    in {
-      # docker-compose = oldPkgs.docker-compose;
-    })
-    (final: prev: let
-      fixed = import inputs.nixpkgs-winboat-fixed {
-        system = final.system;
-        config.allowUnfree = true;
-      };
-    in {
-      winboat = fixed.winboat;
-    })
+    # (final: prev: let
+    #   oldPkgs = import inputs.nixpkgs-old {
+    #     system = final.system;
+    #     config.allowUnfree = true; # if needed
+    #   };
+    # in {
+    #   # docker-compose = oldPkgs.docker-compose;
+    # })
   ];
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {

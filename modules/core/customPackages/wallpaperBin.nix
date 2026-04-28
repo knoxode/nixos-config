@@ -9,7 +9,7 @@
     runtimeInputs = with pkgs; [
       bash
       waypaper
-      swww
+      awww
       coreutils
       findutils
       util-linux
@@ -45,7 +45,7 @@
           first=false
 
           cp -- "$IMAGE" "$DYNAMIC_WALLPAPER_FILE"
-          waypaper --fill fill --wallpaper "$IMAGE" --backend swww
+          waypaper --fill fill --wallpaper "$IMAGE" --backend awww
           sleep "$INTERVAL"
         done
       done

@@ -109,7 +109,7 @@ in {
       superfile
       swappy
       syncthing
-      swww
+      awww
       temurin-bin-17
       texliveFull
       #texmaker

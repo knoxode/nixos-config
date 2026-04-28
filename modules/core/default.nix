@@ -20,7 +20,6 @@ in {
       ./nautilus-related.nix
       ./network.nix
       ./nh.nix
-      ./noctalia.nix
       ./openssh.nix
       ./packages.nix
       ./audio.nix

@@ -28,7 +28,15 @@
         lspSignature.enable = false; # conflicts with blink in maximal
         otter-nvim.enable = true;
         nvim-docs-view.enable = true;
-        harper-ls.enable = true;
+        servers = {
+          harper.enable = true;
+        };
+
+        presets = {
+          harper.enable = true;
+          tailwindcss-language-server = {
+          };
+        };
       };
 
       languages = {
@@ -54,7 +62,7 @@
             };
           };
         };
-        ts = {
+        typescript = {
           enable = true;
           lsp.enable = true;
           format.type = ["prettierd"];
@@ -63,10 +71,6 @@
         html.enable = false;
         lua.enable = true;
         css.enable = true;
-        tailwind = {
-          enable = true;
-          lsp.enable = true;
-        };
         typst.enable = true;
         rust = {
           enable = true;
