@@ -34,8 +34,7 @@
 
         presets = {
           harper.enable = true;
-          tailwindcss-language-server = {
-          };
+          tailwindcss-language-server.enable = true;
         };
       };
 
@@ -71,7 +70,13 @@
         html.enable = false;
         lua.enable = true;
         css.enable = true;
-        typst.enable = true;
+        typst = {
+          enable = true;
+          extensions = {
+            typst-concealer.enable = true;
+            typst-preview-nvim.enable = true;
+          };
+        };
         rust = {
           enable = true;
           extensions = {

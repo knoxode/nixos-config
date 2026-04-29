@@ -3,8 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-winboat-fixed.url = "github:NixOS/nixpkgs/pull/503185/head";
-    nixpkgs-old.url = "github:NixOS/nixpkgs/03bcfc09f877ed28d9bcab4f8772ec15599cbc37";
+    # nixpkgs-winboat-fixed.url = "github:NixOS/nixpkgs/pull/503185/head";
+    # nixpkgs-old.url = "github:NixOS/nixpkgs/03bcfc09f877ed28d9bcab4f8772ec15599cbc37";
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +12,7 @@
     nur.url = "github:nix-community/NUR";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     noctalia = {
