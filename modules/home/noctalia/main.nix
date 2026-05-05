@@ -25,14 +25,14 @@ in {
       #   settingsVersion = 0;
       bar = {
         position = "top";
-        monitors = [];
+        type = "floating";
         density = "comfortable";
+        monitors = [];
         showOutline = false;
         showCapsule = true;
         capsuleOpacity = 1.0;
         backgroundOpacity = lib.mkForce 0.50;
         useSeparateOpacity = false;
-        floating = false;
         marginVertical = 4;
         marginHorizontal = 4;
         outerCorners = true;
@@ -67,6 +67,8 @@ in {
             [
               {
                 id = "Tray";
+                drawerEnabled = false;
+                colorizeIcons = false;
               }
               {
                 id = "NotificationHistory";
@@ -125,7 +127,8 @@ in {
         boxBorderEnabled = false;
       };
       location = lib.mkForce {
-        name = "Oxford, GB";
+        name = "";
+        autoLocate = true;
         weatherEnabled = true;
         weatherShowEffects = true;
         useFahrenheit = false;
@@ -166,7 +169,7 @@ in {
         fillColor = "#000000";
         useSolidColor = false;
         solidColor = "#1a1a2e";
-        randomEnabled = true;
+        automationEnabled = true;
         wallpaperChangeMode = "random";
         #Change wallpaper every x seconds
         randomIntervalSec = 300;
@@ -194,7 +197,7 @@ in {
         enableClipPreview = true;
         clipboardWrapText = true;
         position = "center";
-        pinnedApps = ["spotify-client" "nm-applet"];
+        pinnedApps = [];
         useApp2Unit = false;
         sortByMostUsed = true;
         terminalCommand = "xterm -e";

@@ -26,6 +26,9 @@
     node-login = "ssh shaiikura@10.7.0.3";
     nomad-login = "ssh shaiikura@10.7.0.4";
     reuby-login = "ssh shaiikura@10.7.0.5";
+    ag-login = "ssh shaiikura@192.168.1.118";
+    prox-login = "ssh shaiikura@192.168.1.43";
+    plex-login = "ssh shaiikura@192.168.10.21";
 
     #Git related aliases
     ggpur = "ggu";
