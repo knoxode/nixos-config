@@ -37,6 +37,7 @@
     inputs.nix-cachyos-kernel.overlays.pinned
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
+    (import ./overlays/wireshark.nix)
     # (final: prev: let
     #   oldPkgs = import inputs.nixpkgs-old {
     #     system = final.system;
