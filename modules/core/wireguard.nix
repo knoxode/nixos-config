@@ -1,5 +1,6 @@
 {
   host,
+  config,
   pkgs,
   lib,
   ...
@@ -7,6 +8,15 @@
   selfIP =
     if host == "reuby"
     then ["10.7.0.5/32"]
+    else if host == "nomad"
+    then ["10.7.0.4/32"]
+    else if host == "node"
+    then ["10.7.0.3/32"]
+    else [];
+
+  selfIPv6 =
+    if host == "reuby"
+    then ["10.8.0.5/32" "2a06:61c1:5a28:70::5/128"]
     else if host == "nomad"
     then ["10.7.0.4/32"]
     else if host == "node"
@@ -31,14 +41,14 @@ in {
 
     wireguard.interfaces = {
       wg0 = {
-        ips = selfIP;
+        ips = selfIPv6;
         listenPort = 1235;
-        mtu = 1360;
-        privateKeyFile = "/run/secrets/wireguard/${host}/privatekey";
+        mtu = 1420;
+        privateKeyFile = config.sops.secrets."wireguard/${host}/i6privatekey".path;
         peers = [
           {
-            presharedKeyFile = "/run/secrets/wireguard/presharedkey";
-            publicKey = "kjkXw+oCZqNPHB/m9GxOg2urWTH58f02jxvsBVD6SDY=";
+            presharedKeyFile = config.sops.secrets."wireguard/presharedkey".path;
+            publicKey = "DGMiYEvjkaG37zQfxbAisvjAnKGkT5D7p8YqdcN/xn4=";
             allowedIPs =
               [
                 "10.7.0.1/32"
@@ -49,11 +59,13 @@ in {
                 "192.168.30.0/24"
                 "192.168.40.0/24"
                 "10.10.10.0/24"
+                "::/0"
               ]
               ++ selfIP
+              ++ selfIPv6
               ++ allowedPeerIPs;
-            name = vpnConnectionName;
-            endpoint = "knoxvpn.duckdns.org:51820";
+            name = "${vpnConnectionName}_i6";
+            endpoint = "knoxvpn.duckdns.org:51821";
             persistentKeepalive = 25;
           }
         ];
