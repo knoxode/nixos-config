@@ -133,7 +133,7 @@ in {
     )
     ++ (
       if forGaming
-      then [mangohud prismlauncher gamemode mesa myLutris]
+      then [mangohud prismlauncher gamemode mesa] #myLutris
       else []
     )
     ++ (
