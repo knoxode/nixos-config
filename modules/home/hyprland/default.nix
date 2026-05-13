@@ -1,42 +1,30 @@
-{
-  lib,
-  host,
-  ...
-}: let
-  inherit
-    (import ./../../../hosts/${host}/variables.nix)
-    hostType
-    ;
-in {
+{...}: {
   imports = [
-    ./animations-def.nix
-    ./binds.nix
     ./hypridle.nix
     ./hyprland.nix
-    ./keyboards.nix
-    ./layerrules.nix
-    ./pyprland.nix
-    ./scripts.nix
-    ./windowrules.nix
-    ./workspaces.nix
   ];
-
-  home.file = lib.mkMerge [
-    (
-      if hostType == "Laptop"
-      then {
-        ".config/hypr/startupscripts" = {
-          source = ./startupscripts;
-          recursive = true;
-          executable = true;
-        };
-      }
-      else {
-        ".config/hypr/startupscripts/2_workspace.sh" = {
-          source = ./startupscripts/2_workspace.sh;
-          executable = true;
-        };
-      }
-    )
-  ];
+  home.file = let
+    files = [
+      ./animations.lua
+      ./appearance.lua
+      ./binds.lua
+      ./devices.lua
+      ./env.lua
+      ./exec.lua
+      ./gpu.lua
+      ./hyprland.lua
+      ./layouts.lua
+      ./misc.lua
+      ./monitors.lua
+      ./permissions.lua
+      ./shared.lua
+      ./windowrules.lua
+      ./workspaces.lua
+    ];
+  in
+    builtins.listToAttrs (map (f: {
+        name = ".config/hypr/${baseNameOf f}";
+        value.source = f;
+      })
+      files);
 }

@@ -17,7 +17,7 @@
     ll = "ls -la";
     lt = "ls -lat";
     icat = "kitten icat";
-    logout = "hyprctl dispatch exit";
+    logout = "hyprctl dispatch 'hl.dsp.exit()'";
     man-nixos = "man configuration.nix";
     man-hm = "man home-configuration.nix";
     setup_nix_env = "echo 'use nix' > .envrc && direnv allow";
