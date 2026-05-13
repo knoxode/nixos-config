@@ -11,7 +11,7 @@
     else if host == "nomad"
     then ["10.8.0.4/32" "2a06:61c1:5a28:70::4/128"]
     else if host == "node"
-    then ["10.7.0.3/32"]
+    then ["10.8.0.3/32" "2a06:61c1:5a28:70::3/128"]
     else [];
 
   selfIPstring = builtins.head selfIP;
@@ -25,6 +25,8 @@
     "10.8.0.5/32"
     #Reuby IPv6
     "2a06:61c1:5a28:70::5/128"
+    # Node IPv6
+    "2a06:61c1:5a28:70::3/128"
   ];
 
   allowedPeerIPs =
