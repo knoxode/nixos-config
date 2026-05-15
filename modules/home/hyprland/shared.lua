@@ -5,9 +5,17 @@ M.terminal = "ghostty"
 M.fileManager = "nautilus"
 M.menu = "hyprlauncher"
 
+local restarting = false
+
 function M.restart_noctalia()
-	os.execute("pkill -f quickshell")
-	os.execute("noctalia-shell & disown")
+	-- Kill all running noctalia shell instances
+	os.execute([[sh -c "noctalia-shell list --json | jq -r '.[].pid' | xargs -r kill"]])
+
+	-- Small delay so the old instance fully exits
+	os.execute("sleep 0.3")
+
+	-- Restart
+	hl.exec_cmd("noctalia-shell -d")
 end
 
 function M.on_battery()

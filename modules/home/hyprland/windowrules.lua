@@ -49,7 +49,7 @@ hl.window_rule({
 hl.window_rule({
 	name = "Chat float",
 	match = {
-		class = "^(discord|obsidian|spotify|Texts|kitty-dropterm)$",
+		class = "^(discord-canary|obsidian|spotify|Texts|kitty-dropterm)$",
 	},
 
 	no_initial_focus = true,
@@ -149,6 +149,16 @@ hl.window_rule({
 	},
 
 	float = true,
+})
+
+hl.window_rule({
+	name = "Video player no opacity",
+	match = {
+		class = "^(org.jellyfin.JellyfinDesktop|tv.plex.Plex)$",
+	},
+
+	float = true,
+	opacity = "1.0 override 1.0 override 1.0 override",
 })
 
 hl.window_rule({

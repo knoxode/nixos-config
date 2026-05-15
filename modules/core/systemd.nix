@@ -16,14 +16,5 @@ in {
         };
       }
       else {};
-    display_hotplug_monitor = {
-      description = "A self-made display hotplugging monitor script";
-      after = ["hyprland-session.target"];
-      serviceConfig = {
-        ExecStart = "";
-        User = "";
-        Restart = "on-failure";
-      };
-    };
   };
 }

@@ -18,9 +18,6 @@ in {
     hyprpolkitagent
     hyprland-qtutils # needed for banners and ANR messages
   ];
-  systemd.user.targets.hyprland-session.Unit.Wants = [
-    "xdg-desktop-autostart.target"
-  ];
   # Place Files Inside Home Directory
   wayland.windowManager.hyprland = {
     enable = true;
