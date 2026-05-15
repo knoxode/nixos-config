@@ -1,4 +1,8 @@
-{...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   programs.nvf = {
     settings.vim = {
       spellcheck = {
@@ -30,6 +34,16 @@
         nvim-docs-view.enable = true;
         servers = {
           harper.enable = true;
+          lua-language-server = {
+            settings = {
+              Lua = {
+                workspace.library = [
+                  "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/share/hypr/stubs"
+                ];
+                diagnostics.globals = ["hl"];
+              };
+            };
+          };
         };
 
         presets = {
