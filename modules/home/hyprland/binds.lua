@@ -13,8 +13,8 @@ local function set_mon_binds_dynamic()
 	elseif #monitors == 2 then
 		for i = 1, 10 do
 			local key = i % 10 -- 10 maps to key 0
-			hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
 			hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i + 5 }))
+			hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
 			hl.bind(shared.mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }))
 		end
 	end

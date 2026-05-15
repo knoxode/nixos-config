@@ -27,8 +27,8 @@ local function set_mon_dynamic()
 	elseif #monitors == 2 then
 		for i = 1, 5 do
 			local j = i + 5
-			hl.workspace_rule({ workspace = tostring(i), monitor = monitors[2].name })
 			hl.workspace_rule({ workspace = tostring(j), monitor = monitors[1].name })
+			hl.workspace_rule({ workspace = tostring(i), monitor = monitors[2].name })
 		end
 		hl.monitor({
 			output = monitors[1].name,
