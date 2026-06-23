@@ -9,21 +9,12 @@ local function set_mon_dynamic()
 		local hostname = shared.get_hostname()
 		local on_battery = shared.on_battery()
 
-		if on_battery and (hostname == "nomad" or hostname == "reuby") then
-			hl.monitor({
-				output = "eDP-1",
-				mode = "1920x1080@60hz",
-				position = "auto",
-				scale = "1",
-			})
-		else
-			hl.monitor({
-				output = "eDP-1",
-				mode = "highrr",
-				position = "auto",
-				scale = "1",
-			})
-		end
+		hl.monitor({
+			output = "eDP-1",
+			mode = "1920x1080@60hz",
+			position = "auto",
+			scale = "1",
+		})
 	elseif #monitors == 2 then
 		for i = 1, 5 do
 			local j = i + 5

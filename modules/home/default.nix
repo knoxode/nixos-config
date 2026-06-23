@@ -27,5 +27,4 @@
     ./waypaper.nix
   ];
   xdg.userDirs.createDirectories = true;
-  gtk.gtk4.theme = null;
 }

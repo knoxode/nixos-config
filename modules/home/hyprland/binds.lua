@@ -28,7 +28,7 @@ hl.on("monitor.removed", set_mon_binds_dynamic)
 hl.bind(shared.mainMod .. " + Return", hl.dsp.exec_cmd(shared.terminal))
 local closeWindowBind = hl.bind(shared.mainMod .. " + Q", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(shared.mainMod .. " + R", hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle"))
+hl.bind(shared.mainMod .. " + R", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
 hl.bind(shared.mainMod .. " + E", hl.dsp.exec_cmd(shared.fileManager))
 hl.bind(shared.mainMod .. " + W", hl.dsp.exec_cmd("firefox-nightly"))
 hl.bind(shared.mainMod .. " + ALT + Space", hl.dsp.window.float({ action = "toggle" }))
@@ -37,7 +37,7 @@ hl.bind(
 	shared.mainMod .. " + SHIFT + ALT + S",
 	hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f - # Screen snip >> edit')
 )
-hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("noctalia-shell ipc call sessionMenu toggle"))
+hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("noctalia msg panel-open session"))
 hl.bind(shared.mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind(shared.mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(shared.mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
