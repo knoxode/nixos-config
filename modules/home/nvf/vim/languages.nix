@@ -78,7 +78,7 @@
         typescript = {
           enable = true;
           lsp.enable = true;
-          format.type = ["prettierd"];
+          format.type = ["prettier"];
           extensions.ts-error-translator.enable = true;
         };
         html.enable = false;

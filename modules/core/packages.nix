@@ -10,6 +10,18 @@
     forGaming
     hostType
     ;
+
+  snapgenePkgs = import inputs.nixpkgs-snapgene {
+    system = pkgs.system;
+
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "openssl-1.1.1w"
+      ];
+    };
+  };
+
   myLutris = pkgs.lutris.override {
     extraPkgs = pkgs: [
       # e.g., pkgs.wineWowPackages.stable
@@ -93,7 +105,7 @@ in {
       openssl
       os-prober
       plexamp
-      plex-desktop
+      #plex-desktop
       power-profiles-daemon
       powertop
       python3
@@ -104,7 +116,9 @@ in {
       rustdesk-flutter
       socat
       sshfs
-      (pkgs.callPackage ../packages/snapgene.nix {})
+      (pkgs.callPackage ../packages/snapgene.nix {
+        openssl_1_1 = snapgenePkgs.openssl_1_1;
+      })
       starship
       superfile
       swappy
