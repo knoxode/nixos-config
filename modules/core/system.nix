@@ -26,12 +26,12 @@
         "nix-command"
         "flakes"
       ];
-      substituters = ["https://hyprland.cachix.org" "https://winapps.cachix.org/" "https://attic.xuyh0120.win/lantian"];
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz8+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g=" "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
+      substituters = ["https://hyprland.cachix.org" "https://winapps.cachix.org/" "https://noctalia.cachix.org" "https://attic.xuyh0120.win/lantian"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz8+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g=" "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
     };
   };
   nixpkgs.config = {
-    permittedInsecurePackages = ["openssl-1.1.1w" "electron-38.8.4"];
+    permittedInsecurePackages = ["openssl-1.1.1w" "electron-40.10.5"];
   };
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
@@ -39,12 +39,12 @@
     inputs.nix-vscode-extensions.overlays.default
     (import ./overlays/wireshark.nix)
     # (final: prev: let
-    #   oldPkgs = import inputs.nixpkgs-old {
+    #   oldPkgs = import inputs.nixpkgs-snapgene {
     #     system = final.system;
     #     config.allowUnfree = true; # if needed
     #   };
     # in {
-    #   # docker-compose = oldPkgs.docker-compose;
+    #   SnapGene = oldPkgs.SnapGene;
     # })
   ];
   security.sudo.wheelNeedsPassword = false;

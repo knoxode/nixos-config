@@ -13,13 +13,14 @@ in {
       ./customOptions
       ./customPackages
       # ./flatpak.nix
-      ./greetd.nix
+      #./greetd.nix
       ./gpu_symlink.nix
       ./i2c.nix
       ./icons.nix
       ./nautilus-related.nix
       ./network.nix
       ./nh.nix
+      ./noctalia-greeter.nix
       ./openssh.nix
       ./packages.nix
       ./audio.nix

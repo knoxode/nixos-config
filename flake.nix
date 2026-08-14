@@ -3,8 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs-winboat-fixed.url = "github:NixOS/nixpkgs/pull/503185/head";
-    # nixpkgs-old.url = "github:NixOS/nixpkgs/03bcfc09f877ed28d9bcab4f8772ec15599cbc37";
+    nixpkgs-snapgene.url = "github:NixOS/nixpkgs/e2587cae";
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,6 +16,9 @@
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
+    };
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";

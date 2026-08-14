@@ -230,6 +230,15 @@ hl.window_rule({
 })
 
 hl.window_rule({
+	name = "Inkscape",
+	match = {
+		class = "org.inkscape.Inkscape",
+	},
+
+	opacity = "1.0 override 1.0 override 1.0 override",
+})
+
+hl.window_rule({
 	name = "Ferdium",
 	match = {
 		class = "^([Ff]erdium)$",
