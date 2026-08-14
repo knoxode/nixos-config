@@ -58,7 +58,7 @@ in {
       flatpak
       fiji
       fish
-      gamescope
+      #gamescope
       ghostty
       gimp3
       git

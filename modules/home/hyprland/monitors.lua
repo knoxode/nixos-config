@@ -1,7 +1,12 @@
+local node = require("node_specific")
 local shared = require("shared")
 
 local function set_mon_dynamic()
 	local monitors = hl.get_monitors()
+	if shared.hostname == "node" then
+		node.set_mon_node()
+		return
+	end
 	if #monitors == 1 then
 		for i = 1, 10 do
 			hl.workspace_rule({ workspace = tostring(i), monitor = "eDP-1" })
@@ -64,6 +69,8 @@ local function set_mon_dynamic()
 end
 
 set_mon_dynamic()
+
 hl.on("monitor.added", set_mon_dynamic)
 hl.on("monitor.removed", set_mon_dynamic)
 hl.on("config.reloaded", set_mon_dynamic)
+hl.on("hyprland.start", set_mon_dynamic)
