@@ -75,9 +75,6 @@ hl.config({
 	decoration = {
 		rounding = 20,
 		rounding_power = 6,
-		active_opacity = 0.8,
-		inactive_opacity = 0.8,
-		fullscreen_opacity = 0.9,
 	},
 	animations = {
 		enabled = true,

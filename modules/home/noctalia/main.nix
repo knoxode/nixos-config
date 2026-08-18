@@ -84,13 +84,6 @@ in {
           ];
           thickness = 41;
           widget_spacing = 18;
-          dead_zone = {
-            command = "";
-            middle_command = "";
-            right_command = "";
-            scroll_down_command = "";
-            scroll_up_command = "";
-          };
           capsule_group = [
             {
               fill = "surface_variant";
@@ -452,14 +445,12 @@ in {
         enabled = [];
         source = [
           {
-            auto_update = false;
             enabled = true;
             kind = "git";
             location = "https://github.com/noctalia-dev/official-plugins";
             name = "official";
           }
           {
-            auto_update = false;
             enabled = true;
             kind = "git";
             location = "https://github.com/noctalia-dev/community-plugins";
@@ -480,7 +471,6 @@ in {
         disable_mipmaps = false;
         font_family = "Roboto Flex";
         launch_apps_as_systemd_services = false;
-        middle_click_opens_widget_settings = true;
         niri_overview_type_to_launch_enabled = false;
         offline_mode = false;
         password_style = "default";
@@ -492,7 +482,6 @@ in {
         show_location = true;
         telemetry_enabled = false;
         time_format = "{:%H:%M}";
-        ui_scale = 1.0;
         animation = {
           enabled = true;
           speed = 1.0;
@@ -502,22 +491,14 @@ in {
         };
         panel = {
           borders = false;
-          clipboard_placement = "centered";
           control_center_placement = "attached";
-          floating_offset = 8;
-          launcher_app_grid = false;
-          launcher_categories = true;
-          launcher_compact = false;
-          launcher_placement = "centered";
-          launcher_session_search = false;
-          launcher_show_icons = true;
-          launcher_sort_by_usage = true;
+          floating_offset = 0;
+          launcher_placement = "floating";
           open_near_click_clipboard = false;
           open_near_click_control_center = false;
           open_near_click_launcher = false;
           open_near_click_session = false;
           open_near_click_wallpaper = false;
-          session_placement = "centered";
           shadow = false;
           transparency_mode = "glass";
           wallpaper_placement = "attached";
@@ -608,8 +589,6 @@ in {
           cpu_temp_sensor_path = "";
           cpu_usage_activity_threshold = 50.0;
           cpu_usage_critical_threshold = 90.0;
-          disk_pct_activity_threshold = 80.0;
-          disk_pct_critical_threshold = 95.0;
           disk_poll_seconds = 10.0;
           enabled = true;
           gpu_poll_seconds = 0.0;
@@ -680,11 +659,6 @@ in {
           title_scroll = "none";
           type = "active_window";
         };
-        bongocat = {
-          scale = 2.4000000000000004;
-          script = "scripts/bongocat.lua";
-          type = "scripted";
-        };
         clock = {
           capsule = true;
           capsule_fill = "hover";
@@ -708,7 +682,6 @@ in {
           type = "volume";
         };
         keyboard_layout = {
-          cycle_command = "";
           hide_when_single_layout = false;
           type = "keyboard_layout";
         };

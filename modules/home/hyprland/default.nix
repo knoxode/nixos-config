@@ -13,6 +13,7 @@
     "layouts.lua"
     "misc.lua"
     "monitors.lua"
+    "node_specific.lua"
     "permissions.lua"
     "shared.lua"
     "windowrules.lua"

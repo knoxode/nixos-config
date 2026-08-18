@@ -10,10 +10,22 @@ require("misc")
 require("animations")
 require("env")
 require("gpu")
+require("node_specific")
 
 hl.config({
-	scrolling = {
-		fullscreen_on_one_column = true,
+	render = {
+		direct_scanout = 2,
+		new_render_scheduling = true,
+		use_fp16 = 1,
+		cm_auto_hdr = true,
+		send_content_type = true,
+		cm_enabled = true,
+	},
+	quirks = {
+		prefer_hdr = 2,
+	},
+	cursor = {
+		no_hardware_cursors = 1,
 	},
 })
 
