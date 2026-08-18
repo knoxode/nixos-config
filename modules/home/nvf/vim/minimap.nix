@@ -1,5 +1,5 @@
 {...}: {
-  programs.nvf.settings.vim.minimap.codewindow = {
-    enable = false;
+  programs.nvf.settings.vim.minimap.minimap-vim = {
+    enable = true;
   };
 }
