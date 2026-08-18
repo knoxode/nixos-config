@@ -1,23 +1,10 @@
 {
   host,
+  username,
   lib,
   ...
 }: let
   inherit (import ../../../hosts/${host}/variables.nix) hostType;
-  clockSet = {
-    id = "Clock";
-    formatHorizontal = "dddd | MMM dd yyyy | HH:mm";
-    usePrimaryColor = true;
-  };
-
-  hostDepBattery =
-    if hostType == "Desktop"
-    then {}
-    else {
-      id = "Battery";
-      "showPowerProfiles" = true;
-      "showNoctaliaPerformance" = true;
-    };
 in {
   programs.noctalia = {
     enable = true;
@@ -460,7 +447,7 @@ in {
       };
       shell = {
         app_icon_colorize = false;
-        avatar_path = "/home/shaiikura/.face";
+        avatar_path = "/home/${username}/.face";
         clipboard_auto_paste = "auto";
         clipboard_confirm_clear_history = true;
         clipboard_enabled = true;
@@ -485,6 +472,10 @@ in {
         animation = {
           enabled = true;
           speed = 1.0;
+        };
+        greeter_sync = {
+          auto_sync = true;
+          privilege_command = "sudo pkexec";
         };
         mpris = {
           blacklist = [];
@@ -625,7 +616,7 @@ in {
         };
       };
       wallpaper = {
-        directory = "";
+        directory = "/home/${username}/Pictures/DesktopBackground";
         directory_dark = "";
         directory_light = "";
         edge_smoothness = 0.30000001192092896;
