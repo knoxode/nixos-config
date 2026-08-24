@@ -14,9 +14,6 @@
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-    };
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";

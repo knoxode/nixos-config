@@ -11,7 +11,6 @@
   home-manager = {
     sharedModules = [
       ./../home
-      inputs.noctalia.homeModules.default
       inputs.nvf.homeManagerModules.default
     ];
     useUserPackages = true;
