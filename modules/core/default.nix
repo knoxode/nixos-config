@@ -40,6 +40,7 @@ in {
       ./virtualisation.nix
       ./wireguard.nix
       ./wireshark.nix
+      ./zsh.nix
     ]
     ++ (
       if forGaming

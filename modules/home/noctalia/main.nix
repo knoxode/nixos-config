@@ -475,7 +475,6 @@ in {
         };
         greeter_sync = {
           auto_sync = true;
-          privilege_command = "sudo pkexec";
         };
         mpris = {
           blacklist = [];

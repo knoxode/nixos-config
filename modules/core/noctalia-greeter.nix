@@ -1,15 +1,18 @@
 {
-  inputs,
+  lib,
   pkgs,
+  config,
   ...
 }: {
-  imports = [
-    inputs.noctalia-greeter.nixosModules.default
-  ];
-
-  programs.noctalia-greeter = {
+  services.displayManager.noctalia-greeter = {
     enable = true;
-    package = inputs.noctalia-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    greeter-args = "Hyprland";
+    settings = {
+      cursor.size = 24;
+    };
+    cursorTheme = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
+    };
+    passwordlessSyncUsers = lib.attrNames (lib.filterAttrs (_: user: user.isNormalUser) config.users.users);
   };
 }
