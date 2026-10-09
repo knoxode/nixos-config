@@ -6,6 +6,6 @@
       cmp.enable = true;
     };
     codecompanion-nvim.enable = false;
-    avante-nvim.enable = true;
+    avante-nvim.enable = false;
   };
 }

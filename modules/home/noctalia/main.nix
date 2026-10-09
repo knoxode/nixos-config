@@ -291,6 +291,7 @@ in {
         blur_intensity = 0.09999999403953552;
         blurred_desktop = false;
         enabled = true;
+        transition = "fade";
         fingerprint = true;
         monitors = [];
         tint_intensity = 0.30000001192092896;
