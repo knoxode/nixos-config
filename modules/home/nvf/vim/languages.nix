@@ -22,6 +22,22 @@
         ];
       };
 
+      diagnostics = {
+        nvim-lint.linters = {
+          luacheck = {
+            args = [
+              "--formatter"
+              "plain"
+              "--codes"
+              "--ranges"
+              "--read-globals"
+              "hl"
+              "-"
+            ];
+          };
+        };
+      };
+
       lsp = {
         enable = true;
         formatOnSave = true;

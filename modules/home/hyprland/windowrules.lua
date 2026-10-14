@@ -35,10 +35,21 @@ hl.window_rule({
   },
 
   float = true,
+  --pin = true,
+  opacity = 0.8,
+  no_blur = true,
   pin = true,
-  center = true,
   focus_on_activate = true,
-  size = { "monitor_h * 0.75", "monitor_h * 0.75" },
+
+  size = {
+    "monitor_w * 0.25",
+    "monitor_h * 0.90",
+  },
+
+  move = {
+    "monitor_w - (monitor_w * 0.25) - 11",
+    "monitor_h * 0.05",
+  },
 })
 
 hl.window_rule({
