@@ -12,6 +12,7 @@ in {
       ./bluetooth.nix
       ./customOptions
       ./customPackages
+      ./fstrim.nix
       # ./flatpak.nix
       #./greetd.nix
       ./gpu_symlink.nix

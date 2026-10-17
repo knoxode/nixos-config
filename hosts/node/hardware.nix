@@ -62,8 +62,8 @@
 
   fileSystems."/mnt/games" = {
     device = "/dev/disk/by-uuid/F69C7E789C7E336B";
-    fsType = "ntfs-3g";
-    options = ["rw" "uid=1000"];
+    fsType = "ntfs";
+    options = ["rw" "windows_names"];
   };
 
   fileSystems."/home/shaiikura/externalUbisoft" = {
