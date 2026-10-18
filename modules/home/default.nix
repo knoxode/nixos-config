@@ -18,7 +18,7 @@
     #./helix.nix
     #./hyprpanel.nix
     ./kitty.nix
-    ./rofi.nix
+    #./rofi.nix
     ./shellAliases.nix
     ./stylix.nix
     ./systemd.nix
