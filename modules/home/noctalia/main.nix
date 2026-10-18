@@ -236,26 +236,30 @@ in {
         ];
         pre_action_fade_seconds = 2.0;
         behavior = {
-          lock = {
-            action = "lock";
-            command = "";
-            enabled = true;
-            resume_command = "";
-            timeout = 20.0;
-          };
-          "lock-and-suspend" = {
-            action = "lock_and_suspend";
-            command = "";
-            enabled = true;
-            resume_command = "";
-            timeout = 40.0;
-          };
           "screen-off" = {
             action = "screen_off";
             command = "";
             enabled = true;
             resume_command = "";
-            timeout = 30.0;
+            timeout = 60.0;
+          };
+          lock = {
+            action = "lock";
+            command = "";
+            enabled = true;
+            resume_command = "";
+            timeout = 300.0;
+          };
+          "suspend" = {
+            action = "suspend";
+            command = "";
+            enabled = true;
+            resume_command = "";
+            timeout = 600.0;
+          };
+          "lock-and-suspend" = {
+            action = "lock_and_suspend";
+            enabled = false;
           };
         };
       };
@@ -692,6 +696,10 @@ in {
           min_length = 200;
           title_scroll = "always";
           type = "media";
+          actions = {
+            scroll_down = "brightness-down * 10";
+            scroll_up = "brightness-up * 10";
+          };
         };
         network_rx = {
           stat = "net_rx";

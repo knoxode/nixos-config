@@ -5,11 +5,11 @@
     inherit (import ./keymap.nix) keymap;
     inherit (import ./theme.nix) theme;
     shellWrapperName = "y";
-    plugins = {
-      lazygit = pkgs.yaziPlugins.lazygit;
-      full-border = pkgs.yaziPlugins.full-border;
-      git = pkgs.yaziPlugins.git;
-      smart-enter = pkgs.yaziPlugins.smart-enter;
+    plugins = with pkgs.yaziPlugins; {
+      lazygit.package = lazygit;
+      full-border.package = full-border;
+      git.package = git;
+      smart-enter.package = smart-enter;
     };
 
     initLua = ''

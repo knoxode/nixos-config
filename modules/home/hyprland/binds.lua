@@ -79,14 +79,10 @@ hl.bind(
   hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
   { locked = true, repeating = true }
 )
-hl.bind(
-  "XF86MonBrightnessUp",
-  hl.dsp.exec_cmd("noctalia-shell ipc call brightness increase"),
-  { locked = true, repeating = true }
-)
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("noctalia msg brightness-up 10"), { locked = true, repeating = true })
 hl.bind(
   "XF86MonBrightnessDown",
-  hl.dsp.exec_cmd("noctalia-shell ipc call brightness decrease"),
+  hl.dsp.exec_cmd("noctalia msg brightness-down 10"),
   { locked = true, repeating = true }
 )
 

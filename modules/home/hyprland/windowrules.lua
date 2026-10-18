@@ -53,6 +53,25 @@ hl.window_rule({
 })
 
 hl.window_rule({
+  name = "Noctalia Settings",
+  match = {
+    initial_title = "Noctalia Settings",
+  },
+
+  float = true,
+  --pin = true,
+  opacity = 0.8,
+  no_blur = true,
+  center = true,
+  focus_on_activate = true,
+
+  size = {
+    "monitor_h * 0.75",
+    "monitor_h * 0.75",
+  },
+})
+
+hl.window_rule({
   name = "File manager tag",
   match = {
     class = "^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt)$",
