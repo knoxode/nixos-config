@@ -13,9 +13,7 @@ in {
       audio = {
         enable_overdrive = false;
         enable_sounds = false;
-        notification_sound = "";
         sound_volume = 0.5;
-        volume_change_sound = "";
       };
       backdrop = {
         blur_intensity = 0.5;
@@ -209,10 +207,10 @@ in {
         show_running = true;
       };
       hooks = {
-        battery_charging = [];
-        battery_discharging = [];
+        battery_charging = ["hyprctl eval 'OnACHook()'"];
+        battery_discharging = ["hyprctl eval 'OnBatteryHook()'"];
         battery_percentage_changed = [];
-        battery_plugged = [];
+        battery_plugged = ["hyprctl eval 'OnACHook()'"];
         bluetooth_disabled = [];
         bluetooth_enabled = [];
         colors_changed = [];
@@ -295,7 +293,7 @@ in {
         blur_intensity = 0.09999999403953552;
         blurred_desktop = false;
         enabled = true;
-        transition = "fade";
+        transition = ["fade"];
         fingerprint = true;
         monitors = [];
         tint_intensity = 0.30000001192092896;

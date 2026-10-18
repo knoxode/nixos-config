@@ -18,6 +18,7 @@
     "shared.lua"
     "windowrules.lua"
     "workspaces.lua"
+    "hooks.lua"
   ];
 in {
   imports = [
