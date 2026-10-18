@@ -8,6 +8,7 @@
     enable = true;
     settings = {
       cursor.size = 24;
+      user.default = "shaiikura";
     };
     cursorTheme = {
       package = pkgs.bibata-cursors;

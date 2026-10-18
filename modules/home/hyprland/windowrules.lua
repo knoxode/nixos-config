@@ -72,6 +72,24 @@ hl.window_rule({
 })
 
 hl.window_rule({
+  name = "Select what to share",
+  match = {
+    initial_title = "Select what to share",
+  },
+
+  float = true,
+  --pin = true,
+  opacity = 0.8,
+  no_blur = true,
+  center = true,
+  focus_on_activate = true,
+
+  size = {
+    "monitor_w * 0.50",
+    "monitor_h * 0.50",
+  },
+})
+hl.window_rule({
   name = "File manager tag",
   match = {
     class = "^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt)$",
