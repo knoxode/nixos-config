@@ -1,75 +1,76 @@
-local previousGraphics = nil
-local previousMonitors = nil
+local shared = require("shared")
 
-function OnBatteryHook()
-  -- Save settings only once
-  if not previousGraphics then
-    previousGraphics = {
-      blur = hl.get_config("decoration.blur.enabled"),
-      shadow = hl.get_config("decoration.shadow.enabled"),
-    }
-  end
+---@param on_AC boolean
+function SetPowerSettings(on_AC)
+  local brightness = shared.DecideBrightness(on_AC)
+  local profile = on_AC and "performance" or "power-saver"
 
-  hl.notification.create({
-    text = "Switched to battery. Disabling fancy graphics.",
-    timeout = 3000,
-  })
+  local commands = {
+    string.format("noctalia msg brightness-set '*' %d%%", brightness),
+    string.format("powerprofilesctl set %s", profile),
+  }
 
-  hl.config({
-    decoration = {
-      blur = { enabled = false },
-      shadow = { enabled = false },
-    },
-  })
-
-  if not previousMonitors then
-    previousMonitors = {}
-
-    local monitors = hl.get_monitors()
-
-    for _, mon in ipairs(monitors) do
-      local originalMode = string.format("%dx%d@%.2f", mon.width, mon.height, mon.refresh_rate)
-
-      table.insert(previousMonitors, {
-        output = mon.name,
-        mode = originalMode,
-      })
-
-      local batteryMode = string.format("%dx%d@60", mon.width, mon.height)
-
-      hl.monitor({
-        output = mon.name,
-        mode = batteryMode,
-      })
-    end
+  for _, command in ipairs(commands) do
+    hl.exec_cmd(command)
   end
 end
 
-function OnACHook()
-  hl.notification.create({
-    text = "Switched to AC. Restoring graphics.",
-    timeout = 3000,
-  })
-
-  if previousGraphics then
+---@param on_AC boolean
+function SetGraphicsOpts(on_AC)
+  if not on_AC then
     hl.config({
       decoration = {
-        blur = { enabled = previousGraphics.blur },
-        shadow = { enabled = previousGraphics.shadow },
+        blur = {
+          enabled = false,
+        },
+        shadow = {
+          enabled = false,
+        },
       },
     })
-
-    previousGraphics = nil
+  else
+    hl.config({
+      decoration = {
+        blur = {
+          enabled = true,
+          size = 3,
+          passes = 1,
+          vibrancy = 0.1696,
+        },
+        shadow = {
+          enabled = true,
+          range = 4,
+          render_power = 3,
+          color = 0xee1a1a1a,
+        },
+      },
+    })
   end
+end
 
-  if previousMonitors then
-    for _, mon in ipairs(previousMonitors) do
-      hl.monitor({
-        output = mon.output,
-        mode = mon.mode,
-      })
-    end
+function OnBatteryHook()
+  shared.on_AC = false
 
-    previousMonitors = nil
-  end
+  SetGraphicsOpts(shared.on_AC)
+
+  eval_monitors(hl.get_monitors(), shared.on_AC)
+
+  hl.notification.create({
+    text = "Switched to battery. Performing Battery Optimisations.",
+    timeout = 3000,
+  })
+  SetPowerSettings(shared.on_AC)
+end
+
+function OnACHook()
+  shared.on_AC = true
+
+  SetGraphicsOpts(shared.on_AC)
+
+  eval_monitors(hl.get_monitors(), shared.on_AC)
+  hl.notification.create({
+    text = "Switched to AC. Enabling Fancy Graphics.",
+    timeout = 3000,
+  })
+  SetPowerSettings(shared.on_AC)
 end

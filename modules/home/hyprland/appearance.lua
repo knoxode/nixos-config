@@ -3,41 +3,41 @@ local shared = require("shared")
 local last_on_battery = nil
 
 local function apply_battery_optimisations(on_battery)
-	if on_battery == last_on_battery then
-		return
-	end
+  if on_battery == last_on_battery then
+    return
+  end
 
-	last_on_battery = on_battery
+  last_on_battery = on_battery
 
-	if on_battery then
-		hl.config({
-			decoration = {
-				blur = {
-					enabled = false,
-				},
-				shadow = {
-					enabled = false,
-				},
-			},
-		})
-	else
-		hl.config({
-			decoration = {
-				blur = {
-					enabled = true,
-					size = 3,
-					passes = 1,
-					vibrancy = 0.1696,
-				},
-				shadow = {
-					enabled = true,
-					range = 4,
-					render_power = 3,
-					color = 0xee1a1a1a,
-				},
-			},
-		})
-	end
+  if on_battery then
+    hl.config({
+      decoration = {
+        blur = {
+          enabled = false,
+        },
+        shadow = {
+          enabled = false,
+        },
+      },
+    })
+  else
+    hl.config({
+      decoration = {
+        blur = {
+          enabled = true,
+          size = 3,
+          passes = 1,
+          vibrancy = 0.1696,
+        },
+        shadow = {
+          enabled = true,
+          range = 4,
+          render_power = 3,
+          color = 0xee1a1a1a,
+        },
+      },
+    })
+  end
 end
 
 -- hl.on("hyprland.start", function()
@@ -52,33 +52,33 @@ end
 -- end)
 
 hl.config({
-	general = {
-		gaps_in = 5,
-		gaps_out = 11,
+  general = {
+    gaps_in = 5,
+    gaps_out = 11,
 
-		border_size = 2,
+    border_size = 2,
 
-		col = {
-			active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-			inactive_border = "rgba(595959aa)",
-		},
+    col = {
+      active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
+      inactive_border = "rgba(595959aa)",
+    },
 
-		-- Set to true to enable resizing windows by clicking and dragging on borders and gaps
-		resize_on_border = false,
+    -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
+    resize_on_border = false,
 
-		-- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
-		allow_tearing = false,
+    -- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
+    allow_tearing = false,
 
-		layout = "dwindle",
-	},
+    layout = "dwindle",
+  },
 
-	decoration = {
-		rounding = 20,
-		rounding_power = 6,
-	},
-	animations = {
-		enabled = true,
-	},
+  decoration = {
+    rounding = 20,
+    rounding_power = 6,
+  },
+  animations = {
+    enabled = true,
+  },
 })
 
 -- Default curves and animations, see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
