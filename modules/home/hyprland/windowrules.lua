@@ -136,16 +136,51 @@ hl.window_rule({
 
 -- Snapgene rule
 hl.window_rule({
-  name = "Snapgene dialog",
+  name = "SnapGene dialog",
   match = {
-    class = "^(?![Ss]nap[Gg]ene$).*$",
-    title = "^([Ss]nap[Gg]ene)$",
+    class = "^SnapGene$",
+    title = "^SnapGene$",
+    modal = true,
   },
 
   center = true,
   size = "50% 50%",
 })
 
+hl.window_rule({
+  name = "youtube-idle-inhibit",
+  match = {
+    class = "firefox.*",
+    title = ".*YouTube.*",
+  },
+  border_color = {
+    colors = {
+      "rgb(A020F0)", -- Purple
+      "rgb(DC143C)", -- Crimson
+      "rgb(FF3535)", -- Bright red
+    },
+    angle = 45,
+  },
+  idle_inhibit = "focus",
+})
+
+hl.window_rule({
+  name = "whatsapp-border",
+  match = {
+    class = "firefox.*",
+    title = ".*WhatsApp.*",
+  },
+
+  border_color = {
+    colors = {
+      "rgb(25D366)", -- WhatsApp green
+      "rgb(00C9A7)", -- Teal
+      "rgb(00FF88)", -- Neon green
+      "rgb(25D366)", -- Back to green
+    },
+    angle = 45,
+  },
+})
 hl.window_rule({
   name = "Browser tag",
   match = {
