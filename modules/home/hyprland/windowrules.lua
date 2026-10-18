@@ -92,13 +92,28 @@ hl.window_rule({
 hl.window_rule({
   name = "Chat float",
   match = {
-    class = "^(discord-canary|obsidian|spotify|Texts|kitty-dropterm)$",
+    class = "^(discord-canary|obsidian|Spotify|Texts)$",
   },
 
   no_initial_focus = true,
   suppress_event = "fullscreen, maximize, activate, activatefocus, fullscreenoutput",
   workspace = "special:apps",
   opacity = "0.7 override 0.7 override 0.7 override",
+})
+
+hl.window_rule({
+  name = "Kitty dropterm",
+  match = {
+    class = "^(kitty)$",
+    workspace = "special:terminal",
+  },
+  float = true,
+  center = true,
+  border_size = 0,
+  no_blur = true,
+  size = { "monitor_w*0.9", "monitor_h*0.4" },
+  suppress_event = "fullscreen maximize",
+  opacity = "0.7 override 0.7 override",
 })
 
 -- Snapgene rule

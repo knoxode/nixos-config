@@ -57,6 +57,7 @@ hl.bind(shared.mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true
 
 --Special workspace
 hl.bind("ALT + V", hl.dsp.workspace.toggle_special("apps"))
+hl.bind("SUPER + SHIFT + T", hl.dsp.workspace.toggle_special("terminal"))
 
 -- Laptop multimedia keys for volume and LCD brightness
 hl.bind(

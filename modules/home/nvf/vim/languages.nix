@@ -54,7 +54,7 @@
             settings = {
               Lua = {
                 workspace.library = [
-                  "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/share/hypr/stubs"
+                  "${pkgs.hyprland}/share/hypr/stubs"
                 ];
                 diagnostics.globals = ["hl"];
               };

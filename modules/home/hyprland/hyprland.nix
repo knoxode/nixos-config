@@ -1,7 +1,6 @@
 {
   host,
-  config,
-  inputs,
+  lib,
   pkgs,
   ...
 }: let
@@ -21,10 +20,14 @@ in {
   # Place Files Inside Home Directory
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    configType = "lua";
+    systemd.enable = true;
     xwayland = {
       enable = true;
     };
+    extraConfig = ''
+      -- Hyprland configuration is managed externally.
+    '';
   };
+  xdg.configFile."hypr/hyprland.lua".enable = lib.mkForce false;
 }

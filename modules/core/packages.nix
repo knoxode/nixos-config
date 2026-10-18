@@ -34,7 +34,10 @@ in {
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      withUWSM = true;
+    };
   };
 
   fonts.packages = with pkgs; [
@@ -111,7 +114,6 @@ in {
       python3
       qalculate-qt
       ripgrep
-      rofi
       rustc
       rustdesk-flutter
       socat

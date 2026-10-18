@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   hyprDir = "/home/shaiikura/alexos/modules/home/hyprland";
 
   files = [
@@ -28,7 +32,14 @@ in {
 
   home.file = builtins.listToAttrs (map (file: {
       name = ".config/hypr/${file}";
-      value.source = config.lib.file.mkOutOfStoreSymlink "${hyprDir}/${file}";
+
+      value.source =
+        if file == "hyprland.lua"
+        then
+          lib.mkForce (
+            config.lib.file.mkOutOfStoreSymlink "${hyprDir}/${file}"
+          )
+        else config.lib.file.mkOutOfStoreSymlink "${hyprDir}/${file}";
     })
     files);
 }
