@@ -1,20 +1,5 @@
 local shared = require("shared")
-
----@param on_AC boolean
-function SetPowerSettings(on_AC)
-  local brightness = shared.DecideBrightness(on_AC)
-  local profile = on_AC and "performance" or "power-saver"
-
-  local commands = {
-    string.format("noctalia msg brightness-set '*' %d%%", brightness),
-    string.format("powerprofilesctl set %s", profile),
-  }
-
-  for _, command in ipairs(commands) do
-    hl.exec_cmd(command)
-  end
-end
-
+---
 ---@param on_AC boolean
 function SetGraphicsOpts(on_AC)
   if not on_AC then
@@ -41,7 +26,7 @@ function SetGraphicsOpts(on_AC)
           enabled = true,
           range = 4,
           render_power = 3,
-          color = 0xee1a1a1a,
+          color = "0xee1a1a1a",
         },
       },
     })
@@ -53,13 +38,8 @@ function OnBatteryHook()
 
   SetGraphicsOpts(shared.on_AC)
 
-  eval_monitors(hl.get_monitors(), shared.on_AC)
-
-  hl.notification.create({
-    text = "Switched to battery. Performing Battery Optimisations.",
-    timeout = 3000,
-  })
-  SetPowerSettings(shared.on_AC)
+  Notify.debug("Switched to battery. Performing Battery Optimisations.")
+  shared.SetPowerSettings(shared.on_AC)
 end
 
 function OnACHook()
@@ -67,10 +47,6 @@ function OnACHook()
 
   SetGraphicsOpts(shared.on_AC)
 
-  eval_monitors(hl.get_monitors(), shared.on_AC)
-  hl.notification.create({
-    text = "Switched to AC. Enabling Fancy Graphics.",
-    timeout = 3000,
-  })
-  SetPowerSettings(shared.on_AC)
+  Notify.debug("Switched to AC. Enabling Fancy Graphics.")
+  shared.SetPowerSettings(shared.on_AC)
 end

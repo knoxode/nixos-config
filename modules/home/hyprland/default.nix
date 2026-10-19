@@ -6,6 +6,9 @@
   hyprDir = "/home/shaiikura/alexos/modules/home/hyprland";
 
   files = [
+    "helpers"
+    "systems"
+    "events"
     "animations.lua"
     "appearance.lua"
     "binds.lua"

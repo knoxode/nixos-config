@@ -13,6 +13,14 @@ require("gpu")
 require("hooks")
 require("node_specific")
 
+local events = require("events")
+Notify = require("helpers.notify")
+Display = require("systems.display")
+
+Notify.set_debug(true)
+
+events.register()
+
 hl.config({
   render = {
     direct_scanout = 2,
