@@ -1,3 +1,5 @@
+local Notify = require("helpers.notify")
+
 local M = {}
 
 function M.read_file(path)

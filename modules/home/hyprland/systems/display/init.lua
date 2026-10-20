@@ -1,3 +1,4 @@
+local Notify = require("helpers.notify")
 local monitor_helpers = require("helpers.monitors")
 local workspace_helpers = require("helpers.workspaces")
 local brightness_helper = require("helpers.brightness")

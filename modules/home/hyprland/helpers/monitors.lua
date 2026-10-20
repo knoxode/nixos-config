@@ -1,3 +1,4 @@
+local Notify = require("helpers.notify")
 local M = {}
 
 ---@param monitor HL.Monitor

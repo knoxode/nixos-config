@@ -12,10 +12,12 @@ require("gpu")
 require("hooks")
 
 local events = require("events")
-Notify = require("helpers.notify")
-Display = require("systems.display")
+local Notify = require("helpers.notify")
+local Operations = require("diagnostics.operations")
 
-Notify.set_debug(true)
+Notify.configure({
+  debug = {},
+})
 
 local machine = require("machine_specific")
 

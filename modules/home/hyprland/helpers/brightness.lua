@@ -1,4 +1,5 @@
 local sun = require("helpers.sun")
+local Notify = require("helpers.notify")
 
 local M = {}
 

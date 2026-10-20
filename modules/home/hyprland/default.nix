@@ -9,6 +9,7 @@
     "helpers"
     "systems"
     "events"
+    "diagnostics"
     "machine_specific"
     "animations.lua"
     "appearance.lua"

@@ -1,4 +1,6 @@
 local system_helpers = require("helpers.system")
+local Notify = require("helpers.notify")
+
 local M = {}
 
 ---@param on_AC boolean | nil
