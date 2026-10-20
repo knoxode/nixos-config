@@ -1,4 +1,3 @@
-require("monitors")
 require("workspaces")
 require("binds")
 require("exec")
@@ -11,7 +10,6 @@ require("animations")
 require("env")
 require("gpu")
 require("hooks")
-require("node_specific")
 
 local events = require("events")
 Notify = require("helpers.notify")
@@ -19,6 +17,11 @@ Display = require("systems.display")
 
 Notify.set_debug(true)
 
+local machine = require("machine_specific")
+
+if machine.monitors then
+  machine.monitors.configure()
+end
 events.register()
 
 hl.config({

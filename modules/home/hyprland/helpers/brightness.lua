@@ -1,5 +1,3 @@
--- helpers/brightness.lua
-
 local sun = require("helpers.sun")
 
 local M = {}
@@ -14,14 +12,14 @@ function M.calculate(on_AC)
 
   if start_time and end_time and end_time > start_time then
     if now > start_time and now < end_time then
-      local progress = (now - start_time) / (end_time - start_time)
-      local intensity = math.sin(math.pi * progress)
+      local transition = math.min(3600, (end_time - start_time) / 2)
 
-      brightness = 1 + 99 * intensity
+      local progress = math.min((now - start_time) / transition, (end_time - now) / transition, 1)
 
-      if not on_AC then
-        brightness = brightness * 0.25
-      end
+      local intensity = (1 - math.cos(math.pi * progress)) / 2
+
+      local maximum = on_AC and 100 or 25
+      brightness = 1 + (maximum - 1) * intensity
     end
   end
 
@@ -44,7 +42,7 @@ function M.apply(brightness)
   local command = string.format("noctalia msg brightness-set '*' %d", brightness)
 
   Notify.debug("Executing: " .. command)
-  os.execute(command)
+  hl.exec_cmd(command)
 end
 
 return M

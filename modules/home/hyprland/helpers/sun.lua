@@ -12,12 +12,16 @@ function M.GetSunTimes()
     return cached_sun
   end
 
-  local cmd = [[
+  -- Explicitly request sun times for the current local date
+  local cmd = string.format(
+    [[
     curl -fsS --connect-timeout 3 --max-time 5 \
-      "https://api.sunrise-sunset.org/json?lat=51.75&lng=-1.25&formatted=0" |
+      "https://api.sunrise-sunset.org/json?lat=51.75&lng=-1.25&date=%s&formatted=0" |
     jq -r 'if .status == "OK" then .results | .sunrise, .sunset else empty end' |
-    while read -r time; do date -d "$time" +%s; done
-  ]]
+    while read -r time; do date -d "$time" +%%s; done
+  ]],
+    today
+  )
 
   local handle = io.popen(cmd)
   if not handle then
@@ -32,14 +36,9 @@ function M.GetSunTimes()
     return nil
   end
 
-  local sunrise_time = os.date("*t", sunrise)
-  local sunset_time = os.date("*t", sunset)
-
   cached_sun = {
     sunrise = sunrise,
     sunset = sunset,
-    sunrise_before_6 = sunrise_time.hour < 6,
-    sunset_after_10 = sunset_time.hour >= 22,
   }
 
   cached_date = today
@@ -49,17 +48,17 @@ end
 
 ---@return integer|nil start_time
 ---@return integer|nil end_time
----@return integer|nil start_time
----@return integer|nil end_time
 function M.GetEffectiveSunTimes()
   local sun = M.GetSunTimes()
 
   if not sun then
+    Notify.debug("Sun times: Failed to retrieve sunrise/sunset")
     return nil, nil
   end
 
   local today = os.date("*t", system_helpers.GetCurrentTime())
 
+  -- Minimum brightness period: 06:00 to 22:00
   local start_time = os.time({
     year = today.year,
     month = today.month,
@@ -78,7 +77,21 @@ function M.GetEffectiveSunTimes()
     sec = 0,
   })
 
-  return math.min(sun.sunrise, start_time), math.max(sun.sunset, end_time)
+  -- Extend the period for earlier sunrises or later sunsets
+  local effective_start = math.min(sun.sunrise, start_time)
+  local effective_end = math.max(sun.sunset, end_time)
+
+  Notify.debug(
+    string.format(
+      "Sun times:\nSunrise: %s\nSunset: %s\nEffective start: %s\nEffective end: %s",
+      os.date("%Y-%m-%d %H:%M", sun.sunrise),
+      os.date("%Y-%m-%d %H:%M", sun.sunset),
+      os.date("%Y-%m-%d %H:%M", effective_start),
+      os.date("%Y-%m-%d %H:%M", effective_end)
+    )
+  )
+
+  return effective_start, effective_end
 end
 
 return M

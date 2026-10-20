@@ -22,6 +22,7 @@ function M.is_on_AC()
 
   local handle = io.popen("ls -1 " .. dir .. " 2>/dev/null")
   if not handle then
+    Notify.debug("AC detection: Failed to read power supply directory")
     return nil
   end
 
@@ -31,9 +32,12 @@ function M.is_on_AC()
   for name in handle:lines() do
     local path = dir .. "/" .. name
 
-    if system_helpers.read_file(path .. "/type") == "Mains" then
-      local status = system_helpers.read_file(path .. "/online")
+    local supply_type = system_helpers.read_file(path .. "/type")
+    local status = system_helpers.read_file(path .. "/online")
 
+    Notify.debug(string.format("Power supply: %s\nType: %s\nOnline: %s", name, tostring(supply_type), tostring(status)))
+
+    if supply_type == "Mains" then
       if status == "1" then
         online = true
       end
@@ -47,8 +51,12 @@ function M.is_on_AC()
   handle:close()
 
   if not found then
+    Notify.debug("AC detection: No valid mains power supply found")
     return nil
   end
+
+  Notify.debug(string.format("AC detection result: %s", online and "AC connected" or "Battery"))
+
   return online
 end
 

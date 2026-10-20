@@ -1,7 +1,8 @@
 local M = {}
 
-function M.set_mon_node()
+function M.configure()
   local monitors = hl.get_monitors()
+
   if #monitors == 0 then
     return
   end
@@ -9,8 +10,8 @@ function M.set_mon_node()
   if #monitors >= 2 then
     for i = 1, 5 do
       local j = i + 5
-      hl.workspace_rule({ workspace = tostring(j), monitor = monitors[1].name })
-      hl.workspace_rule({ workspace = tostring(i), monitor = monitors[2].name })
+      hl.workspace_rule({ workspace = tostring(i), monitor = monitors[1].name })
+      hl.workspace_rule({ workspace = tostring(j), monitor = monitors[2].name })
     end
   end
 
