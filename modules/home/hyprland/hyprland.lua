@@ -11,20 +11,22 @@ require("env")
 require("gpu")
 require("hooks")
 
-local events = require("events")
+local Events = require("events")
 local Notify = require("helpers.notify")
-local Operations = require("diagnostics.operations")
+
+Notify.register(Events.operations)
 
 Notify.configure({
   debug = {},
 })
+
+Events.register()
 
 local machine = require("machine_specific")
 
 if machine.monitors then
   machine.monitors.configure()
 end
-events.register()
 
 hl.config({
   render = {

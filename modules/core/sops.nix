@@ -15,6 +15,11 @@
     "wireguard/publickey" = {};
     "wireguard/presharedkey" = {};
     "geldoc" = {};
+    "eduroam/cert" = {
+      path = "/etc/NetworkManager/certs/eduroam.pem";
+      mode = "0444";
+    };
+    "eduroam/env" = {};
   };
 in {
   imports = [

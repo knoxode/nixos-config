@@ -4,13 +4,24 @@
   options,
   ...
 }: {
+  imports = [
+    ./networkProfiles/eduroam.nix
+  ];
+
   systemd.network.wait-online.enable = false;
+
   networking = {
-    hostName = "${host}";
+    hostName = host;
+
     networkmanager.enable = true;
-    timeServers = options.networking.timeServers.default ++ ["pool.ntp.org"];
+
+    timeServers =
+      options.networking.timeServers.default
+      ++ ["pool.ntp.org"];
+
     firewall = {
       enable = true;
+
       allowedTCPPorts = [
         22
         80
@@ -19,6 +30,7 @@
         59011
         8080
       ];
+
       allowedUDPPorts = [
         51820
         1235
@@ -28,5 +40,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [networkmanagerapplet];
+  environment.systemPackages = with pkgs; [
+    networkmanagerapplet
+  ];
 }

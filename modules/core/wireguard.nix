@@ -65,10 +65,11 @@ in {
               ++ selfIP
               ++ allowedPeerIPs;
             name = "${vpnConnectionName}_i6";
-            endpoint = "knoxvpn.duckdns.org:51821";
+            endpoint = "i6vpn.tha.haus:51821";
             persistentKeepalive = 25;
           }
         ];
+        postSetup = ''printf "nameserver 10.200.100.1" | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0'';
       };
     };
   };

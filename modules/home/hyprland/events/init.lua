@@ -3,8 +3,15 @@ local power = require("systems.powerManagement")
 local power_helper = require("helpers.power")
 local machine = require("machine_specific")
 local Notify = require("helpers.notify")
-local Operations = require("diagnostics.operations")
+
 local M = {}
+
+--- Public event operations also serve as diagnostic identifiers.
+--- Notify.register() discovers these functions automatically, allowing
+--- them to be selected for debugging without a separate operation registry.
+---
+--- Declaring this table separately also improves LuaLS field inference.
+M.operations = {}
 
 local function make_context(on_AC)
   if on_AC == nil then
@@ -22,71 +29,88 @@ local function make_context(on_AC)
   }
 end
 
-local function refresh_display_configuration()
-  Notify.scope(Operations.monitorChange, function()
-    local ctx = make_context()
+function M.operations.monitorChange()
+  local ctx = make_context()
 
-    if machine.policy.dynamic_monitors then
-      display.configure_display_environment(ctx)
-    end
-
-    if machine.policy.automatic_brightness then
-      display.update_brightness(ctx)
-    end
-  end)
-end
-
-local function handle_power_change(on_AC)
-  Notify.scope(Operations.powerChange, function()
-    local ctx = make_context(on_AC)
-
+  if machine.policy.dynamic_monitors then
     display.configure_display_environment(ctx)
+  end
+
+  if machine.policy.automatic_brightness then
     display.update_brightness(ctx)
-    power.configure(ctx)
-  end)
-end
-
-local function refresh_brightness()
-  local ok, err = pcall(function()
-    Notify.scope(Operations.brightnessRefresh, function()
-      local ctx = make_context()
-      display.update_brightness(ctx)
-    end)
-  end)
-
-  if not ok then
-    Notify.info("Brightness error: " .. tostring(err))
   end
 end
 
-function M.register()
-  hl.on("hyprland.start", function()
-    Notify.scope(Operations.Startup, function()
-      local ctx = make_context()
+function M.operations.powerChange(on_AC)
+  local ctx = make_context(on_AC)
 
-      display.configure_display_environment(ctx)
-      display.update_brightness(ctx)
-      power.configure(ctx)
-
-      hl.timer(refresh_brightness, {
-        timeout = 30 * 60 * 1000,
-        type = "repeat",
-      })
-    end)
-  end)
-
-  hl.on("monitor.added", refresh_display_configuration)
-  hl.on("monitor.removed", refresh_display_configuration)
-  hl.on("config.reloaded", refresh_display_configuration)
+  display.configure_display_environment(ctx)
+  display.update_brightness(ctx)
+  power.configure(ctx)
 end
 
--- Exposed globally for your existing Noctalia integration.
+function M.operations.brightnessRefresh()
+  local ctx = make_context()
+  display.update_brightness(ctx)
+end
+
+function M.operations.startup()
+  local ctx = make_context()
+
+  display.configure_display_environment(ctx)
+  display.update_brightness(ctx)
+  power.configure(ctx)
+
+  -- Timers execute independently of the startup operation, so each
+  -- brightness refresh needs its own diagnostic scope.
+  hl.timer(function()
+    local ok, err = pcall(function()
+      Notify.scope(M.operations.brightnessRefresh)
+    end)
+
+    if not ok then
+      Notify.info("Brightness error: " .. tostring(err))
+    end
+  end, {
+    timeout = 30 * 60 * 1000,
+    type = "repeat",
+  })
+end
+
+--- Each event handler runs through Notify.scope() to establish a diagnostic
+--- context for the entire operation, including any helpers it calls.
+---
+--- The root operation determines whether debug messages are enabled.
+--- Nested function calls inherit this setting automatically, so helpers
+--- can call Notify.debug() without knowing which event triggered them.
+---
+--- Calling an operation directly would bypass this diagnostic context.
+
+function M.register()
+  hl.on("hyprland.start", function()
+    Notify.scope(M.operations.startup)
+  end)
+
+  hl.on("monitor.added", function()
+    Notify.scope(M.operations.monitorChange)
+  end)
+
+  hl.on("monitor.removed", function()
+    Notify.scope(M.operations.monitorChange)
+  end)
+
+  hl.on("config.reloaded", function()
+    Notify.scope(M.operations.monitorChange)
+  end)
+end
+
+-- Exposed globally for Noctalia integration.
 function OnBatteryHook()
-  handle_power_change(false)
+  Notify.scope(M.operations.powerChange, false)
 end
 
 function OnACHook()
-  handle_power_change(true)
+  Notify.scope(M.operations.powerChange, true)
 end
 
 return M
