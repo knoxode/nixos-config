@@ -20,6 +20,7 @@
       mode = "0444";
     };
     "eduroam/env" = {};
+    "eduroam/password" = {};
   };
 in {
   imports = [

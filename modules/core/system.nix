@@ -30,11 +30,13 @@
         "https://hyprland.cachix.org"
         "https://winapps.cachix.org/"
         "https://noctalia.cachix.org"
+        #"https://attic.xuyh0120.win/lantian"
       ];
       trusted-public-keys = [
         "hyprland.cachix.org-1:a7pgxzMz8+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g="
         "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        #"lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       ];
     };
   };
