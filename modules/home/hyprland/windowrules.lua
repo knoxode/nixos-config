@@ -66,7 +66,7 @@ hl.window_rule({
   focus_on_activate = true,
 
   size = {
-    "monitor_h * 0.75",
+    "monitor_w * 0.75",
     "monitor_h * 0.75",
   },
 })
@@ -89,6 +89,7 @@ hl.window_rule({
     "monitor_h * 0.50",
   },
 })
+
 hl.window_rule({
   name = "File manager tag",
   match = {
@@ -125,11 +126,15 @@ hl.window_rule({
     class = "^(kitty)$",
     workspace = "special:terminal",
   },
+
   float = true,
   center = true,
   border_size = 0,
   no_blur = true,
-  size = { "monitor_w*0.9", "monitor_h*0.4" },
+  size = {
+    "monitor_w * 0.90",
+    "monitor_h * 0.40",
+  },
   suppress_event = "fullscreen maximize",
   opacity = "0.7 override 0.7 override",
 })
@@ -144,7 +149,10 @@ hl.window_rule({
   },
 
   center = true,
-  size = "50% 50%",
+  size = {
+    "monitor_w * 0.50",
+    "monitor_h * 0.50",
+  },
 })
 
 hl.window_rule({
@@ -153,6 +161,7 @@ hl.window_rule({
     class = "firefox.*",
     title = ".*YouTube.*",
   },
+
   border_color = {
     colors = {
       "rgb(A020F0)", -- Purple
@@ -181,6 +190,7 @@ hl.window_rule({
     angle = 45,
   },
 })
+
 hl.window_rule({
   name = "Browser tag",
   match = {
@@ -336,7 +346,11 @@ hl.window_rule({
   },
 
   float = true,
-  size = "70% 70%",
+  center = true,
+  size = {
+    "monitor_w * 0.70",
+    "monitor_h * 0.70",
+  },
   opacity = "0.8 0.7",
 })
 
@@ -356,7 +370,10 @@ hl.window_rule({
   },
 
   float = true,
-  size = "60% 70%",
+  size = {
+    "monitor_w * 0.60",
+    "monitor_h * 0.70",
+  },
 })
 
 hl.window_rule({
@@ -425,7 +442,10 @@ hl.window_rule({
     initial_title = "(Add Folder to Workspace|Open Files)",
   },
 
-  size = "70% 60%",
+  size = {
+    "monitor_w * 0.70",
+    "monitor_h * 0.60",
+  },
 })
 
 hl.window_rule({
