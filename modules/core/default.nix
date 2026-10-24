@@ -12,6 +12,7 @@ in {
       ./bluetooth.nix
       ./customOptions
       ./customPackages
+      ./hardware
       ./fstrim.nix
       # ./flatpak.nix
       #./greetd.nix

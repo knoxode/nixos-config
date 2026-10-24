@@ -25,7 +25,14 @@
     };
     initrd = {
       verbose = false;
-      availableKernelModules = ["xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
+      availableKernelModules = [
+        "xhci_pci"
+        "thunderbolt"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+        "rtsx_pci_sdmmc"
+      ];
       kernelModules = ["dm-snapshot"];
       luks.devices.luks-root = {
         device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
@@ -35,8 +42,12 @@
     kernel.sysctl = {
       "vm.swappiness" = 10;
     };
+
     kernelParams = [
+      "i915.force_probe=!7d45"
+      "xe.force_probe=7d45"
     ];
+
     kernelModules = [
       "kvm-intel"
       "i2c-dev"
