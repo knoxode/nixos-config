@@ -26,8 +26,7 @@ in {
         ca-cert = eduroamCert;
         domain-match = "radius.ox.ac.uk";
 
-        password = eduroamPassword;
-        password-flags = 0;
+        password-flags = 1;
       };
 
       ipv4.method = "auto";
@@ -36,10 +35,10 @@ in {
     secrets.entries = [
       {
         matchId = "Eduroam";
-        matchType = "wifi";
+        #matchType = "wifi";
         matchSetting = "802-1x";
         key = "password";
-        file = config.sops.secrets."eduroam/password".path;
+        file = eduroamPassword;
       }
     ];
   };
