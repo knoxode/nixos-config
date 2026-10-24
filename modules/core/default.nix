@@ -10,6 +10,7 @@ in {
     [
       ./avahi.nix
       ./bluetooth.nix
+      ./aiModels
       ./customOptions
       ./customPackages
       ./hardware
