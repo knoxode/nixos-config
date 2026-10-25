@@ -95,4 +95,9 @@ function M.apply_config(config)
   hl.monitor(config)
 end
 
+Notify.register({
+  ["monitors.build_config"] = M.build_config,
+  ["monitors.apply_config"] = M.apply_config,
+})
+
 return M

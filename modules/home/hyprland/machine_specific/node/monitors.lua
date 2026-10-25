@@ -7,14 +7,6 @@ function M.configure()
     return
   end
 
-  if #monitors >= 2 then
-    for i = 1, 5 do
-      local j = i + 5
-      hl.workspace_rule({ workspace = tostring(i), monitor = monitors[1].name })
-      hl.workspace_rule({ workspace = tostring(j), monitor = monitors[2].name })
-    end
-  end
-
   for i = 1, math.min(2, #monitors) do
     if monitors[i].description == "Acer Technologies XB273U GX 3052185574200" then
       hl.monitor({

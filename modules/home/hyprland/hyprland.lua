@@ -9,7 +9,6 @@ require("misc")
 require("animations")
 require("env")
 require("gpu")
-require("hooks")
 
 local Events = require("events")
 local Notify = require("helpers.notify")

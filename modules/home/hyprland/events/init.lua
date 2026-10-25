@@ -1,6 +1,7 @@
 local display = require("systems.display")
 local power = require("systems.powerManagement")
 local power_helper = require("helpers.power")
+local workspace_helpers = require("helpers.workspaces")
 local machine = require("machine_specific")
 local Notify = require("helpers.notify")
 
@@ -32,6 +33,8 @@ end
 function M.operations.monitorChange()
   local ctx = make_context()
 
+  workspace_helpers.assign(ctx.monitors, machine.policy)
+
   if machine.policy.dynamic_monitors then
     display.configure_display_environment(ctx)
   end
@@ -44,6 +47,7 @@ end
 function M.operations.powerChange(on_AC)
   local ctx = make_context(on_AC)
 
+  workspace_helpers.assign(ctx.monitors, machine.policy)
   display.configure_display_environment(ctx)
   display.update_brightness(ctx)
   power.configure(ctx)
@@ -57,6 +61,7 @@ end
 function M.operations.startup()
   local ctx = make_context()
 
+  workspace_helpers.assign(ctx.monitors, machine.policy)
   display.configure_display_environment(ctx)
   display.update_brightness(ctx)
   power.configure(ctx)

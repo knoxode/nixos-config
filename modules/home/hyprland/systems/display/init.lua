@@ -1,6 +1,5 @@
 local Notify = require("helpers.notify")
 local monitor_helpers = require("helpers.monitors")
-local workspace_helpers = require("helpers.workspaces")
 local brightness_helper = require("helpers.brightness")
 
 local M = {}
@@ -30,14 +29,8 @@ function M.configure_display_environment(ctx)
   Notify.debug(string.format("Configuring %d monitors", #monitors))
 
   apply_monitor_settings(monitors, ctx.on_AC)
-  workspace_helpers.assign(monitors)
 end
 
-function M.update_power_dependent(ctx)
-  -- Refresh rates and brightness
-end
-
----@param ctx table
 function M.update_brightness(ctx)
   local brightness = brightness_helper.calculate(ctx.on_AC)
 
@@ -48,8 +41,9 @@ function M.update_brightness(ctx)
   brightness_helper.apply(brightness)
 end
 
-function M.set_layout(layout)
-  -- Manual window-layout override
-end
+Notify.register({
+  ["display.configure_display_environment"] = M.configure_display_environment,
+  ["display.update_brightness"] = M.update_brightness,
+})
 
 return M

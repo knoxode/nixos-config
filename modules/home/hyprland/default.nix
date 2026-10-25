@@ -9,7 +9,6 @@
     "helpers"
     "systems"
     "events"
-    "diagnostics"
     "machine_specific"
     "animations.lua"
     "appearance.lua"
@@ -25,7 +24,6 @@
     "shared.lua"
     "windowrules.lua"
     "workspaces.lua"
-    "hooks.lua"
   ];
 in {
   imports = [

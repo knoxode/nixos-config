@@ -4,21 +4,6 @@ local Notify = require("helpers.notify")
 local M = {}
 
 ---@param on_AC boolean | nil
-function M.SetPowerSettings(on_AC)
-  local brightness = M.DecideBrightness(on_AC)
-  local profile = on_AC and "performance" or "power-saver"
-
-  local commands = {
-    string.format("noctalia msg brightness-set '*' %d", brightness),
-    string.format("powerprofilesctl set %s", profile),
-  }
-
-  for _, command in ipairs(commands) do
-    Notify.debug("Executing: " .. command)
-    hl.exec_cmd(command)
-  end
-end
-
 function M.is_on_AC()
   local dir = "/sys/class/power_supply"
 
@@ -61,5 +46,9 @@ function M.is_on_AC()
 
   return online
 end
+
+Notify.register({
+  ["power.is_on_AC"] = M.is_on_AC,
+})
 
 return M

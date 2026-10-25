@@ -96,4 +96,8 @@ function M.GetEffectiveSunTimes()
   return effective_start, effective_end
 end
 
+Notify.register({
+  ["sun.get_effective_sun_times"] = M.GetEffectiveSunTimes,
+})
+
 return M

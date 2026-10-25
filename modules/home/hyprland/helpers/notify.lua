@@ -1,18 +1,23 @@
 --- Operation-scoped diagnostic notifications.
 ---
---- Event functions are registered as diagnostic identifiers and can
---- be selectively enabled through configure().
+--- Any function can be registered as a diagnostic identifier: top-level
+--- event operations as well as individual helper functions. Registered
+--- functions can be selectively enabled through configure().
 ---
---- scope() establishes a diagnostic context for an operation.
---- All synchronous functions called within that scope inherit its
---- debug setting, without needing to receive or check it themselves.
+--- scope() pushes the operation onto a stack of active diagnostic scopes
+--- and pops it afterwards, so nested calls (event operation -> helper ->
+--- sub-helper) each contribute a frame to the diagnostic path.
 ---
---- Only the root operation determines whether debugging is enabled.
---- Nested scopes cannot override the root operation's decision.
+--- Debug output is enabled when ANY frame in the active stack is enabled.
+--- This allows enabling either a whole event operation or a single
+--- sub-function, wherever it is called from.
+---
+--- Diagnostic messages are prefixed with the full active scope path,
+--- e.g. "[startup > update_brightness > apply] message".
 
 local M = {}
 
--- Lookup of operations for which debugging is enabled.
+-- Lookup of functions for which debugging is enabled.
 -- Function references are used as keys instead of string identifiers.
 local debug_operations = {}
 
@@ -20,14 +25,14 @@ local debug_operations = {}
 -- Used to identify the originating operation in notifications.
 local operation_names = {}
 
--- The currently executing root operation, or nil when outside a scope.
-local active_scope = nil
+-- Stack of currently executing scopes (innermost last).
+local active_scopes = {}
 
---- Register named operations for diagnostic output.
+--- Register named functions for diagnostic output.
 ---
---- Accepts the Events.operations table and automatically associates
---- each function with its name. This avoids maintaining a separate
---- registry of diagnostic operation identifiers.
+--- Accepts a table mapping names to functions. Both event operations
+--- and helper functions can be registered; each module registers its
+--- own diagnostic units at load time.
 ---
 ---@param operations table<string, function>
 function M.register(operations)
@@ -38,13 +43,13 @@ function M.register(operations)
   end
 end
 
---- Configure which registered operations produce debug notifications.
+--- Configure which registered functions produce debug notifications.
 ---
---- Only operations included in config.debug are enabled.
+--- Only functions included in config.debug are enabled.
 --- All other operations remain functional but produce no debug output.
 ---
---- Operations are identified by their function references, allowing
---- direct selection using Events.operations with LuaLS autocomplete.
+--- Functions are identified by their references, allowing direct
+--- selection using module tables with LuaLS autocomplete.
 ---
 ---@param config { debug: function[] }
 function M.configure(config)
@@ -59,38 +64,29 @@ function M.configure(config)
   end
 end
 
---- Execute an operation within a diagnostic scope.
+--- Execute a function within a diagnostic scope.
 ---
---- If no scope is active, this operation becomes the root and its
---- configured debug setting determines whether messages are shown.
----
---- If a scope is already active, the nested operation inherits the
---- existing root context instead of creating a new one.
+--- The scope is pushed onto the active stack for the duration of the
+--- call and removed afterwards, even if execution fails, preventing
+--- diagnostic state from leaking into later operations.
 ---
 --- xpcall() executes the operation while capturing any errors.
---- The previous scope is restored afterwards, even if execution fails,
---- preventing diagnostic settings from leaking into later operations.
 ---
 ---@param operation function
 ---@param ... any
 function M.scope(operation, ...)
   assert(operation_names[operation], "Unregistered diagnostic operation")
 
-  local previous_scope = active_scope
-
-  -- Only root operations determine whether debugging is enabled.
-  if not previous_scope then
-    active_scope = {
-      name = operation_names[operation],
-      debug_enabled = debug_operations[operation] == true,
-    }
-  end
+  table.insert(active_scopes, {
+    name = operation_names[operation],
+    debug_enabled = debug_operations[operation] == true,
+  })
 
   -- Execute the operation, capturing errors and return values.
   local results = table.pack(xpcall(operation, debug.traceback, ...))
 
   -- Restore the previous context regardless of success or failure.
-  active_scope = previous_scope
+  table.remove(active_scopes)
 
   -- Propagate errors after restoring the diagnostic context.
   if not results[1] then
@@ -100,19 +96,39 @@ function M.scope(operation, ...)
   return table.unpack(results, 2, results.n)
 end
 
---- Display a debug notification if the active root operation is enabled.
+--- Build the active scope path, e.g. "startup > update_brightness > apply".
+local function scope_path()
+  local names = {}
+
+  for _, frame in ipairs(active_scopes) do
+    table.insert(names, frame.name)
+  end
+
+  return table.concat(names, " > ")
+end
+
+--- Display a debug notification if any active scope is enabled.
 ---
 --- Helpers can call this unconditionally. The diagnostic system decides
---- whether to display the message based on the active scope.
+--- whether to display the message based on the active scopes.
 ---
 ---@param message string
 function M.debug(message)
-  if not active_scope or not active_scope.debug_enabled then
+  local enabled = false
+
+  for _, frame in ipairs(active_scopes) do
+    if frame.debug_enabled then
+      enabled = true
+      break
+    end
+  end
+
+  if not enabled then
     return
   end
 
   hl.notification.create({
-    text = "[" .. active_scope.name .. "] " .. message,
+    text = "[" .. scope_path() .. "] " .. message,
     timeout = 5000,
     icon = "warn",
   })

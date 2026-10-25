@@ -1,5 +1,3 @@
-local Notify = require("helpers.notify")
-
 local M = {}
 
 function M.read_file(path)
@@ -27,15 +25,5 @@ function M.get_hostname()
 end
 
 M.hostname = M.get_hostname()
-
-function CheckAC()
-  M.on_AC = M.is_on_AC()
-
-  Notify.debug("AC status: " .. tostring(M.on_AC))
-end
-
-function M.GetCurrentTime()
-  return os.time()
-end
 
 return M

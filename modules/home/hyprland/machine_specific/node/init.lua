@@ -6,11 +6,13 @@ local policies = {
   node = {
     dynamic_monitors = false,
     automatic_brightness = true,
+    primary_desc = "Acer Technologies XB273U GX",
   },
 
   default = {
     dynamic_monitors = true,
     automatic_brightness = true,
+    primary_desc = nil,
   },
 }
 

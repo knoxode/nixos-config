@@ -46,4 +46,9 @@ function M.apply(brightness)
   hl.exec_cmd(command)
 end
 
+Notify.register({
+  ["brightness.calculate"] = M.calculate,
+  ["brightness.apply"] = M.apply,
+})
+
 return M

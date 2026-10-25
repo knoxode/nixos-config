@@ -10,7 +10,6 @@ in {
     ../../hosts/${host}
     ../../modules/drivers
     ../../modules/core
-    ../../specialisations/prime-offload.nix
   ];
   drivers.intel.enable = true;
   # PRIME render offload: iGPU renders the session, dGPU runs on demand.
