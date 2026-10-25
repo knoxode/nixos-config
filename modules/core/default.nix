@@ -42,7 +42,7 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix ./gamescope.nix ./coolercontrol.nix]
+      then [./steam.nix ./gamemode.nix ./gamescope.nix]
       else []
     )
     ++ (
@@ -52,7 +52,14 @@ in {
     )
     ++ (
       if hostType == "Desktop"
-      then [./nvidia-container-toolkit.nix]
+      then
+        [
+          ./nvidia-container-toolkit.nix
+          # Desktop-only: coolercontrold keeps a persistent NVML handle to the
+          # NVIDIA GPU, which blocks RTD3 runtime suspend entirely. Laptops
+          # (nomad) keep their dGPU in D3cold instead; node doesn't use RTD3.
+          ./coolercontrol.nix
+        ]
       else []
     );
 }
