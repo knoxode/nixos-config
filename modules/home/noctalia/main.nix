@@ -5,6 +5,11 @@
   ...
 }: let
   inherit (import ../../../hosts/${host}/variables.nix) hostType;
+
+  suspendOnIdle =
+    if host == "node"
+    then false
+    else true;
 in {
   programs.noctalia = {
     enable = true;
@@ -192,7 +197,6 @@ in {
         main_axis_padding = 16;
         margin_edge = 8;
         margin_ends = 0;
-        monitors = [];
         pinned = [];
         position = "bottom";
         radius = 16;
@@ -230,7 +234,7 @@ in {
         behavior_order = [
           "lock"
           "screen-off"
-          "lock-and-suspend"
+          "suspend"
         ];
         pre_action_fade_seconds = 2.0;
         behavior = {
@@ -251,7 +255,7 @@ in {
           "suspend" = {
             action = "suspend";
             command = "";
-            enabled = true;
+            enabled = suspendOnIdle;
             resume_command = "";
             timeout = 600.0;
           };
