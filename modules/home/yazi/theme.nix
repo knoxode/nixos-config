@@ -1,36 +1,25 @@
 {
   theme = {
-    flavor = {
-      dark = "";
-      light = "";
-    };
-    manager = {
-      marker_marked = {
-        fg = "lightcyan";
-        bg = "lightcyan";
-      };
-      tab_width = 1;
-      border_symbol = "│";
-    };
-    mode = {};
     status = {
-      overall = {bold = true;};
-      sep_left = ["░▒▓" "▓▒░"];
-      sep_right = ["░▒▓" "▓▒░"];
-    };
-    which = {
-      cols = 3;
-      separator = "  ";
+      overall = {
+        bold = true;
+      };
+      sep_left = [
+        "░▒▓"
+        "▓▒░"
+      ];
+      sep_right = [
+        "░▒▓"
+        "▓▒░"
+      ];
     };
     confirm = {
-      border = {fg = "gray";};
+      border = {
+        fg = "gray";
+      };
       title = {
         fg = "blue";
         bold = true;
-      };
-      content = {
-      };
-      list = {
       };
       btn_yes = {
         bg = "green";
@@ -42,40 +31,9 @@
         fg = "black";
         bold = true;
       };
-      btn_labels = ["  [Y]es  " "  (N)o  "];
     };
-    spot = {
-      border = {fg = "blue";};
-      title = {fg = "blue";};
-      tbl_col = {fg = "blue";};
-      tbl_cell = {
-        fg = "yellow";
-        reversed = true;
-      };
-    };
-    notify = {
-      title_info = {fg = "green";};
-      title_warn = {fg = "yellow";};
-      title_error = {fg = "red";};
-      icon_info = "";
-      icon_warn = "";
-      icon_error = "";
-    };
-    pick = {};
-    input = {};
-    cmp = {
-      active = {reversed = true;};
-      inactive = {
-      };
-      icon_file = "";
-      icon_folder = "";
-      icon_command = "";
-    };
-    tasks = {};
-    help = {};
-    filetype = {};
+
     icon = {
-      globs = [];
       dirs = [
         {
           name = ".config";

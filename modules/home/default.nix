@@ -4,6 +4,7 @@
     ./hyprland
     ./noctalia
     ./nvf
+    ./opencode
     ./tmux
     ./yazi
     ./zsh

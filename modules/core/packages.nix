@@ -109,7 +109,7 @@ in {
       lm_sensors
       lsof
       lxqt.lxqt-policykit
-      patchedMcpNixos
+      #patchedMcpNixos
       mendeley
       mupdf
       nautilus

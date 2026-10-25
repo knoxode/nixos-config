@@ -3,21 +3,25 @@
     enable = true;
     inherit (import ./yazi.nix) settings;
     inherit (import ./keymap.nix) keymap;
-    inherit (import ./theme.nix) theme;
+    #inherit (import ./theme.nix) theme;
     shellWrapperName = "y";
     plugins = with pkgs.yaziPlugins; {
       lazygit.package = lazygit;
-      full-border.package = full-border;
-      git.package = git;
-      smart-enter.package = smart-enter;
+      full-border = {
+        package = full-border;
+        setup = true;
+      };
+      git = {
+        package = git;
+        setup = true;
+      };
+      smart-enter = {
+        package = smart-enter;
+        setup = true;
+        settings = {
+          open_multi = true;
+        };
+      };
     };
-
-    initLua = ''
-      require("full-border"):setup()
-         require("git"):setup()
-         require("smart-enter"):setup {
-           open_multi = true,
-         }
-    '';
   };
 }
