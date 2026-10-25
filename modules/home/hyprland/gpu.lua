@@ -1,2 +1,3 @@
-local shared = require("shared")
--- hl.env("AQ_DRM_DEVICES", "dev/dri/card0:/dev/dri/card1")
+-- GPU device selection is intentionally left to Hyprland/aquamarine
+-- auto-detection. AQ_DRM_DEVICES is deliberately NOT set; manual GPU
+-- pinning was removed from the configuration.

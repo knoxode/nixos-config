@@ -1,11 +1,4 @@
-{host, ...}: let
-  inherit (import ../../hosts/${host}/variables.nix) gpuDevices;
-  names = builtins.attrNames gpuDevices;
-  gpuListStr = builtins.concatStringsSep ":" (
-    map (n: "/dev/dri/${n}") names
-  );
-  preaqDrmDevices = "AQ_DRM_DEVICES," + gpuListStr;
-in {
+{host, ...}: {
   imports = [
     ../../hosts/${host}
     ../../modules/drivers
@@ -18,5 +11,4 @@ in {
     nvidia-prime.enable = false;
     intel.enable = true;
   };
-  hyprland.aqDrmDevices = preaqDrmDevices;
 }

@@ -1,10 +1,5 @@
 {host, ...}: let
-  inherit (import ../hosts/${host}/variables.nix) intelID nvidiaID gpuDevices;
-  names = builtins.attrNames gpuDevices;
-  gpuListStr = builtins.concatStringsSep ":" (
-    map (n: "/dev/dri/${n}") names
-  );
-  preaqDrmDevices = "AQ_DRM_DEVICES," + gpuListStr;
+  inherit (import ../hosts/${host}/variables.nix) intelID nvidiaID;
 in {
   specialisation = {
     prime-offload.configuration = {
@@ -17,7 +12,6 @@ in {
           nvidiaBusID = "${nvidiaID}";
         };
       };
-      hyprland.aqDrmDevices = preaqDrmDevices;
     };
   };
 }

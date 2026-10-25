@@ -124,7 +124,6 @@ in {
       os-prober
       plexamp
       #plex-desktop
-      power-profiles-daemon
       powertop
       python3
       qalculate-qt

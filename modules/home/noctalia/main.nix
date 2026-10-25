@@ -6,10 +6,7 @@
 }: let
   inherit (import ../../../hosts/${host}/variables.nix) hostType;
 
-  suspendOnIdle =
-    if host == "node"
-    then false
-    else true;
+  suspendOnIdle = hostType != "Desktop";
 in {
   programs.noctalia = {
     enable = true;

@@ -3,7 +3,8 @@
   lib,
   ...
 }: let
-  isDesktop = host == "node";
+  inherit (import ../../hosts/${host}/variables.nix) hostType;
+  isDesktop = hostType == "Desktop";
   isLaptop = !isDesktop;
 in {
   # Only force governor on desktop

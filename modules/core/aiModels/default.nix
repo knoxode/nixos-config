@@ -1,6 +1,8 @@
-{host, ...}: {
+{host, ...}: let
+  inherit (import ../../../hosts/${host}/variables.nix) hostType;
+in {
   imports =
-    if host == "node"
+    if hostType == "Desktop"
     then [./ollama.nix]
     else [];
 }

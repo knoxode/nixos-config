@@ -11,7 +11,6 @@ in {
       ./avahi.nix
       ./bluetooth.nix
       ./aiModels
-      ./customOptions
       ./customPackages
       ./hardware
       ./gpu_symlink.nix
