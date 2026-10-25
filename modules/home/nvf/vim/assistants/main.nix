@@ -1,11 +1,10 @@
 {...}: {
   programs.nvf.settings.vim.assistant = {
     chatgpt.enable = false;
+
     copilot = {
       enable = false;
-      cmp.enable = true;
+      cmp.enable = false;
     };
-    codecompanion-nvim.enable = false;
-    avante-nvim.enable = false;
   };
 }

@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ./assistant.nix
+    ./assistants
     ./autoActions.nix
     ./binds.nix
     ./clipboard.nix

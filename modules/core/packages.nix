@@ -21,7 +21,21 @@
       ];
     };
   };
+  patchedMcpNixos = pkgs.mcp-nixos.overrideAttrs (old: {
+    postPatch =
+      (old.postPatch or "")
+      + ''
+        substituteInPlace mcp_nixos/config.py \
+          --replace-fail \
+            "https://nvf.notashelf.dev/options.html" \
+            "https://nvf.notashelf.dev/options-full.html"
 
+        substituteInPlace tests/test_nvf.py \
+          --replace-fail \
+            "https://nvf.notashelf.dev/options.html" \
+            "https://nvf.notashelf.dev/options-full.html"
+      '';
+  });
   myLutris = pkgs.lutris.override {
     extraPkgs = pkgs: [
       # e.g., pkgs.wineWowPackages.stable
@@ -95,6 +109,7 @@ in {
       lm_sensors
       lsof
       lxqt.lxqt-policykit
+      patchedMcpNixos
       mendeley
       mupdf
       nautilus
