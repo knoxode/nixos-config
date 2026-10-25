@@ -26,5 +26,5 @@
       };
     };
 in {
-  systemd.user.services = {} // displayHotPlugMonitor;
+  systemd.user.services = displayHotPlugMonitor;
 }

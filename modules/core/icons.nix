@@ -1,3 +1,0 @@
-{
-  xdg.icons.enable = true;
-}

@@ -1,6 +1,5 @@
 {
   pkgs,
-  host,
   options,
   ...
 }: {
@@ -11,8 +10,6 @@
   systemd.network.wait-online.enable = false;
 
   networking = {
-    hostName = host;
-
     networkmanager.enable = true;
 
     timeServers =

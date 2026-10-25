@@ -28,7 +28,7 @@
   hashes =
     if builtins.hasAttr username userHashes
     then userHashes.${username}
-    else lib.throw "No asset hashes configured for user: ${username}";
+    else builtins.throw "No asset hashes configured for user: ${username}";
 
   mainUrl = "https://pub-5091b3de9360409687d69cad055e35dc.r2.dev";
   wallpapers = pkgs.fetchurl {

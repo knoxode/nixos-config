@@ -14,12 +14,8 @@ in {
       ./customOptions
       ./customPackages
       ./hardware
-      ./fstrim.nix
-      # ./flatpak.nix
-      #./greetd.nix
       ./gpu_symlink.nix
       ./i2c.nix
-      ./icons.nix
       ./nautilus-related.nix
       ./network.nix
       ./nh.nix
@@ -53,11 +49,6 @@ in {
     ++ (
       if hasRazer
       then [./rgb.nix]
-      else []
-    )
-    ++ (
-      if host == "reuby"
-      then []
       else []
     )
     ++ (

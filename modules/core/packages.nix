@@ -146,7 +146,6 @@ in {
       #texmaker
       typst
       tree
-      typst
       unzip
       virtiofsd
       vlc

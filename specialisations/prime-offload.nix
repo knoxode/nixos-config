@@ -18,7 +18,6 @@ in {
         };
       };
       hyprland.aqDrmDevices = preaqDrmDevices;
-      vm.guest-services.enable = false;
     };
   };
 }

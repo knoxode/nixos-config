@@ -5,9 +5,6 @@
   pkgs,
   ...
 }: let
-  initExtraFirst =
-    lib.mkOrder 500 ''
-    '';
   initExtraBeforeCompInit = lib.mkOrder 550 ''
     # put this before completion initialization
     zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -48,7 +45,7 @@ in {
         append = true;
         path = "${config.xdg.dataHome}/zsh/history";
       };
-      initContent = lib.mkMerge [initExtraFirst initExtraBeforeCompInit initExtraLate initExtraLast];
+      initContent = lib.mkMerge [initExtraBeforeCompInit initExtraLate initExtraLast];
       shellAliases = config.commonShellAliases;
     };
     oh-my-posh = {

@@ -82,8 +82,8 @@
             cloudStorageEnabled = mkForce false;
 
             importedLists = [
-              "https:#filters.adtidy.org/extension/ublock/filters/3.txt"
-              "https:#github.com/DandelionSprout/adfilt/raw/master/LegitimateURLShortener.txt"
+              "https://filters.adtidy.org/extension/ublock/filters/3.txt"
+              "https://github.com/DandelionSprout/adfilt/raw/master/LegitimateURLShortener.txt"
             ];
 
             externalLists = lib.concatStringsSep "\n" importedLists;
@@ -97,7 +97,7 @@
             "adguard-spyware-url"
             "easylist"
             "easyprivacy"
-            "https:#github.com/DandelionSprout/adfilt/raw/master/LegitimateURLShortener.txt"
+            "https://github.com/DandelionSprout/adfilt/raw/master/LegitimateURLShortener.txt"
             "plowe-0"
             "ublock-abuse"
             "ublock-badware"

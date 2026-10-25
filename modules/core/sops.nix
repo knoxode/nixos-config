@@ -7,12 +7,10 @@
   hostSecrets = {
     "syncthing/${host}/key" = {};
     "syncthing/${host}/cert" = {};
-    "wireguard/${host}/privatekey" = {};
     "wireguard/${host}/i6privatekey" = {};
   };
 
   commonSecrets = {
-    "wireguard/publickey" = {};
     "wireguard/presharedkey" = {};
     "geldoc" = {};
     "eduroam/cert" = {

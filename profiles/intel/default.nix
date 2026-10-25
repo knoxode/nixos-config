@@ -18,6 +18,5 @@ in {
     nvidia-prime.enable = false;
     intel.enable = true;
   };
-  vm.guest-services.enable = false;
   hyprland.aqDrmDevices = preaqDrmDevices;
 }

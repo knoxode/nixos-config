@@ -1,8 +1,6 @@
 {pkgs, ...}: {
-  programs = with pkgs; {
-    wireshark = {
-      enable = true;
-      package = wireshark;
-    };
+  programs.wireshark = {
+    enable = true;
+    package = pkgs.wireshark;
   };
 }
