@@ -5,12 +5,12 @@
 }: let
   shellAliases = {
     c = "clear";
-    # nhv = nh wrapper that evals the host's toplevel (and refreshes
-    # flake.lock for --update) before switching; see modules/core/nh.nix
-    fr = "nhv switch --hostname ${host}";
-    fu = "nhv switch --hostname ${host} --update";
-    frb = "nhv boot --hostname ${host}";
-    fub = "nhv boot --hostname ${host} --update";
+    # nh: switch/boot/test abort on evaluation failure; --update refreshes
+    # flake.lock first.
+    fr = "nh os switch --hostname ${host}";
+    fu = "nh os switch --hostname ${host} --update";
+    frb = "nh os boot --hostname ${host}";
+    fub = "nh os boot --hostname ${host} --update";
     nhc = "nh clean all";
     ncg = "nix-collect-garbage --delete-old && sudo nix-collect-garbage -d && sudo /run/current-system/bin/switch-to-configuration boot";
     ls = "ls --color=auto";

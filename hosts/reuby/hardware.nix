@@ -10,8 +10,7 @@
   ];
 
   boot = {
-    #kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v3;
 
     loader = {
       grub = {
@@ -37,10 +36,6 @@
         device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
       };
     };
-    kernel.sysctl = {
-      "vm.swappiness" = 10;
-    };
-
     kernelParams = [
       "i915.force_probe=!7d45"
       "xe.force_probe=7d45"

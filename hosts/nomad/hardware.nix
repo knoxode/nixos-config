@@ -25,9 +25,6 @@
       availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = [];
     };
-    kernel.sysctl = {
-      "vm.swappiness" = 10;
-    };
     kernelParams = [
     ];
     kernelModules = [

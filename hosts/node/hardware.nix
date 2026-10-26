@@ -13,7 +13,7 @@
     extraModprobeConfig = ''
       options it87 force_id=0x8622
     '';
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v3;
 
     loader = {
       grub = {
@@ -28,9 +28,6 @@
     initrd = {
       availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = ["kvm-amd"];
-    };
-    kernel.sysctl = {
-      "vm.swappiness" = 10;
     };
     kernelParams = [
       "acpi_enforce_resources=lax"
