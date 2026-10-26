@@ -22,6 +22,10 @@
     settings = {
       auto-optimise-store = true;
       download-buffer-size = 524288000;
+      # Explicitly list trusted users; do not rely on the module default
+      # ["root"] merging in. Trusted users may pass --option substituters /
+      # trusted-public-keys from non-root clients (nh refuses to run as root).
+      trusted-users = lib.mkForce ["root" "shaiikura"];
       experimental-features = [
         "nix-command"
         "flakes"
