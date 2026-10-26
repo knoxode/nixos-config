@@ -29,4 +29,7 @@
 
   # Enable Printing Support
   printEnable = true;
+
+  # Auto-apply CI-validated flake.lock updates from origin/main
+  autoUpdate = true;
 }

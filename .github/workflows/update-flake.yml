@@ -30,6 +30,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v23
 
       - name: Update flake.lock and open PR
+        id: update
         uses: DeterminateSystems/update-flake-lock@v29
         with:
           token: ${{ secrets.FLAKE_UPDATE_PAT }}
@@ -43,3 +44,14 @@ jobs:
           pr-labels: |
             flake-lock
             automated
+
+      # Merges the PR automatically once its required status checks are green.
+      # Needs "Allow auto-merge" enabled in repo Settings, and branch
+      # protection on main requiring the Check workflow's jobs - otherwise
+      # auto-merge fires before anything is validated.
+      - name: Enable auto-merge on the lock PR
+        env:
+          GH_TOKEN: ${{ secrets.FLAKE_UPDATE_PAT }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh pr merge --auto --squash "${{ steps.update.outputs.pull-request-number }}"
