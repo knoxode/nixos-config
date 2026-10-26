@@ -1,4 +1,6 @@
 {pkgs, ...}: let
+  # rEnv: kept as reference for R project dev-shells — see the rPackages list
+  # below for the derivation shape when creating per-project flake.nix shells.
   rEnv = pkgs.rstudioWrapper.override {
     packages = with pkgs.rPackages; [
       rio

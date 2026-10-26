@@ -84,6 +84,7 @@
         ];
       };
       root = {
+        shell = pkgs.zsh;
         hashedPassword = "$6$re41R8kMD0bE.pPA$msbTYZQbZ0syZcicbHlHrqWXlxGii7IbwOEW1ORNHuEkiIma2pjV4eynsFo46K.MQQ8jg1gth7zgf6JW9bFjB0";
         description = lib.mkForce "Root";
       };

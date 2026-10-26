@@ -11,7 +11,6 @@
           ms-vscode-remote.vscode-remote-extensionpack
           vscodevim.vim
           yzhang.markdown-all-in-one
-          nextflow.nextflow
           tomoki1207.pdf
         ];
       };

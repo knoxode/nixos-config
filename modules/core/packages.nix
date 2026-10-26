@@ -21,29 +21,6 @@
       ];
     };
   };
-  patchedMcpNixos = pkgs.mcp-nixos.overrideAttrs (old: {
-    postPatch =
-      (old.postPatch or "")
-      + ''
-        substituteInPlace mcp_nixos/config.py \
-          --replace-fail \
-            "https://nvf.notashelf.dev/options.html" \
-            "https://nvf.notashelf.dev/options-full.html"
-
-        substituteInPlace tests/test_nvf.py \
-          --replace-fail \
-            "https://nvf.notashelf.dev/options.html" \
-            "https://nvf.notashelf.dev/options-full.html"
-      '';
-  });
-  myLutris = pkgs.lutris.override {
-    extraPkgs = pkgs: [
-      # e.g., pkgs.wineWowPackages.stable
-      pkgs.proton-ge-bin
-      pkgs.gamescope
-      pkgs.gamemode
-    ];
-  };
 in {
   programs = {
     direnv.enable = true;
@@ -74,10 +51,7 @@ in {
       bash-language-server
       beeper
       brightnessctl
-      cargo
       cifs-utils
-      clang
-      conda
       ddcui
       ddcutil
       direnv
@@ -85,9 +59,7 @@ in {
       easyeffects
       fastfetch
       flatpak
-      fiji
-      fish
-      #gamescope
+      (pkgs.callPackage ../packages/fiji.nix {})
       ghostty
       gimp3
       git
@@ -109,26 +81,18 @@ in {
       lm_sensors
       lsof
       lxqt.lxqt-policykit
-      #patchedMcpNixos
-      mendeley
       mupdf
       nautilus
-      nextflow
       nix-direnv
       nix-search-tv
       nix-prefetch-git
-      nvidia_oc
       obsidian
       openconnect
-      openssl
       os-prober
       plexamp
-      #plex-desktop
       powertop
-      python3
       qalculate-qt
       ripgrep
-      rustc
       rustdesk-flutter
       socat
       sshfs
@@ -136,13 +100,9 @@ in {
         openssl_1_1 = snapgenePkgs.openssl_1_1;
       })
       starship
-      superfile
       swappy
       syncthing
       awww
-      temurin-bin-17
-      texliveFull
-      #texmaker
       typst
       tree
       unzip
@@ -151,8 +111,6 @@ in {
       waypaper
       winboat
       wl-clipboard
-      w3m
-      xmlstarlet
       zoom-us
     ]
     ++ (
@@ -162,12 +120,12 @@ in {
     )
     ++ (
       if forGaming
-      then [mangohud prismlauncher gamemode mesa] #myLutris
+      then [mangohud prismlauncher gamemode mesa]
       else []
     )
     ++ (
       if hostType == "Desktop"
-      then [coolercontrol.coolercontrol-gui heroic]
+      then [coolercontrol.coolercontrol-gui heroic nvidia_oc]
       else []
     );
   nixpkgs.config.allowUnfree = true;
