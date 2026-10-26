@@ -88,13 +88,15 @@ in {
     };
   };
 
-  # Once a day, after the CI pipeline (03:43 UTC lock update + builds) has
-  # had time to finish. Persistent=true means a missed run (sleep/shutdown)
-  # fires shortly after boot or wake instead of being skipped.
+  # Once a day, at 02:00. With Persistent=true a missed run (sleep/shutdown)
+  # fires at the first boot or wake afterwards, so machines effectively check
+  # first thing in the morning, in the background - before the workday starts.
+  # The CI pipeline (03:43 UTC lock update + builds) finishes by early morning,
+  # so a morning wake deploys the freshest validated state.
   systemd.timers.alexos-auto-update = lib.mkIf autoUpdate {
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnCalendar = "12:00";
+      OnCalendar = "02:00";
       Persistent = true;
       RandomizedDelaySec = "10min";
     };
