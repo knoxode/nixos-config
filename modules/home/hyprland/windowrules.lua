@@ -167,7 +167,7 @@ hl.window_rule({
 })
 
 -- Fiji's GTK file chooser: centered, sized as a square at half the monitor
--- width (both axes derive from monitor_w so the dialog stays square).
+-- height (monitor_w would overflow the height on wide monitors).
 hl.window_rule({
   name = "Fiji file chooser",
   match = {
@@ -177,8 +177,8 @@ hl.window_rule({
 
   center = true,
   size = {
-    "monitor_w * 0.50",
-    "monitor_w * 0.50",
+    "monitor_h * 0.50",
+    "monitor_h * 0.50",
   },
 })
 
