@@ -1,30 +1,14 @@
 local shared = require("shared")
 
 -- Switching workspaces
+--
+-- Workspace-to-monitor distribution is handled by helpers/workspaces;
+-- binds only need the workspace numbers, so they are static. Key 0
+-- selects workspace 10.
 
-local function set_mon_binds_dynamic()
-  local monitors = hl.get_monitors()
-  if #monitors == 1 then
-    for i = 1, 10 do
-      local key = i % 10 -- 10 maps to key 0
-      hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-    end
-  elseif #monitors == 2 then
-    for i = 1, 10 do
-      local key = i % 10 -- 10 maps to key 0
-      hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i + 5 }))
-      hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-    end
-  end
-end
-
-set_mon_binds_dynamic()
-hl.on("monitor.added", set_mon_binds_dynamic)
-hl.on("monitor.removed", set_mon_binds_dynamic)
-
--- Sets the silent move of a window to a new workspace
 for i = 1, 10 do
   local key = i % 10
+  hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
   hl.bind(shared.mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }))
 end
 

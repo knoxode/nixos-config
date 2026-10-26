@@ -24,7 +24,6 @@
       timeout = 5;
     };
     initrd = {
-      verbose = false;
       availableKernelModules = [
         "xhci_pci"
         "thunderbolt"
@@ -36,7 +35,6 @@
       kernelModules = ["dm-snapshot"];
       luks.devices.luks-root = {
         device = "/dev/disk/by-uuid/18259c3e-e044-4752-86ea-b5f79fd1463c";
-        preLVM = true;
       };
     };
     kernel.sysctl = {

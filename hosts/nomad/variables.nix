@@ -13,6 +13,20 @@
     "intel-igpu" = {vendor = "0x8086";};
   };
 
+  # Hyprland host data
+  hyprland = {
+    latitude = 51.75;
+    longitude = -1.25;
+    keyboards = {
+      us = [];
+      gb = [
+        "razer-razer-blade"
+        "razer-razer-blade-1"
+        "razer-razer-blade-3"
+      ];
+    };
+  };
+
   # Enable Printing Support
   printEnable = true;
 }

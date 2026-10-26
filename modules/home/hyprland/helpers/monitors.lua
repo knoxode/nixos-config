@@ -19,36 +19,6 @@ local function get_scale(mode)
 end
 
 ---@param monitor HL.Monitor
----@param mode table
----@return string|nil
-local function check_modechange_needed(monitor, mode)
-  local same_resolution = monitor.width == mode.width and monitor.height == mode.height
-  local same_refresh = math.abs(monitor.refresh_rate - mode.refresh_rate) < 0.1
-
-  local change_needed = not (same_resolution and same_refresh)
-
-  local current_mode = string.format("%dx%d@%.3f", monitor.width, monitor.height, monitor.refresh_rate)
-
-  local requested_mode = string.format("%dx%d@%.3f", mode.width, mode.height, mode.refresh_rate)
-
-  Notify.debug(
-    string.format(
-      "%s\nCurrent: %s\nRequested: %s\nMode change needed: %s",
-      monitor.name,
-      current_mode,
-      requested_mode,
-      tostring(change_needed)
-    )
-  )
-
-  if not change_needed then
-    return nil
-  end
-
-  return requested_mode
-end
-
----@param monitor HL.Monitor
 local function find_best_mode(monitor, max_refresh_rate)
   local best_mode = nil
   local modes = monitor.available_modes
@@ -80,12 +50,16 @@ function M.build_config(monitor, monitor_count, max_refresh_rate)
   local mode = find_best_mode(monitor, max_refresh_rate)
 
   if not mode then
+    Notify.info(string.format("No valid mode found for %s, leaving it at Hyprland defaults", monitor.name))
+
     return nil
   end
 
   return {
     output = monitor.name,
-    mode = check_modechange_needed(monitor, mode),
+    -- Always pass the mode explicitly: omitting it would fall back to
+    -- Hyprland's "preferred" default if omitted fields reset on apply.
+    mode = string.format("%dx%d@%.3f", mode.width, mode.height, mode.refresh_rate),
     position = get_position(monitor, monitor_count),
     scale = get_scale(mode),
   }

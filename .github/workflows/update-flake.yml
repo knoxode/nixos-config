@@ -1,0 +1,45 @@
+name: Update flake.lock
+
+# Opens a lock-file-only PR once a day. The Check workflow runs on the PR,
+# so a red lock PR means the new upstream revisions broke evaluation - the
+# separation from config changes falls out naturally: red "update flake.lock"
+# PRs are upstream problems, red PRs for your own branches are config
+# problems.
+#
+# Requires a fine-grained personal access token (contents: read/write on this
+# repo only) stored as the FLAKE_UPDATE_PAT secret. The default GITHUB_TOKEN
+# would create the PR, but pushes made with it do not trigger other
+# workflows, so Check would never run on the PR.
+on:
+  workflow_dispatch:
+  schedule:
+    # daily at 03:43 UTC, ahead of the daily Check run
+    - cron: "43 3 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-flake-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v23
+
+      - name: Update flake.lock and open PR
+        uses: DeterminateSystems/update-flake-lock@v29
+        with:
+          token: ${{ secrets.FLAKE_UPDATE_PAT }}
+          pr-title: "chore: update flake.lock"
+          pr-body: |
+            Automated daily flake.lock update.
+
+            CI evaluates all hosts against the new lock. Merge when green.
+            If this PR is red, the new upstream revisions broke evaluation -
+            consider pinning the offending input or fixing forward.
+          pr-labels: |
+            flake-lock
+            automated

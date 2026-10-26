@@ -23,6 +23,8 @@ function M.configure_display_environment(ctx)
   local monitors = ctx.monitors
 
   if #monitors == 0 or #monitors > 2 then
+    Notify.debug(string.format("Skipping monitor configuration (%d monitors, only 1-2 supported)", #monitors))
+
     return
   end
 

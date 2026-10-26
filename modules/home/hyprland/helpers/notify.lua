@@ -4,16 +4,16 @@
 --- event operations as well as individual helper functions. Registered
 --- functions can be selectively enabled through configure().
 ---
---- scope() pushes the operation onto a stack of active diagnostic scopes
---- and pops it afterwards, so nested calls (event operation -> helper ->
---- sub-helper) each contribute a frame to the diagnostic path.
+--- debug() inspects the live Lua call stack (debug.getinfo) to find the
+--- registered functions currently executing. Output is enabled when ANY
+--- registered function on the stack is enabled, so a whole event
+--- operation or a single sub-function can be enabled independently of
+--- how it was called. Messages are prefixed with the path of registered
+--- frames, e.g. "[monitorChange > update_brightness] message".
 ---
---- Debug output is enabled when ANY frame in the active stack is enabled.
---- This allows enabling either a whole event operation or a single
---- sub-function, wherever it is called from.
----
---- Diagnostic messages are prefixed with the full active scope path,
---- e.g. "[startup > update_brightness > apply] message".
+--- scope() wraps top-level event operations to capture errors and write
+--- them to the diagnostic log; it does not participate in the debug
+--- decision.
 
 local M = {}
 
@@ -21,12 +21,59 @@ local M = {}
 -- Function references are used as keys instead of string identifiers.
 local debug_operations = {}
 
+-- Names of enabled diagnostic functions (reverse lookup for the
+-- call-stack check in debug()).
+local debug_enabled_names = {}
+
 -- Maps registered function references to their readable names.
--- Used to identify the originating operation in notifications.
 local operation_names = {}
 
--- Stack of currently executing scopes (innermost last).
-local active_scopes = {}
+-- File handle for the persistent diagnostic log, opened lazily.
+-- nil means "not tried yet"; false means "unavailable, don't retry".
+local log_file = nil
+
+--- Open the diagnostic log file once.
+---
+--- Written to $XDG_STATE_HOME/hypr/ (default ~/.local/state/hypr/).
+--- If the file cannot be opened, file logging is disabled silently
+--- for the rest of the session and notifications remain the only sink.
+local function get_log_file()
+  if log_file ~= nil then
+    return log_file
+  end
+
+  local state_dir = os.getenv("XDG_STATE_HOME") or os.getenv("HOME") .. "/.local/state"
+  local path = state_dir .. "/hypr/alexos.log"
+
+  log_file = io.open(path, "a")
+
+  if not log_file then
+    -- Directory may not exist yet; create it once and retry.
+    os.execute("mkdir -p " .. state_dir .. "/hypr")
+    log_file = io.open(path, "a") or false
+  end
+
+  if log_file == false then
+    return nil
+  end
+
+  return log_file
+end
+
+--- Append a record to the diagnostic log file.
+---
+---@param level string
+---@param message string
+local function log_to_file(level, message)
+  local file = get_log_file()
+
+  if not file then
+    return
+  end
+
+  file:write(string.format("%s %s %s\n", os.date("%Y-%m-%d %H:%M:%S"), level, message))
+  file:flush()
+end
 
 --- Register named functions for diagnostic output.
 ---
@@ -61,14 +108,36 @@ function M.configure(config)
     assert(operation_names[operation], "Unregistered diagnostic operation")
 
     debug_operations[operation] = true
+    debug_enabled_names[operation_names[operation]] = true
   end
 end
 
---- Execute a function within a diagnostic scope.
+--- Collect the registered functions on the current call stack, from
+--- outermost to innermost.
 ---
---- The scope is pushed onto the active stack for the duration of the
---- call and removed afterwards, even if execution fails, preventing
---- diagnostic state from leaking into later operations.
+---@return string[] names
+local function registered_call_path()
+  local names = {}
+  local depth = 1
+
+  while true do
+    local info = debug.getinfo(depth, "f")
+    if not info then
+      break
+    end
+
+    local name = operation_names[info.func]
+    if name then
+      table.insert(names, 1, name)
+    end
+
+    depth = depth + 1
+  end
+
+  return names
+end
+
+--- Execute an operation while capturing errors into the diagnostic log.
 ---
 --- xpcall() executes the operation while capturing any errors.
 ---
@@ -77,47 +146,42 @@ end
 function M.scope(operation, ...)
   assert(operation_names[operation], "Unregistered diagnostic operation")
 
-  table.insert(active_scopes, {
-    name = operation_names[operation],
-    debug_enabled = debug_operations[operation] == true,
-  })
-
   -- Execute the operation, capturing errors and return values.
   local results = table.pack(xpcall(operation, debug.traceback, ...))
 
-  -- Restore the previous context regardless of success or failure.
-  table.remove(active_scopes)
-
-  -- Propagate errors after restoring the diagnostic context.
+  -- Propagate errors after logging them.
   if not results[1] then
+    log_to_file("ERROR", string.format("[%s] %s", operation_names[operation], results[2]))
+
+    -- One short user-facing notification pointing at the log; the
+    -- traceback itself stays in the file.
+    hl.notification.create({
+      text = operation_names[operation] .. " failed - see alexos.log",
+      timeout = 8000,
+      icon = "warn",
+    })
+
     error(results[2], 0)
   end
 
   return table.unpack(results, 2, results.n)
 end
 
---- Build the active scope path, e.g. "startup > update_brightness > apply".
-local function scope_path()
-  local names = {}
-
-  for _, frame in ipairs(active_scopes) do
-    table.insert(names, frame.name)
-  end
-
-  return table.concat(names, " > ")
-end
-
---- Display a debug notification if any active scope is enabled.
+--- Display a debug record if any registered function currently on the
+--- call stack is enabled.
 ---
---- Helpers can call this unconditionally. The diagnostic system decides
---- whether to display the message based on the active scopes.
+--- Debug output goes to the diagnostic log only: the log is the
+--- diagnostic channel; notifications are reserved for information a
+--- user should act on. Follow the log with:
+---   tail -f ~/.local/state/hypr/alexos.log
 ---
 ---@param message string
 function M.debug(message)
-  local enabled = false
+  local path = registered_call_path()
 
-  for _, frame in ipairs(active_scopes) do
-    if frame.debug_enabled then
+  local enabled = false
+  for _, name in ipairs(path) do
+    if debug_enabled_names[name] then
       enabled = true
       break
     end
@@ -127,11 +191,7 @@ function M.debug(message)
     return
   end
 
-  hl.notification.create({
-    text = "[" .. scope_path() .. "] " .. message,
-    timeout = 5000,
-    icon = "warn",
-  })
+  log_to_file("DEBUG", "[" .. table.concat(path, " > ") .. "] " .. message)
 end
 
 --- Display an informational notification regardless of debug settings.
@@ -141,6 +201,8 @@ end
 ---
 ---@param message string
 function M.info(message)
+  log_to_file("INFO", message)
+
   hl.notification.create({
     text = message,
     timeout = 5000,

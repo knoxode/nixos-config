@@ -53,10 +53,19 @@
           lua-language-server = {
             settings = {
               Lua = {
+                runtime.version = "Lua 5.4";
                 workspace.library = [
                   "${pkgs.hyprland}/share/hypr/stubs"
+                  "/home/shaiikura/alexos/modules/home/hyprland"
                 ];
-                diagnostics.globals = ["hl"];
+                diagnostics = {
+                  globals = [
+                    "hl"
+                    # Noctalia calls these by name at the global scope.
+                    "OnBatteryHook"
+                    "OnACHook"
+                  ];
+                };
               };
             };
           };

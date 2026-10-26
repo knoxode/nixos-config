@@ -1,32 +1,48 @@
-local system_helpers = require("helpers.system")
 local Notify = require("helpers.notify")
+local host = require("host")
 
 local M = {}
 
 local cached_sun = nil
 local cached_date = nil
 
+-- Time of the last failed fetch. Failed lookups are not retried for
+-- an hour to avoid running the curl pipeline on every event while
+-- offline.
+local last_failure = 0
+
+local RETRY_INTERVAL = 60 * 60
+
 ---@return table|nil
 function M.GetSunTimes()
+  local now = os.time()
+
+  if now - last_failure < RETRY_INTERVAL then
+    return nil
+  end
+
   local today = os.date("%Y-%m-%d")
 
   if cached_sun and cached_date == today then
     return cached_sun
   end
 
-  -- Explicitly request sun times for the current local date
+  -- Coordinates come from the Nix-generated host.lua.
   local cmd = string.format(
     [[
     curl -fsS --connect-timeout 3 --max-time 5 \
-      "https://api.sunrise-sunset.org/json?lat=51.75&lng=-1.25&date=%s&formatted=0" |
+      "https://api.sunrise-sunset.org/json?lat=%s&lng=%s&date=%s&formatted=0" |
     jq -r 'if .status == "OK" then .results | .sunrise, .sunset else empty end' |
     while read -r time; do date -d "$time" +%%s; done
   ]],
+    host.latitude,
+    host.longitude,
     today
   )
 
   local handle = io.popen(cmd)
   if not handle then
+    last_failure = now
     return nil
   end
 
@@ -35,6 +51,7 @@ function M.GetSunTimes()
   handle:close()
 
   if not sunrise or not sunset then
+    last_failure = now
     return nil
   end
 
@@ -58,7 +75,7 @@ function M.GetEffectiveSunTimes()
     return nil, nil
   end
 
-  local today = os.date("*t", system_helpers.GetCurrentTime())
+  local today = os.date("*t", os.time())
 
   -- Minimum brightness period: 06:00 to 22:00
   local start_time = os.time({

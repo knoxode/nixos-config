@@ -313,27 +313,10 @@ hl.window_rule({
 })
 
 hl.window_rule({
+  -- Inhibit idle whenever any window is fullscreen.
   name = "Idle inhibit fullscreen",
   match = {
     class = "^(.*)$",
-  },
-
-  idle_inhibit = "fullscreen",
-})
-
-hl.window_rule({
-  name = "Idle inhibit title",
-  match = {
-    title = "^(.*)$",
-  },
-
-  idle_inhibit = "fullscreen",
-})
-
-hl.window_rule({
-  name = "Fullscreen idle inhibit",
-  match = {
-    fullscreen = true,
   },
 
   idle_inhibit = "fullscreen",

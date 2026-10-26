@@ -19,7 +19,8 @@ local policies = {
 M.policy = policies[system.hostname] or policies.default
 
 if system.hostname == "node" then
-  M.monitors = require("machine_specific.node.monitors")
+  -- Node's monitor rules are declarative; requiring the module applies them.
+  require("machine_specific.node.monitors")
 end
 
 return M

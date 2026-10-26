@@ -26,7 +26,6 @@
       timeout = 5;
     };
     initrd = {
-      verbose = false;
       availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = ["kvm-amd"];
     };

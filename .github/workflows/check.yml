@@ -1,0 +1,41 @@
+name: Check
+
+# Evaluates every host against the committed flake.lock on every push, on all
+# PRs, and once a day. Evaluation errors and failed
+# assertions fail the job; evaluation warnings are visible in the log.
+#
+# This catches "will my config still evaluate" breakage (including breakage
+# introduced by flake.lock updates) cheaply. Real builds still happen on the
+# hosts themselves via `nhv switch`.
+on:
+  push: # any branch - no coupling to what the default branch is called
+  pull_request:
+  schedule:
+    # daily at 04:17 UTC
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    name: Evaluate ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [reuby, node, nomad]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v23
+
+      - name: Evaluate ${{ matrix.host }} toplevel
+        run: |
+          nix eval ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
