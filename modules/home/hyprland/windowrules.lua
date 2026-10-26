@@ -155,6 +155,33 @@ hl.window_rule({
   },
 })
 
+-- Fiji is multi-window (main window plus each image window); float all of
+-- them. The file chooser is a separate XWayland client with class "Java".
+hl.window_rule({
+  name = "Fiji float",
+  match = {
+    class = "^(fiji-Main|Java)$",
+  },
+
+  float = true,
+})
+
+-- Main Fiji window: centered, sized as a square at half the monitor width
+-- (both axes derive from monitor_w so the window stays square).
+hl.window_rule({
+  name = "Fiji main window",
+  match = {
+    class = "^(fiji-Main)$",
+    initial_title = "^(Fiji Is Just) ImageJ$",
+  },
+
+  center = true,
+  size = {
+    "monitor_w * 0.50",
+    "monitor_w * 0.50",
+  },
+})
+
 hl.window_rule({
   name = "youtube-idle-inhibit",
   match = {
