@@ -166,13 +166,13 @@ hl.window_rule({
   float = true,
 })
 
--- Main Fiji window: centered, sized as a square at half the monitor width
--- (both axes derive from monitor_w so the window stays square).
+-- Fiji's GTK file chooser: centered, sized as a square at half the monitor
+-- width (both axes derive from monitor_w so the dialog stays square).
 hl.window_rule({
-  name = "Fiji main window",
+  name = "Fiji file chooser",
   match = {
-    class = "^(fiji-Main)$",
-    initial_title = "^(Fiji Is Just) ImageJ$",
+    class = "^(Java)$",
+    initial_title = "^(Choose a file)$",
   },
 
   center = true,
