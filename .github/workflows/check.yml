@@ -4,9 +4,9 @@ name: Check
 # PRs, and once a day. Evaluation errors and failed
 # assertions fail the job; evaluation warnings are visible in the log.
 #
-# This catches "will my config still evaluate" breakage (including breakage
-# introduced by flake.lock updates) cheaply. Real builds still happen on the
-# hosts themselves via `nhv switch`.
+# This catches "will my config still evaluate" breakage cheaply, and for the
+# daily flake.lock PRs the build job additionally proves the full system
+# closures still build with the new lock.
 on:
   push: # any branch - no coupling to what the default branch is called
   pull_request:
@@ -39,3 +39,33 @@ jobs:
       - name: Evaluate ${{ matrix.host }} toplevel
         run: |
           nix eval ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
+
+  build:
+    name: Build ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    # Only for the daily flake.lock PRs (labeled "flake-lock" by
+    # update-flake-lock) and manual runs. Config PRs stay eval-only and fast.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'flake-lock'))
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [reuby, node, nomad]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v23
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+            /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --force || true
+
+      - name: Build ${{ matrix.host }} toplevel
+        run: |
+          nix build --no-link --print-out-paths \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
