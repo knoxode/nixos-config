@@ -9,6 +9,7 @@ in {
   imports =
     [
       ./avahi.nix
+      ./auto-update.nix
       ./bluetooth.nix
       ./aiModels
       ./customPackages

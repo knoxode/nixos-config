@@ -4,9 +4,9 @@ name: Check
 # PRs, and once a day. Evaluation errors and failed
 # assertions fail the job; evaluation warnings are visible in the log.
 #
-# This catches "will my config still evaluate" breakage cheaply, and for the
-# daily flake.lock PRs the build job additionally proves the full system
-# closures still build with the new lock.
+# This catches "will my config still evaluate" breakage cheaply, and the
+# build job proves on every PR that the full system closures still build -
+# so anything merged to main is known to evaluate and build.
 on:
   push: # any branch - no coupling to what the default branch is called
   pull_request:
@@ -43,12 +43,11 @@ jobs:
   build:
     name: Build ${{ matrix.host }}
     runs-on: ubuntu-latest
-    # Only for the daily flake.lock PRs (labeled "flake-lock" by
-    # update-flake-lock) and manual runs. Config PRs stay eval-only and fast.
+    # Build on every PR (config changes included) and manual runs, so anything
+    # merged to main is known to build.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'flake-lock'))
+      github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -64,6 +63,7 @@ jobs:
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
             /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
           sudo docker image prune --force || true
+          df -h /
 
       - name: Build ${{ matrix.host }} toplevel
         run: |
