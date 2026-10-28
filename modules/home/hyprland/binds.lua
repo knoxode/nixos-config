@@ -2,13 +2,14 @@ local shared = require("shared")
 
 -- Switching workspaces
 --
--- Workspace-to-monitor distribution is handled by helpers/workspaces;
--- binds only need the workspace numbers, so they are static. Key 0
--- selects workspace 10.
+-- The $mainMod+number focus binds are registered by
+-- helpers/workspaces.bind_focus, keyed to the current monitor setup:
+-- with two or more monitors, keys 1-5 also switch the secondary
+-- monitor to the paired workspace (N+5), so both change together.
+-- The SHIFT binds below stay static. Key 0 selects workspace 10.
 
 for i = 1, 10 do
   local key = i % 10
-  hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
   hl.bind(shared.mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }))
 end
 

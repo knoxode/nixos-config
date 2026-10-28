@@ -58,7 +58,10 @@ Node is expected to have two monitors and uses **static** `desc:`-based
 fallback rule covers unexpected monitor states.
 
 Workspace assignment lives in one place (`helpers/workspaces.lua`) and
-runs for all machines on startup and monitor change.
+runs for all machines on startup and monitor change. The
+`$mainMod+number` focus binds are registered there too (`bind_focus`):
+with two or more monitors, keys 1-5 also switch the secondary monitor
+to the paired workspace (N+5), so both change together.
 
 ## Diagnostics
 

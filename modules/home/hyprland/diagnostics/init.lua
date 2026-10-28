@@ -38,6 +38,7 @@ local M = {
 
   -- Workspaces
   workspaces_assign = workspaces.assign,
+  workspaces_bind_focus = workspaces.bind_focus,
 
   -- Power
   power_is_on_AC = power.is_on_AC,
