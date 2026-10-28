@@ -8,13 +8,25 @@
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nur.url = "github:nix-community/NUR";
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Keep its own nixpkgs: overlays.pinned serves packages built from the
+    # input's own unstable-small tree, not ours.
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
-    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
-    stylix.url = "github:danth/stylix/master";
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:danth/stylix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nvf = {
       url = "github:notashelf/nvf";
