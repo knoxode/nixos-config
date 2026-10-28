@@ -1,10 +1,25 @@
 name: Update flake.lock
 
-# Opens a lock-file-only PR once a day. The Check workflow runs on the PR,
-# so a red lock PR means the new upstream revisions broke evaluation - the
-# separation from config changes falls out naturally: red "update flake.lock"
-# PRs are upstream problems, red PRs for your own branches are config
-# problems.
+# Opens a lock-file-only PR once a day and arms auto-merge on it.
+#
+# nixpkgs comes from a channel tarball (flake.nix):
+#   https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz
+# That URL only ever resolves to a published channel revision - one Hydra
+# has fully built and tested - so this updater can never adopt a nixpkgs
+# rev that is missing from cache.nixos.org. With the old github: branch
+# ref, updates routinely outran the cache and lock PRs failed on
+# fetch/build errors (see PR #16). If a lock PR fails, check whether the
+# channel simply has not advanced: https://channels.nixos.org/nixos-unstable
+# and https://hydra.nixos.org/jobset/nixpkgs/unstable
+#
+# When a non-nixpkgs input breaks the closure build, pin it to its
+# last-known-good rev in flake.nix (the nixpkgs-snapgene pattern), regenerate
+# the lock on the PR branch, and remove the pin once upstream fixes it.
+#
+# Requires a fine-grained personal access token (contents: read/write on this
+# repo only) stored as the FLAKE_UPDATE_PAT secret. The default GITHUB_TOKEN
+# would create the PR, but pushes made with it do not trigger other
+# workflows, so Check would never run on the PR.
 #
 # Requires a fine-grained personal access token (contents: read/write on this
 # repo only) stored as the FLAKE_UPDATE_PAT secret. The default GITHUB_TOKEN
