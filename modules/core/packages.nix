@@ -1,6 +1,5 @@
 {
   host,
-  inputs,
   pkgs,
   ...
 }: let
@@ -10,17 +9,6 @@
     forGaming
     hostType
     ;
-
-  snapgenePkgs = import inputs.nixpkgs-snapgene {
-    system = pkgs.stdenv.hostPlatform.system;
-
-    config = {
-      allowUnfree = true;
-      permittedInsecurePackages = [
-        "openssl-1.1.1w"
-      ];
-    };
-  };
 in {
   programs = {
     direnv.enable = true;
@@ -96,9 +84,7 @@ in {
       rustdesk-flutter
       socat
       sshfs
-      (pkgs.callPackage ../packages/snapgene.nix {
-        openssl_1_1 = snapgenePkgs.openssl_1_1;
-      })
+      (pkgs.callPackage ../packages/snapgene.nix { })
       starship
       swappy
       syncthing

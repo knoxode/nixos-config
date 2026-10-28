@@ -6,7 +6,6 @@
     # rev, so lock updates can't outrun cache.nixos.org. See update-flake.yml
     # and README.md.
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
-    nixpkgs-snapgene.url = "github:NixOS/nixpkgs/e2587cae";
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";

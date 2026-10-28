@@ -17,7 +17,6 @@
   libice,
   libXcursor,
   libXext,
-  openssl_1_1,
   dbus,
 }: let
   pname = "SnapGene";
@@ -59,7 +58,6 @@ in
       libXext
       libcxx
       libtiff
-      openssl_1_1
       dbus
       llvmPackages.openmp
     ];
@@ -97,7 +95,7 @@ in
     postFixup = ''
       wrapProgram $out/opt/gslbiotech/snapgene/snapgene \
         --set QT_QPA_PLATFORM xcb \
-        --set LD_LIBRARY_PATH "${lib.makeLibraryPath [openssl_1_1 libtiff]}:$LD_LIBRARY_PATH"
+        --set LD_LIBRARY_PATH "${lib.makeLibraryPath [libtiff]}:$LD_LIBRARY_PATH"
     '';
 
     installPhase = ''
