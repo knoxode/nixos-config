@@ -21,6 +21,7 @@
   xz,
   icu70,
   htslib,
+  libunwind,
   dbus,
 }: let
   pname = "SnapGene";
@@ -62,12 +63,14 @@ in
       libXext
       libcxx
       libtiff
+      libunwind
       dbus
       llvmPackages.openmp
       openssl
       xz
       icu70
       htslib
+      libunwind
     ];
 
     nativeBuildInputs = [
@@ -85,7 +88,7 @@ in
       cd extract
       # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
       tar --extract --xz --file=../data.tar.xz
-      # Strip the bundled OpenSSL 3, xz, ICU, libc++/libomp and htslib; autoPatchelf relinks against
+      # Strip the bundled OpenSSL 3, xz, ICU, libc++/libomp, htslib and libunwind; autoPatchelf relinks against
       # the nixpkgs versions in buildInputs so security patches flow via
       # rebuilds.
       rm -f opt/gslbiotech/snapgene/libssl.so.3 \
@@ -97,7 +100,8 @@ in
             opt/gslbiotech/snapgene/libc++.so.1 \
             opt/gslbiotech/snapgene/libc++abi.so.1 \
             opt/gslbiotech/snapgene/libomp.so.5 \
-            opt/gslbiotech/snapgene/libhts.so.3
+            opt/gslbiotech/snapgene/libhts.so.3 \
+            opt/gslbiotech/snapgene/libunwind.so.1
     '';
 
     patchPhase = ''
@@ -125,9 +129,12 @@ in
       mv $out/usr/share $out/share
       chmod +x $out/opt/gslbiotech/snapgene/snapgene
       # nixpkgs' LLVM 21 openmp ships unversioned libomp.so; provide the
-      # libomp.so.5 soname the vendored binaries expect.
+      # libomp.so.5 soname the vendored binaries expect. Same for libunwind
+      # (nixpkgs ships .so.8, vendored binaries want .so.1).
       ln -s ${llvmPackages.openmp}/lib/libomp.so \
             $out/opt/gslbiotech/snapgene/libomp.so.5
+      ln -s ${libunwind}/lib/libunwind.so.8 \
+            $out/opt/gslbiotech/snapgene/libunwind.so.1
     '';
 
     meta = with lib; {
