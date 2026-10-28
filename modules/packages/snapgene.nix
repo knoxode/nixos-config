@@ -83,7 +83,7 @@ in
       cd extract
       # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
       tar --extract --xz --file=../data.tar.xz
-      # Strip the bundled OpenSSL 3, xz and ICU; autoPatchelf relinks against
+      # Strip the bundled OpenSSL 3, xz, ICU and libc++/libomp; autoPatchelf relinks against
       # the nixpkgs versions in buildInputs so security patches flow via
       # rebuilds.
       rm -f opt/gslbiotech/snapgene/libssl.so.3 \
@@ -91,7 +91,10 @@ in
             opt/gslbiotech/snapgene/liblzma.so.5 \
             opt/gslbiotech/snapgene/libicudata.so.70 \
             opt/gslbiotech/snapgene/libicui18n.so.70 \
-            opt/gslbiotech/snapgene/libicuuc.so.70
+            opt/gslbiotech/snapgene/libicuuc.so.70 \
+            opt/gslbiotech/snapgene/libc++.so.1 \
+            opt/gslbiotech/snapgene/libc++abi.so.1 \
+            opt/gslbiotech/snapgene/libomp.so.5
     '';
 
     patchPhase = ''
@@ -118,6 +121,10 @@ in
       cp -r opt usr $out/
       mv $out/usr/share $out/share
       chmod +x $out/opt/gslbiotech/snapgene/snapgene
+      # nixpkgs' LLVM 21 openmp ships unversioned libomp.so; provide the
+      # libomp.so.5 soname the vendored binaries expect.
+      ln -s ${llvmPackages.openmp}/lib/libomp.so \
+            $out/opt/gslbiotech/snapgene/libomp.so.5
     '';
 
     meta = with lib; {
