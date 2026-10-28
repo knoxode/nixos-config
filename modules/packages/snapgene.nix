@@ -17,6 +17,8 @@
   libice,
   libXcursor,
   libXext,
+  openssl,
+  xz,
   dbus,
 }: let
   pname = "SnapGene";
@@ -60,6 +62,8 @@ in
       libtiff
       dbus
       llvmPackages.openmp
+      openssl
+      xz
     ];
 
     nativeBuildInputs = [
@@ -77,6 +81,11 @@ in
       cd extract
       # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
       tar --extract --xz --file=../data.tar.xz
+      # Strip the bundled OpenSSL 3 and xz; autoPatchelf relinks against the
+      # nixpkgs versions in buildInputs so security patches flow via rebuilds.
+      rm -f opt/gslbiotech/snapgene/libssl.so.3 \
+            opt/gslbiotech/snapgene/libcrypto.so.3 \
+            opt/gslbiotech/snapgene/liblzma.so.5
     '';
 
     patchPhase = ''
