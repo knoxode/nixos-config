@@ -4,11 +4,16 @@ name: Check
 # PRs, and once a day. Evaluation errors and failed
 # assertions fail the job; evaluation warnings are visible in the log.
 #
-# This catches "will my config still evaluate" breakage cheaply, and the
-# build job proves on every PR that the full system closures still build -
-# so anything merged to main is known to evaluate and build.
+# This catches "will my config still evaluate" breakage cheaply. The build
+# job additionally proves the full system closures build for flake.lock
+# update PRs, gated by the required Build gate check.
 on:
-  push: # any branch - no coupling to what the default branch is called
+  # Only main: pushes to feature branches are covered by their PR's
+  # pull_request run. Checking branches on push duplicates the evals on every
+  # PR and produces the confusing "Build ${{ matrix.host }} (push) Skipped"
+  # line on lock PRs.
+  push:
+    branches: [main]
   pull_request:
   schedule:
     # daily at 04:17 UTC
@@ -43,14 +48,18 @@ jobs:
   build:
     name: Build ${{ matrix.host }}
     runs-on: ubuntu-latest
-    # Only for the daily flake.lock PRs (labeled "flake-lock" by
-    # update-flake-lock) and manual runs. Config PRs stay eval-only and fast;
-    # the build jobs show as skipped there, which satisfies the required
-    # status checks, so merges still only need the evals.
+    # Builds run on the daily flake.lock PRs and manual runs only; config
+    # PRs stay eval-only and fast (the skipped build satisfies Build gate).
+    # Lock PRs are identified by the "flake-lock" label update-flake-lock
+    # attaches, OR by being authored by the bot: if the PAT ever loses
+    # pull-requests:write, the PR is created unlabeled and would otherwise
+    # silently merge on evals alone. Bot-authored lock PRs are exactly the
+    # ones that need builds, so author is a safe fallback signal.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'flake-lock'))
+       (contains(github.event.pull_request.labels.*.name, 'flake-lock') ||
+        github.event.pull_request.user.login == 'github-actions[bot]'))
     strategy:
       fail-fast: false
       matrix:
