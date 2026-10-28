@@ -43,11 +43,14 @@ jobs:
   build:
     name: Build ${{ matrix.host }}
     runs-on: ubuntu-latest
-    # Build on every PR (config changes included) and manual runs, so anything
-    # merged to main is known to build.
+    # Only for the daily flake.lock PRs (labeled "flake-lock" by
+    # update-flake-lock) and manual runs. Config PRs stay eval-only and fast;
+    # the build jobs show as skipped there, which satisfies the required
+    # status checks, so merges still only need the evals.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'pull_request'
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'flake-lock'))
     strategy:
       fail-fast: false
       matrix:
