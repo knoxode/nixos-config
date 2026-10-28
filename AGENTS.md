@@ -84,3 +84,53 @@ Additional constraints:
 - If blocked or uncertain, report the issue rather than guessing.
 - Report changes, modified files, validation results, and unresolved issues
   concisely.
+
+## GitHub API Workflow
+
+Changes are delivered as PRs and merged automatically once required status
+checks pass. Do not merge manually or bypass checks; let the gates decide.
+
+Authentication: a fine-grained PAT (repo-scoped, Contents RW + Pull requests
+RW, no admin) stored with sops-nix as `github/token`, materialized at
+`/run/secrets/github/token` (mode 0400). Read it per-call — never export it
+into the environment, never print it, never commit it in plaintext. It
+expires; if API calls return 401, prompt for rotation via `sops
+secrets/secrets.yaml` + rebuild.
+
+Standard flow for a change:
+
+```sh
+# 1. push the branch (SSH)
+git push -u origin <branch>
+
+# 2. open the PR
+TOKEN=$(cat /run/secrets/github/token)
+curl -s -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
+  -X POST https://api.github.com/repos/knoxode/nixos-config/pulls \
+  -d '{"title":"...","head":"<branch>","base":"main","body":"..."}'
+
+# 3. arm auto-merge — via GraphQL, NOT the REST endpoint
+#    (PUT /pulls/<n>/auto-merge returns 404 for fine-grained PATs)
+PRID=$(curl -s -H "Authorization: Bearer $TOKEN" \
+  https://api.github.com/repos/knoxode/nixos-config/pulls/<n> | jq -r '.node_id')
+curl -s -H "Authorization: Bearer $TOKEN" -X POST https://api.github.com/graphql \
+  -d "{\"query\":\"mutation(\$id: ID!){enablePullRequestAutoMerge(input:{pullRequestId:\$id,mergeMethod:SQUASH}){pullRequest{number}}}\",\"variables\":{\"id\":\"$PRID\"}}"
+```
+
+Merge quirks:
+
+- The synchronous merge endpoint is **PUT** `/pulls/<n>/merge` (POST returns
+  404). Use it only when checks are already green; otherwise arm auto-merge
+  and let GitHub merge on green.
+- Skipped required checks (config PRs, where `Build *` jobs skip) count as
+  satisfied; cancelled or failed ones do not.
+- The token has no admin rights and cannot bypass branch protection. Never
+  grant it admin scope.
+
+CI semantics (see `README.md` for the full model): config PRs run evals only
+(~2 min); `flake-lock`-labeled PRs (or bot-authored ones) additionally build
+all host closures. A red lock PR usually means the closure broke on a moved
+input — pin the offending input to its last-known-good rev in `flake.nix`
+(the `nixpkgs-snapgene` pattern) rather than force-merging. nixpkgs itself
+follows the nixos-unstable channel tarball and is pre-verified by Hydra; it
+is almost never the culprit.
