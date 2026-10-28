@@ -3,10 +3,6 @@
   options,
   ...
 }: {
-  imports = [
-    ./networkProfiles/eduroam.nix
-  ];
-
   systemd.network.wait-online.enable = false;
 
   networking = {
