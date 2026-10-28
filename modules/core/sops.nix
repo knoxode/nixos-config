@@ -13,6 +13,13 @@
   commonSecrets = {
     "wireguard/presharedkey" = {};
     "geldoc" = {};
+    # Fine-grained PAT used for GitHub API calls from this machine (opening
+    # PRs, enabling auto-merge). Consumed by reading /run/secrets/github/token
+    # directly; not an environment variable.
+    "github/token" = {
+      owner = "shaiikura";
+      mode = "0400";
+    };
   };
 in {
   imports = [
