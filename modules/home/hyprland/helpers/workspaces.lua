@@ -1,6 +1,7 @@
 -- helpers/workspaces.lua
 
 local Notify = require("helpers.notify")
+local shared = require("shared")
 
 local M = {}
 
@@ -82,8 +83,31 @@ function M.assign(monitors, policy)
   end
 end
 
+--- Bind the $mainMod+number focus binds for the current monitor setup.
+---
+--- One monitor: key N focuses workspace N.
+--- Two or more: keys 1-5 first focus the paired workspace N+5, so the
+--- secondary monitor switches in lockstep with the primary, then focus
+--- N. Keys 6-10 focus the secondary's workspaces only. Calling again
+--- on a monitor event replaces the previous binds.
+---
+---@param monitors HL.Monitor[]
+function M.bind_focus(monitors)
+  local paired = #monitors >= 2
+
+  for i = 1, 10 do
+    local key = i % 10 -- 10 maps to key 0
+
+    if paired and i <= 5 then
+      hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i + 5 }))
+    end
+    hl.bind(shared.mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
+  end
+end
+
 Notify.register({
   ["workspaces.assign"] = M.assign,
+  ["workspaces.bind_focus"] = M.bind_focus,
 })
 
 return M

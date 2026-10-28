@@ -34,6 +34,7 @@ function M.operations.monitorChange()
   local ctx = make_context()
 
   workspace_helpers.assign(ctx.monitors, machine.policy)
+  workspace_helpers.bind_focus(ctx.monitors)
 
   if machine.policy.dynamic_monitors then
     display.configure_display_environment(ctx)
@@ -62,6 +63,7 @@ function M.operations.startup()
   local ctx = make_context()
 
   workspace_helpers.assign(ctx.monitors, machine.policy)
+  workspace_helpers.bind_focus(ctx.monitors)
   display.configure_display_environment(ctx)
   display.update_brightness(ctx)
   power.configure(ctx)
