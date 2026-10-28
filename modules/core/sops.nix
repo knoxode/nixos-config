@@ -13,12 +13,6 @@
   commonSecrets = {
     "wireguard/presharedkey" = {};
     "geldoc" = {};
-    "eduroam/cert" = {
-      path = "/etc/NetworkManager/certs/eduroam.pem";
-      mode = "0444";
-    };
-    "eduroam/env" = {};
-    "eduroam/password" = {};
   };
 in {
   imports = [
