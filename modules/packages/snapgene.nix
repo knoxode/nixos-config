@@ -1,7 +1,5 @@
 {
-  binutils,
   lib,
-  libtiff,
   stdenv,
   fetchurl,
   autoPatchelfHook,
@@ -25,21 +23,15 @@
   dbus,
 }: let
   pname = "SnapGene";
-  version = "8.2.2";
-  versionList = lib.versions.splitVersion version;
-  major = builtins.elemAt versionList 0;
+  version = "8.2.3";
+  major = lib.versions.major version;
   majorMinor = lib.versions.majorMinor version;
-  # patch = builtins.elemAt versionList 2;
 
   url = "https://cdn.snapgene.com/downloads/SnapGene/${major}.x/${majorMinor}/${version}/snapgene_${version}_linux.deb";
-  name = builtins.concatStringsSep "-" [pname version];
-  sha256 =
-    {
-      "x86_64-linux" = "1nfw1mrgmi4a95w2qf6c2c0mk8dz6kxlyl44inmzvdd89ybi91wp";
-    }."${stdenv.hostPlatform.system}";
+  sha256 = "093ml2mwa4w4mdxl1cjjhzaamiki2g44r9zaqiqqq4m9k1hlf2hp";
 in
   stdenv.mkDerivation {
-    inherit name pname version;
+    inherit pname version;
     src = fetchurl {
       inherit url sha256;
     };
@@ -62,7 +54,6 @@ in
       libXcursor
       libXext
       libcxx
-      libtiff
       libunwind
       dbus
       llvmPackages.openmp
@@ -70,11 +61,9 @@ in
       xz
       icu70
       htslib
-      libunwind
     ];
 
     nativeBuildInputs = [
-      binutils
       kdePackages.wrapQtAppsHook
       autoPatchelfHook
     ];
@@ -110,23 +99,15 @@ in
         --replace "/opt/gslbiotech/snapgene/launch.png" "$out/opt/gslbiotech/snapgene/launch.png"
     '';
 
-    preFixup = ''
-      # The only object that still asks for libtiff.so.5
-      patchelf --replace-needed \
-               libtiff.so.5 libtiff.so \
-               $out/opt/gslbiotech/snapgene/imageformats/libqtiff.so
-    '';
-
     postFixup = ''
       wrapProgram $out/opt/gslbiotech/snapgene/snapgene \
-        --set QT_QPA_PLATFORM xcb \
-        --set LD_LIBRARY_PATH "${lib.makeLibraryPath [libtiff]}:$LD_LIBRARY_PATH"
+        --set QT_QPA_PLATFORM xcb
     '';
 
     installPhase = ''
-      mkdir -p $out/usr/bin
-      cp -r opt usr $out/
-      mv $out/usr/share $out/share
+      mkdir -p $out
+      cp -r opt $out/
+      cp -r usr/share $out/share
       chmod +x $out/opt/gslbiotech/snapgene/snapgene
       # nixpkgs' LLVM 21 openmp ships unversioned libomp.so; provide the
       # libomp.so.5 soname the vendored binaries expect. Same for libunwind
