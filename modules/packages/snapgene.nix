@@ -19,6 +19,7 @@
   libXext,
   openssl,
   xz,
+  icu70,
   dbus,
 }: let
   pname = "SnapGene";
@@ -64,6 +65,7 @@ in
       llvmPackages.openmp
       openssl
       xz
+      icu70
     ];
 
     nativeBuildInputs = [
@@ -81,11 +83,15 @@ in
       cd extract
       # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
       tar --extract --xz --file=../data.tar.xz
-      # Strip the bundled OpenSSL 3 and xz; autoPatchelf relinks against the
-      # nixpkgs versions in buildInputs so security patches flow via rebuilds.
+      # Strip the bundled OpenSSL 3, xz and ICU; autoPatchelf relinks against
+      # the nixpkgs versions in buildInputs so security patches flow via
+      # rebuilds.
       rm -f opt/gslbiotech/snapgene/libssl.so.3 \
             opt/gslbiotech/snapgene/libcrypto.so.3 \
-            opt/gslbiotech/snapgene/liblzma.so.5
+            opt/gslbiotech/snapgene/liblzma.so.5 \
+            opt/gslbiotech/snapgene/libicudata.so.70 \
+            opt/gslbiotech/snapgene/libicui18n.so.70 \
+            opt/gslbiotech/snapgene/libicuuc.so.70
     '';
 
     patchPhase = ''
