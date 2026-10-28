@@ -72,3 +72,25 @@ jobs:
         run: |
           nix build --no-link --print-out-paths \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+
+  # Stable-named aggregate over the build matrix, required as a status check.
+  # Required per-host matrix checks can't work: when every combination is
+  # skipped (config PRs), GitHub collapses them into a single un-interpolated
+  # check ("Build ${{ matrix.host }}"), so the required names never appear and
+  # merges block forever. This gate passes when builds succeeded or were
+  # skipped, and fails if any host build failed.
+  build-gate:
+    name: Build gate
+    needs: [build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build results
+        run: |
+          result='${{ needs.build.result }}'
+          if [ "$result" = "success" ] || [ "$result" = "skipped" ]; then
+            echo "build job result: $result"
+          else
+            echo "::error::build job failed: $result"
+            exit 1
+          fi
