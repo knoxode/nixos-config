@@ -37,7 +37,6 @@ in {
       adwaita-icon-theme
       anydesk
       bash-language-server
-      beeper
       brightnessctl
       cifs-utils
       ddcui
@@ -46,7 +45,6 @@ in {
       discord-canary
       easyeffects
       fastfetch
-      flatpak
       (pkgs.callPackage ../packages/fiji.nix {})
       ghostty
       gimp3
@@ -64,7 +62,6 @@ in {
       jq
       kdePackages.dolphin
       kdePackages.gwenview
-      kitty
       libreoffice
       lm_sensors
       lsof
@@ -85,16 +82,12 @@ in {
       socat
       sshfs
       (pkgs.callPackage ../packages/snapgene.nix { })
-      starship
       swappy
       syncthing
-      awww
       typst
       tree
       unzip
-      virtiofsd
       vlc
-      waypaper
       winboat
       wl-clipboard
       zoom-us
