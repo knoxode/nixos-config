@@ -11,7 +11,6 @@ in {
       ./avahi.nix
       ./auto-update.nix
       ./bluetooth.nix
-      ./aiModels
       ./customPackages
       ./hardware
       ./gpu_symlink.nix
@@ -53,14 +52,13 @@ in {
     )
     ++ (
       if hostType == "Desktop"
-      then
-        [
-          ./nvidia-container-toolkit.nix
-          # Desktop-only: coolercontrold keeps a persistent NVML handle to the
-          # NVIDIA GPU, which blocks RTD3 runtime suspend entirely. Laptops
-          # (nomad) keep their dGPU in D3cold instead; node doesn't use RTD3.
-          ./coolercontrol.nix
-        ]
+      then [
+        ./nvidia-container-toolkit.nix
+        # Desktop-only: coolercontrold keeps a persistent NVML handle to the
+        # NVIDIA GPU, which blocks RTD3 runtime suspend entirely. Laptops
+        # (nomad) keep their dGPU in D3cold instead; node doesn't use RTD3.
+        ./coolercontrol.nix
+      ]
       else []
     );
 }
