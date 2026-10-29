@@ -16,14 +16,10 @@
     ./ghostty.nix
     ./grim.nix
     ./harperSharedLib.nix
-    #./helix.nix
-    ./kitty.nix
     ./shellAliases.nix
     ./stylix.nix
     ./systemd.nix
-    #./television.nix
     ./vscode.nix
-    ./waypaper.nix
   ];
   xdg.userDirs.createDirectories = true;
 }

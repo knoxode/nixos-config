@@ -11,7 +11,6 @@ in {
       ./avahi.nix
       ./auto-update.nix
       ./bluetooth.nix
-      ./customPackages
       ./hardware
       ./gpu_symlink.nix
       ./i2c.nix
@@ -24,7 +23,6 @@ in {
       ./audio.nix
       ./power-settings.nix
       ./printing.nix
-      ./rstudio.nix
       ./security.nix
       ./sops.nix
       ./spicetify.nix
