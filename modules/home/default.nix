@@ -17,7 +17,6 @@
     ./grim.nix
     ./harperSharedLib.nix
     #./helix.nix
-    #./hyprpanel.nix
     ./kitty.nix
     ./shellAliases.nix
     ./stylix.nix

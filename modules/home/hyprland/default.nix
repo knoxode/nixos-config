@@ -70,7 +70,6 @@
   '';
 in {
   imports = [
-    ./hypridle.nix
     ./hyprland.nix
   ];
 
