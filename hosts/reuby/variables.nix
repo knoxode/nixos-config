@@ -3,6 +3,8 @@
   hasRazer = false;
   hostType = "Laptop";
   forGaming = false;
+  # Battery over latency: roaming laptop.
+  wifiPowersave = true;
 
   #Maps the cards to common names, and creates a consistent symlink
   gpuDevices = {

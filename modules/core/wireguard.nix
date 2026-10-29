@@ -1,5 +1,6 @@
 {
   host,
+  lib,
   config,
   ...
 }: let
@@ -60,6 +61,22 @@
 
   vpnConnectionName = "${host}_split";
 in {
+  systemd.services = {
+    # Wait-online serializes the whole boot behind link-up for a peer that
+    # self-heals via retry + keepalive. Boot stops blocking on connectivity.
+    NetworkManager-wait-online.enable = false;
+
+    "wireguard-wg0-peer-${vpnConnectionName}_i6" = {
+      # The endpoint is an FQDN; if the tunnel comes up before NM has a
+      # route, retry instead of having held the boot hostage for it.
+      wants = lib.mkForce [];
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+    };
+  };
+
   networking = {
     wireguard.enable = true;
 
