@@ -7,6 +7,9 @@
 
   networking = {
     networkmanager.enable = true;
+    # No WWAN modem on any fleet host; NM's default enable only ships the
+    # ModemManager stack and an inactive service.
+    modemmanager.enable = false;
 
     timeServers =
       options.networking.timeServers.default
@@ -15,21 +18,11 @@
     firewall = {
       enable = true;
 
-      allowedTCPPorts = [
-        22
-        80
-        443
-        59010
-        59011
-        8080
-      ];
-
-      allowedUDPPorts = [
-        51820
-        1235
-        59010
-        59011
-      ];
+      # Only what actually listens: sshd and the wg0 listen port. WireGuard
+      # peers are reached via the i6 gateway's endpoint port (51821), which
+      # is outbound-only; return traffic lands on 1235.
+      allowedTCPPorts = [22];
+      allowedUDPPorts = [1235];
     };
   };
 

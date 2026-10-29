@@ -19,7 +19,6 @@
     ./shellAliases.nix
     ./stylix.nix
     ./systemd.nix
-    ./vscode.nix
   ];
   xdg.userDirs.createDirectories = true;
 }

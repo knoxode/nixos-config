@@ -56,13 +56,9 @@
       ];
     };
   };
-  nixpkgs.config = {
-    permittedInsecurePackages = ["openssl-1.1.1w" "electron-40.10.5"];
-  };
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
     inputs.nur.overlays.default
-    inputs.nix-vscode-extensions.overlays.default
   ];
   # The graphical-desktop module enables the speech-dispatcher *service* by
   # default (mkDefault true), which drags espeak-ng + mbrola-voices + flite

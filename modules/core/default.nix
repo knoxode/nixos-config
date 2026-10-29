@@ -40,7 +40,7 @@ in {
     ]
     ++ (
       if forGaming
-      then [./steam.nix ./gamemode.nix ./gamescope.nix]
+      then [./steam.nix ./gamemode.nix]
       else []
     )
     ++ (
