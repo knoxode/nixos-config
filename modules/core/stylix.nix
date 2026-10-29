@@ -35,7 +35,12 @@
       };
     };
     cursor = {
-      package = pkgs.bibata-cursors;
+      # bibata-cursors ships all 12 variants (~320 MiB); wrap it so only the
+      # single theme stylix actually uses ends up in the closure.
+      package = pkgs.runCommand "bibata-cursors-modern-ice" { } ''
+        mkdir -p $out/share/icons
+        cp -r ${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice $out/share/icons/
+      '';
       name = "Bibata-Modern-Ice";
       size = 24;
     };

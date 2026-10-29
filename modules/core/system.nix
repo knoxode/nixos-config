@@ -19,6 +19,15 @@
   };
   networking.hostName = host;
   nix = {
+    # The NixOS default writes /etc/nix/registry.json with `to.type = "path"`
+    # pointing at the system nixpkgs, embedding the full nixpkgs source
+    # (~1.5 GiB) in the system closure. Point the registry at the same channel
+    # tarball URL the flake input uses instead; consumers (`nix search
+    # nixpkgs`, `nix run nixpkgs#...`) fetch it over the network on first use.
+    registry.nixpkgs.to = {
+      type = "tarball";
+      url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    };
     settings = {
       auto-optimise-store = true;
       download-buffer-size = 524288000;
@@ -55,6 +64,12 @@
     inputs.nur.overlays.default
     inputs.nix-vscode-extensions.overlays.default
   ];
+  # The graphical-desktop module enables the speech-dispatcher *service* by
+  # default (mkDefault true), which drags espeak-ng + mbrola-voices + flite
+  # (~700 MiB) into the closure for a screen reader that isn't installed.
+  # Apps that link libspeechd (Firefox, Discord) only need the library, which
+  # is a separate build and unaffected.
+  services.speechd.enable = false;
   security.sudo.wheelNeedsPassword = false;
   services.xserver.xkb = {
     layout = "gb";

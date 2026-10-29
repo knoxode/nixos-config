@@ -106,7 +106,14 @@ in {
     )
     ++ (
       if forGaming
-      then [mangohud prismlauncher gamemode mesa]
+      then [
+        mangohud
+        # Default bundles jdk25+21+17+8 (~1.6 GiB); Minecraft downloads its
+        # own JRE at runtime, so keep only one for the system Java setting.
+        (prismlauncher.override { jdks = [jdk21]; })
+        gamemode
+        mesa
+      ]
       else []
     )
     ++ (
