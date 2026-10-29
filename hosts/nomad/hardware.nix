@@ -22,6 +22,11 @@
     initrd = {
       availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = [];
+      # Runtime DSDT override (rationale in dsdt-override.nix). Prepends an
+      # uncompressed cpio segment with kernel/firmware/acpi/DSDT.aml; the
+      # firmware chip is untouched, the kernel swaps the in-memory table
+      # from this segment before AML executes.
+      prepend = ["${pkgs.callPackage ./dsdt-override.nix {}}"];
     };
     # Hibernation: resume from the /var/lib/swapfile (see swapDevices below).
     # resumeDevice is the partition holding it; resume_offset is its first
