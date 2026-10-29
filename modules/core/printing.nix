@@ -9,6 +9,9 @@ in
   services = {
     printing = {
       enable = printEnable;
+      # Legacy network-printer broadcast discovery; no queue needs it and it
+      # is a repeated CVE source. CUPS is socket-activated anyway.
+      browsed.enable = false;
       drivers = [
         pkgs.hplipWithPlugin
       ];

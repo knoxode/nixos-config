@@ -2,9 +2,12 @@
   services.openssh = {
     enable = true;
     settings = {
-      X11Forwarding = true;
+      # Key-only: both users' ed25519 keys are declared in user.nix.
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
-      PasswordAuthentication = true;
+      # Wayland host; X forwarding over SSH serves nothing.
+      X11Forwarding = false;
     };
     openFirewall = true;
   };
