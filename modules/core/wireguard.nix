@@ -63,15 +63,27 @@
 in {
   systemd.services = {
     "wireguard-wg0-peer-${vpnConnectionName}_i6" = {
-      # Wait for network-online: NetworkManager-wait-online (upstream default,
-      # restored) makes network-online.target track real connectivity, so the
-      # FQDN endpoint resolves on the first attempt. Nothing else in the boot
-      # graph orders on network-online.target, so the rest of boot proceeds
-      # without it. Retry stays as insurance for delayed resolvectl readiness.
+      # Wait for network-online: NetworkManager-wait-online makes
+      # network-online.target track real connectivity, so the FQDN endpoint
+      # resolves on the first attempt. The retry policy only covers a
+      # resolvectl that starts slower than the wifi association.
       serviceConfig = {
         Restart = "on-failure";
         RestartSec = 5;
       };
+    };
+  };
+
+  systemd.targets = {
+    # The generated target makes the peer service a member (wants+after), and
+    # target completion requires its members — which serialized multi-user
+    # behind wifi association (the peer waits for network-online). Keep the
+    # target gating on wg0.service only; the peer still starts with the
+    # interface (wanted by wireguard-wg0.service) and self-gates on
+    # network-online, out of the boot-critical path.
+    "wireguard-wg0" = {
+      wants = lib.mkForce ["wireguard-wg0.service"];
+      after = lib.mkForce ["wireguard-wg0.service"];
     };
   };
 
