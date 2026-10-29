@@ -18,8 +18,6 @@
   openssl,
   xz,
   icu70,
-  htslib,
-  libunwind,
   dbus,
 }: let
   pname = "SnapGene";
@@ -60,7 +58,6 @@ in
       openssl
       xz
       icu70
-      htslib
     ];
 
     nativeBuildInputs = [
@@ -77,7 +74,7 @@ in
       cd extract
       # Usually 'data.tar.xz' or 'data.tar.gz' is present in .deb
       tar --extract --xz --file=../data.tar.xz
-      # Strip the bundled OpenSSL 3, xz, ICU, libc++/libomp, htslib and libunwind; autoPatchelf relinks against
+      # Strip the bundled OpenSSL 3, xz and ICU; autoPatchelf relinks against
       # the nixpkgs versions in buildInputs so security patches flow via
       # rebuilds.
       rm -f opt/gslbiotech/snapgene/libssl.so.3 \
@@ -85,12 +82,7 @@ in
             opt/gslbiotech/snapgene/liblzma.so.5 \
             opt/gslbiotech/snapgene/libicudata.so.70 \
             opt/gslbiotech/snapgene/libicui18n.so.70 \
-            opt/gslbiotech/snapgene/libicuuc.so.70 \
-            opt/gslbiotech/snapgene/libc++.so.1 \
-            opt/gslbiotech/snapgene/libc++abi.so.1 \
-            opt/gslbiotech/snapgene/libomp.so.5 \
-            opt/gslbiotech/snapgene/libhts.so.3 \
-            opt/gslbiotech/snapgene/libunwind.so.1
+            opt/gslbiotech/snapgene/libicuuc.so.70
     '';
 
     patchPhase = ''
