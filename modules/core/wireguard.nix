@@ -62,14 +62,12 @@
   vpnConnectionName = "${host}_split";
 in {
   systemd.services = {
-    # Wait-online serializes the whole boot behind link-up for a peer that
-    # self-heals via retry + keepalive. Boot stops blocking on connectivity.
-    NetworkManager-wait-online.enable = false;
-
     "wireguard-wg0-peer-${vpnConnectionName}_i6" = {
-      # The endpoint is an FQDN; if the tunnel comes up before NM has a
-      # route, retry instead of having held the boot hostage for it.
-      wants = lib.mkForce [];
+      # Wait for network-online: NetworkManager-wait-online (upstream default,
+      # restored) makes network-online.target track real connectivity, so the
+      # FQDN endpoint resolves on the first attempt. Nothing else in the boot
+      # graph orders on network-online.target, so the rest of boot proceeds
+      # without it. Retry stays as insurance for delayed resolvectl readiness.
       serviceConfig = {
         Restart = "on-failure";
         RestartSec = 5;
