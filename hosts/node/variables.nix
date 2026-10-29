@@ -3,6 +3,8 @@
   hasRazer = true;
   hostType = "Desktop";
   forGaming = true;
+  # Latency over battery: stationary desktop.
+  wifiPowersave = false;
 
   # Hyprland host data
   hyprland = {

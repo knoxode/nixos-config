@@ -38,7 +38,8 @@
       # UI and Behavior
       DisplayMenuBar = "never";
       DontCheckDefaultBrowser = true;
-      HardwareAcceleration = false;
+      # VA-API via the intel-media-driver; the iGPU is the render device.
+      HardwareAcceleration = true;
       OfferToSaveLogins = false;
       DefaultDownloadDirectory = "/home/${config.home.username}/Downloads";
 

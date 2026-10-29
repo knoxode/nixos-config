@@ -19,6 +19,13 @@
   };
   networking.hostName = host;
   nix = {
+    # Keep direnv devshell outputs and derivations alive across GC; without
+    # these, nix-direnv shells rebuild every time nh-clean runs (weekly).
+    settings = {
+      keep-outputs = true;
+      keep-derivations = true;
+    };
+
     # The NixOS default writes /etc/nix/registry.json with `to.type = "path"`
     # pointing at the system nixpkgs, embedding the full nixpkgs source
     # (~1.5 GiB) in the system closure. Point the registry at the same channel
@@ -67,6 +74,11 @@
   # is a separate build and unaffected.
   services.speechd.enable = false;
   security.sudo.wheelNeedsPassword = false;
+  # Don't let one straggler service hold shutdown hostage for 90s.
+  systemd.settings.Manager.DefaultTimeoutStopSec = "10s";
+  services.journald.settings.Journal.SystemMaxUse = "1G";
+  # Skip building the NixOS manual on every switch; nothing here reads it.
+  documentation.nixos.enable = false;
   services.xserver.xkb = {
     layout = "gb";
     variant = "";

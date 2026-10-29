@@ -9,8 +9,6 @@
   ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-
     loader = {
       grub = {
         enable = true;
@@ -19,7 +17,7 @@
         useOSProber = true;
       };
       efi.canTouchEfiVariables = true;
-      timeout = 5;
+      timeout = 2;
     };
     initrd = {
       availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
@@ -35,6 +33,8 @@
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/723eb7d0-f5f2-4324-b196-b755d7510174";
     fsType = "ext4";
+    # Access-time bookkeeping buys nothing here; drop the metadata churn.
+    options = ["noatime"];
   };
 
   fileSystems."/boot" = {

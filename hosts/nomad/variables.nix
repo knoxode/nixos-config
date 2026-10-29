@@ -3,6 +3,8 @@
   hasRazer = true;
   hostType = "Laptop";
   forGaming = true;
+  # Battery over latency: roaming laptop.
+  wifiPowersave = true;
 
   intelID = "PCI:0:2:0";
   nvidiaID = "PCI:1:0:0";
