@@ -35,11 +35,9 @@ in {
   environment.systemPackages = with pkgs;
     [
       adwaita-icon-theme
-      anydesk
       bash-language-server
       brightnessctl
       cifs-utils
-      ddcui
       ddcutil
       direnv
       discord-canary
@@ -52,15 +50,12 @@ in {
       grim
       tuigreet
       grimblast
-      gparted
-      htop
       hyprpicker
       hyprsunset
       igv
       inkscape
       jellyfin-desktop
       jq
-      kdePackages.dolphin
       kdePackages.gwenview
       libreoffice
       lm_sensors
@@ -72,13 +67,10 @@ in {
       nix-search-tv
       nix-prefetch-git
       obsidian
-      openconnect
       os-prober
-      plexamp
       powertop
       qalculate-qt
       ripgrep
-      rustdesk-flutter
       socat
       sshfs
       (pkgs.callPackage ../packages/snapgene.nix { })
