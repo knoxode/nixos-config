@@ -15,7 +15,6 @@ in {
     slurp
     wl-clipboard
     hyprpolkitagent
-    hyprland-qtutils # needed for banners and ANR messages
   ];
   # Place Files Inside Home Directory
   wayland.windowManager.hyprland = {
