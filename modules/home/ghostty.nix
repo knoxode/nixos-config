@@ -6,7 +6,7 @@
       ####################################
       #             Theming              #
       ####################################
-      theme = "Catppuccin Mocha";
+      theme = "noctalia";
       window-title-font-family = "JetBrainsMono Nerd Font Mono";
 
       font-family = "JetBrainsMono Nerd Font Mono";
@@ -16,13 +16,13 @@
 
       selection-background = "dc8a78";
 
-      window-show-tab-bar = "always";
+      window-show-tab-bar = "auto";
       gtk-tabs-location = "bottom";
       gtk-titlebar-style = "tabs";
       window-theme = "ghostty";
       gtk-toolbar-style = "raised-border";
-      window-titlebar-foreground = "#000000";
-      window-titlebar-background = "#eba0ac";
+      # window-titlebar-foreground = "#000000";
+      # window-titlebar-background = "#eba0ac";
 
       ####################################
       #         Nice to haves            #
