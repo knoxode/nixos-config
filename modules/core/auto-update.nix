@@ -132,7 +132,7 @@
       # Supply the user's environment explicitly for unattended execution.
       exec runuser -u ${username} -- \
         env HOME="/home/${username}" NH_FLAKE="$repo" \
-        nh os switch --hostname ${host} --elevation-strategy sudo
+        nh os switch --hostname ${host} --elevation-strategy /run/wrappers/bin/sudo
     '';
   };
 in {
