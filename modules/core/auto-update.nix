@@ -12,8 +12,11 @@
   # Applies origin/main automatically, but only when all conditions hold:
   #   1. the working tree is clean (tracked files) - never clobber local work,
   #   2. the update is a fast-forward, and
-  #   3. the commit has a green CI run on GitHub - hosts only ever switch to
-  #      state that CI has evaluated and built.
+  #   3. the latest push CI run for the commit succeeded, including evaluation
+  #      of every host and the aggregate build gate.
+  #
+  # Full builds of flake.lock updates are enforced separately by the PR
+  # workflow and branch protection; push runs on main are evaluation-only.
   updateScript = pkgs.writeShellApplication {
     name = "alexos-auto-update";
 
@@ -52,16 +55,76 @@
       fi
 
       head_sha="$(runuser -u ${username} -- git rev-parse origin/main)"
-      if ! state="$(curl -fsSL "https://api.github.com/repos/knoxode/nixos-config/commits/$head_sha/status" | jq -r .state)"; then
-        echo "auto-update: could not query CI status for $head_sha, skipping"
-        exit 0
-      fi
-      if [ "$state" != "success" ]; then
-        echo "auto-update: CI status for $head_sha is '$state', skipping"
+      api="https://api.github.com/repos/knoxode/nixos-config"
+
+      # Use temporary files to avoid holding large API responses in shell
+      # variables. Remove them automatically when the script exits.
+      tmpdir="$(mktemp -d)"
+      trap 'rm -rf "$tmpdir"' EXIT
+
+      # Find the latest push-triggered Check workflow run for this exact
+      # commit on main. PR and scheduled runs must not authorize deployment.
+      if ! curl -fsSL \
+        "$api/actions/workflows/check.yml/runs?branch=main&event=push&per_page=100" \
+        -o "$tmpdir/runs.json"; then
+        echo "auto-update: could not query CI runs for $head_sha, skipping"
         exit 0
       fi
 
-      echo "auto-update: applying CI-validated update $head_sha"
+      if ! run_id="$(jq -er --arg sha "$head_sha" '
+        [.workflow_runs[]
+         | select(.head_sha == $sha and
+                  .event == "push" and
+                  .head_branch == "main")]
+        | sort_by(.created_at, .id)
+        | last
+        | .id // empty
+      ' "$tmpdir/runs.json")"; then
+        echo "auto-update: no valid push CI run found for $head_sha, skipping"
+        exit 0
+      fi
+
+      state="$(jq -r --argjson id "$run_id" '
+        .workflow_runs[]
+        | select(.id == $id)
+        | if .status == "completed" then
+            .conclusion
+          else
+            .status
+          end
+      ' "$tmpdir/runs.json")"
+
+      if [ "$state" != "success" ]; then
+        echo "auto-update: CI run $run_id is '$state', skipping"
+        exit 0
+      fi
+
+      # Verify that every required job succeeded within the same workflow
+      # run. The build gate accepts skipped builds on push events by design.
+      if ! curl -fsSL \
+        "$api/actions/runs/$run_id/jobs?per_page=100" \
+        -o "$tmpdir/jobs.json"; then
+        echo "auto-update: could not query CI jobs for run $run_id, skipping"
+        exit 0
+      fi
+
+      if ! jq -e '
+        .jobs as $jobs |
+        ["Evaluate reuby", "Evaluate node", "Evaluate nomad", "Build gate"]
+        as $required |
+        all($required[]; . as $name |
+          [$jobs[] |
+            select(.name == $name and
+                   .status == "completed" and
+                   .conclusion == "success")]
+          | length == 1
+        )
+      ' "$tmpdir/jobs.json" >/dev/null; then
+        echo "auto-update: required CI jobs not successful for $head_sha, skipping"
+        exit 0
+      fi
+
+      echo "auto-update: applying CI-validated update $head_sha (run $run_id)"
       runuser -u ${username} -- git merge --ff-only origin/main
       exec nh os switch --hostname ${host}
     '';
