@@ -127,7 +127,12 @@
 
       echo "auto-update: applying CI-validated update $head_sha (run $run_id)"
       runuser -u ${username} -- git merge --ff-only origin/main
-      exec nh os switch --hostname ${host}
+
+      # nh must run as a regular user; it escalates privileges internally.
+      # Supply the user's environment explicitly for unattended execution.
+      exec runuser -u ${username} -- \
+        env HOME="/home/${username}" NH_FLAKE="$repo" \
+        nh os switch --hostname ${host} --elevation-strategy sudo
     '';
   };
 in {
