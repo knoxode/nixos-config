@@ -612,7 +612,7 @@ in {
         source = "wallpaper";
         wallpaper_scheme = "m3-fruit-salad";
         templates = {
-          builtin_ids = [];
+          builtin_ids = ["ghostty"];
           community_ids = [];
           enable_builtin_templates = true;
           enable_community_templates = true;
