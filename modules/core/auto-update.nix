@@ -138,6 +138,12 @@
 in {
   systemd.services.alexos-auto-update = lib.mkIf autoUpdate {
     description = "Apply CI-validated flake.lock updates";
+
+    # Don't interrupt the updater during the NixOS activation it initiated.
+    # The updated unit definition takes effect on the next invocation.
+    restartIfChanged = false;
+    stopIfChanged = false;
+
     after = ["network-online.target"];
     wants = ["network-online.target"];
 
