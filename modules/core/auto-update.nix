@@ -25,6 +25,7 @@
       git
       jq
       nh
+      nix
       util-linux
     ];
 
