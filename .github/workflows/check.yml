@@ -1,33 +1,41 @@
 name: Check
 
-# Evaluates every host against the committed flake.lock on every push, on all
-# PRs, and once a day. Evaluation errors and failed
-# assertions fail the job; evaluation warnings are visible in the log.
-#
-# This catches "will my config still evaluate" breakage cheaply. The build
-# job additionally proves the full system closures build for flake.lock
-# update PRs, gated by the required Build gate check.
+# Evaluate every host on main, on PRs, and daily.
+# Build every host when a PR changes flake.lock or on manual runs.
+# Stable gates are required checks for branch protection.
+
 on:
-  # Only main: pushes to feature branches are covered by their PR's
-  # pull_request run. Checking branches on push duplicates the evals on every
-  # PR and produces the confusing "Build ${{ matrix.host }} (push) Skipped"
-  # line on lock PRs.
   push:
     branches: [main]
   pull_request:
   schedule:
-    # daily at 04:17 UTC
     - cron: "17 4 * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: check-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect lock changes
+    runs-on: ubuntu-latest
+    outputs:
+      lock: ${{ steps.filter.outputs.lock }}
+    steps:
+      - name: Check changed files
+        if: github.event_name == 'pull_request'
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            lock:
+              - 'flake.lock'
+
   eval:
     name: Evaluate ${{ matrix.host }}
     runs-on: ubuntu-latest
@@ -43,23 +51,34 @@ jobs:
 
       - name: Evaluate ${{ matrix.host }} toplevel
         run: |
-          nix eval ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
+          nix eval \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
+
+  eval-gate:
+    name: Evaluate gate
+    needs: [eval]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check evaluation results
+        env:
+          RESULT: ${{ needs.eval.result }}
+        run: |
+          if [ "$RESULT" != "success" ]; then
+            echo "::error::Evaluation result: $RESULT"
+            exit 1
+          fi
+          echo "All host evaluations succeeded."
 
   build:
     name: Build ${{ matrix.host }}
-    runs-on: ubuntu-latest
-    # Builds run on the daily flake.lock PRs and manual runs only; config
-    # PRs stay eval-only and fast (the skipped build satisfies Build gate).
-    # Lock PRs are identified by the "flake-lock" label update-flake-lock
-    # attaches, OR by being authored by the bot: if the PAT ever loses
-    # pull-requests:write, the PR is created unlabeled and would otherwise
-    # silently merge on evals alone. Bot-authored lock PRs are exactly the
-    # ones that need builds, so author is a safe fallback signal.
+    needs: [changes]
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' &&
-       (contains(github.event.pull_request.labels.*.name, 'flake-lock') ||
-        github.event.pull_request.user.login == 'github-actions[bot]'))
+       needs.changes.result == 'success' &&
+       needs.changes.outputs.lock == 'true')
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -82,24 +101,40 @@ jobs:
           nix build --no-link --print-out-paths \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
 
-  # Stable-named aggregate over the build matrix, required as a status check.
-  # Required per-host matrix checks can't work: when every combination is
-  # skipped (config PRs), GitHub collapses them into a single un-interpolated
-  # check ("Build ${{ matrix.host }}"), so the required names never appear and
-  # merges block forever. This gate passes when builds succeeded or were
-  # skipped, and fails if any host build failed.
   build-gate:
     name: Build gate
-    needs: [build]
+    needs: [changes, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Check build results
+        env:
+          EVENT: ${{ github.event_name }}
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          LOCK_CHANGED: ${{ needs.changes.outputs.lock }}
+          BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          result='${{ needs.build.result }}'
-          if [ "$result" = "success" ] || [ "$result" = "skipped" ]; then
-            echo "build job result: $result"
-          else
-            echo "::error::build job failed: $result"
+          # Fail closed if PR change detection failed.
+          if [ "$EVENT" = "pull_request" ] &&
+             [ "$CHANGES_RESULT" != "success" ]; then
+            echo "::error::Lock change detection failed."
             exit 1
+          fi
+
+          # Builds are mandatory for lock PRs and manual runs.
+          if [ "$EVENT" = "workflow_dispatch" ] ||
+             { [ "$EVENT" = "pull_request" ] &&
+               [ "$LOCK_CHANGED" = "true" ]; }; then
+            if [ "$BUILD_RESULT" != "success" ]; then
+              echo "::error::Required builds: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "All required host builds succeeded."
+          else
+            # No builds required for this event.
+            if [ "$BUILD_RESULT" != "skipped" ]; then
+              echo "::error::Unexpected build result: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "Builds correctly skipped."
           fi
