@@ -19,6 +19,8 @@
       window-theme = "ghostty";
       gtk-toolbar-style = "raised-border";
 
+      background-opacity = 0.85;
+
       ####################################
       #         Nice to haves            #
       ####################################

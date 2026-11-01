@@ -2,7 +2,10 @@ local shared = require("shared")
 
 local last_on_battery = nil
 
-local function apply_battery_optimisations(on_battery)
+--- Apply battery/AC appearance optimisations.
+--- Disables blur and shadows on battery; enables them on AC.
+---@param on_battery boolean
+function apply_battery_optimisations(on_battery)
   if on_battery == last_on_battery then
     return
   end
@@ -28,28 +31,28 @@ local function apply_battery_optimisations(on_battery)
           size = 3,
           passes = 1,
           vibrancy = 0.1696,
+          variant = "acrylic",
+          noise = 0.02,
+          acrylic = {
+            aberration = 0.07,
+            bulb = 72,
+            clarity = 0.65,
+            refraction = 38,
+          },
         },
         shadow = {
           enabled = true,
           range = 4,
           render_power = 3,
-          color = 0xee1a1a1a,
+          color = 0x88000000,
         },
       },
     })
   end
 end
 
--- hl.on("hyprland.start", function()
--- 	apply_battery_optimisations(shared.on_battery())
---
--- 	hl.timer(function()
--- 		apply_battery_optimisations(shared.on_battery())
--- 	end, {
--- 		timeout = 5000,
--- 		type = "repeat",
--- 	})
--- end)
+-- Initial application will be handled by events module on startup
+-- and via OnBatteryHook/OnACHook globals for power changes.
 
 hl.config({
   general = {
