@@ -1,136 +1,113 @@
 # Agent Instructions — alexos
 
 ## Purpose
-
-Maintain and simplify this multi-host NixOS flake.
-
-Prioritize correctness, readability, declarative configuration, and
-maintainability. Prefer removing unnecessary configuration over introducing
-abstractions.
+Maintain and simplify this multi-host NixOS flake. Prioritize correctness, readability, declarative configuration, maintainability. Prefer removing config over adding abstractions.
 
 ## Repository Context
+- **System:** NixOS flakes + Home Manager
+- **Desktop:** Hyprland (Wayland)
+- **Editor:** Neovim via nvf/mnw
+- **Shell:** Zsh
+- **Hosts:** reuby, node, nomad (different effective settings)
+- **Root:** `flake.nix`, `flake.lock`
 
-- **System:** NixOS flakes with Home Manager.
-- **Desktop:** Hyprland on Wayland.
-- **Editor:** Neovim configured through nvf and mnw.
-- **Shell:** Zsh.
-- **Hosts:** Multiple configurations with potentially different effective
-  settings.
-- **Root:** `flake.nix` and `flake.lock`.
-
-Use NixOS modules for system configuration, Home Manager for user settings, and
-`hosts/` or `profiles/` for host-specific configuration where appropriate.
+Use NixOS modules (system), Home Manager (user), `hosts/`/`profiles/` (host-specific).
 
 ## Working Principles
-
-- Make the smallest change that satisfies the request.
-- Prefer native NixOS, Home Manager, and upstream module options.
-- Prefer upstream defaults over explicitly reproducing them.
-- Preserve intentional customizations and existing behaviour unless instructed
-  otherwise.
-- Follow existing conventions; avoid unnecessary helpers, modules, and
-  abstractions.
-- Do not modify unrelated files or overwrite unrelated user changes.
-- Never modify `flake.lock`, update inputs, or commit unless explicitly
-  requested.
+- Smallest change that satisfies the request
+- Prefer native/upstream options over custom ones
+- Prefer upstream defaults over reproducing them
+- Preserve intentional customizations
+- Follow existing conventions; avoid unnecessary helpers/abstractions
+- No unrelated file modifications
+- Never modify `flake.lock`, update inputs, or commit unless explicitly requested
 
 ## Investigation
-
-- Inspect relevant files and imports before editing.
-- Prefer targeted searches over broad repository exploration.
-- Check effective option values when module merging or conditional definitions
-  matter.
-- Prefer pinned sources and local module definitions when determining option
-  behaviour.
-- Consult upstream documentation when necessary, not speculatively.
-- Stop investigating once sufficient evidence exists to implement the change.
+- Inspect relevant files/imports before editing
+- Targeted searches > broad exploration
+- Check effective option values when merging/conditionals matter
+- Prefer pinned sources and local module definitions
+- Consult upstream docs when necessary, not speculatively
+- Stop once sufficient evidence exists
 
 ## Validation
+**Use the cheapest meaningful validation:**
 
-Use the cheapest meaningful validation for the change.
+| Change Type | Validation |
+|-------------|------------|
+| Formatting | Check formatting only |
+| Application settings | Evaluate affected option / HM config |
+| Module changes | Evaluate affected host config |
+| Shared modules | Validate representative affected hosts |
+| System integration | Build only when eval insufficient |
 
-- **Formatting:** Check formatting only.
-- **Application settings:** Evaluate the affected option or Home Manager
-  configuration.
-- **Module changes:** Evaluate the affected host configuration.
-- **Shared modules:** Validate representative affected hosts.
-- **System integration:** Build only when evaluation is insufficient.
-
-Prefer targeted evaluation of effective options:
-
+**Targeted eval (context-dependent — not always needed):**
 ```sh
 nix eval '.#nixosConfigurations.<host>.config.<option>'
 nix eval '.#nixosConfigurations.<host>.config.home-manager.users.<user>.<option>'
 ```
+Use actual host/user names. Add `--json` for structured values.
 
-Use actual host and user names. Add `--json` for structured values.
+**Constraints:**
+- Targeted `nix eval` > broad checks/builds (but skip for pure Lua/config changes that don't affect Nix eval, e.g. Hyprland Lua binds)
+- No activation commands (`nixos-rebuild switch`, etc.) unless requested
+- No interactive apps or dependency updates
+- Timeouts for blocking commands; investigate failures before retry
+- Don't repeat successful checks unless invalidated
+- Successful eval ≠ successful build/runtime
 
-Additional constraints:
-
-- Prefer targeted `nix eval` over broad checks or builds.
-- Do not run activation commands (`nixos-rebuild switch`, `home-manager switch`,
-  etc.) unless explicitly requested.
-- Do not launch interactive applications or update dependencies.
-- Use timeouts for potentially blocking commands; investigate failures before
-  retrying.
-- Do not repeat successful checks unless subsequent changes invalidate them.
-- Do not confuse successful evaluation with successful builds or runtime
-  verification.
-
-## Completion
-
-- Stop once the requested change is implemented and appropriately validated.
-- Do not expand scope or perform speculative cleanup.
-- If blocked or uncertain, report the issue rather than guessing.
-- Report changes, modified files, validation results, and unresolved issues
-  concisely.
-
-## GitHub API Workflow
-
-Changes are delivered as PRs and merged automatically once required status
-checks pass. Do not merge manually or bypass checks; let the gates decide.
-
-Authentication: a fine-grained PAT (repo-scoped, Contents RW + Pull requests
-RW, no admin) stored with sops-nix as `github/token`, materialized at
-`/run/secrets/github/token` (mode 0400). Read it per-call — never export it
-into the environment, never print it, never commit it in plaintext. It
-expires; if API calls return 401, prompt for rotation via `sops
-secrets/secrets.yaml` + rebuild.
-
-Standard flow for a change:
+## Git Workflow
+1. **Branch & commit** changes on a feature branch
+2. **Push** to origin
+3. **Open PR** (auto-merge armed via GraphQL)
+4. **Let gates decide** — required checks: 3 evals + Build gate
 
 ```sh
-# 1. push the branch (SSH)
+# Push branch
 git push -u origin <branch>
 
-# 2. open the PR
+# Open PR + arm auto-merge
 TOKEN=$(cat /run/secrets/github/token)
-curl -s -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
-  -X POST https://api.github.com/repos/knoxode/nixos-config/pulls \
-  -d '{"title":"...","head":"<branch>","base":"main","body":"..."}'
-
-# 3. arm auto-merge — via GraphQL, NOT the REST endpoint
-#    (PUT /pulls/<n>/auto-merge returns 404 for fine-grained PATs)
 PRID=$(curl -s -H "Authorization: Bearer $TOKEN" \
   https://api.github.com/repos/knoxode/nixos-config/pulls/<n> | jq -r '.node_id')
 curl -s -H "Authorization: Bearer $TOKEN" -X POST https://api.github.com/graphql \
   -d "{\"query\":\"mutation(\$id: ID!){enablePullRequestAutoMerge(input:{pullRequestId:\$id,mergeMethod:SQUASH}){pullRequest{number}}}\",\"variables\":{\"id\":\"$PRID\"}}"
 ```
 
-Merge quirks:
+**Merge notes:**
+- Sync merge: **PUT** `/pulls/<n>/merge` (only when checks green)
+- Skipped checks (config PRs) = satisfied; cancelled/failed ≠ satisfied
+- Token: fine-grained PAT (Contents RW + PRs RW, no admin), at `/run/secrets/github/token` (0400). Read per-call, never export/print/commit. Rotate on 401 via `sops secrets/secrets.yaml` + rebuild.
 
-- The synchronous merge endpoint is **PUT** `/pulls/<n>/merge` (POST returns
-  404). Use it only when checks are already green; otherwise arm auto-merge
-  and let GitHub merge on green.
-- Skipped required checks (config PRs, where `Build *` jobs skip) count as
-  satisfied; cancelled or failed ones do not.
-- The token has no admin rights and cannot bypass branch protection. Never
-  grant it admin scope.
+## Completion
+- Stop once change is implemented and validated
+- No scope expansion or speculative cleanup
+- If blocked/uncertain → report, don't guess
+- Report changes, modified files, validation results, unresolved issues concisely
 
-CI semantics (see `README.md` for the full model): config PRs run evals only
-(~2 min); `flake-lock`-labeled PRs (or bot-authored ones) additionally build
-all host closures. A red lock PR usually means the closure broke on a moved
-input — pin the offending input to its last-known-good rev in `flake.nix`
-(the `nixpkgs-snapgene` pattern) rather than force-merging. nixpkgs itself
-follows the nixos-unstable channel tarball and is pre-verified by Hydra; it
-is almost never the culprit.
+## Documentation Reference
+See `docs/` for details:
+
+| Area | Document |
+|------|----------|
+| Keybindings (all layers) | `docs/keybindings/README.md` |
+| Cross-layer conflicts | `docs/keybindings/conflicts.md` |
+| Hyprland architecture | `docs/architecture/hyprland.md` |
+| Troubleshooting builds | `docs/operations/troubleshooting.md` |
+| Secrets management | `docs/operations/secrets.md` |
+| Monitor hotplug | `docs/operations/monitor-hotplug.md` |
+| CI / GitHub Actions | `docs/operations/ci.md` |
+| Ghostty config dump | `docs/reference/ghostty-config.md` |
+| Noctalia config dump | `docs/reference/noctalia-config.md` |
+| nvf modules enabled | `docs/reference/nvf-modules.md` |
+
+### When Modifying Keybindings
+1. Check `docs/keybindings/conflicts.md` for existing conflicts
+2. Verify current bindings in each config file
+3. Test at runtime: `ghostty +list-keybinds`, `hyprctl binds`, `:map` in Neovim
+4. Check upstream docs (don't rely on existing config):
+   - Hyprland: <https://wiki.hypr.land> + <https://alejandrominaya.github.io/hyprland-lua-docs/>
+   - Ghostty: <https://ghostty.org/docs/config/reference>
+   - nvf: <https://nvf.notashelf.dev/options.html>
+   - nixpkgs: <https://search.nixos.org/options>
+5. Update `docs/keybindings/conflicts.md` if conflicts change

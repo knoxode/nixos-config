@@ -1,6 +1,7 @@
 local shared = require("shared")
 
-hl.workspace_rule({
-  workspace = "special:terminal",
-  on_created_empty = shared.terminal,
-})
+hl.on("workspace.created", function(workspace)
+  if workspace.name == "special:terminal" and workspace.is_empty then
+    hl.dsp.exec_cmd(shared.terminal)()
+  end
+end)

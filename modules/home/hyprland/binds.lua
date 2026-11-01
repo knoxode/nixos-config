@@ -30,18 +30,13 @@ hl.bind(shared.mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }
 hl.bind(shared.mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(shared.mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 
--- Move focus with shared.mainMod + arrow keys
-hl.bind("CTRL + SHIFT + h", hl.dsp.focus({ direction = "left" }), { repeating = true })
+-- Focus movement: SUPER + h/l (left/right only)
+hl.bind(shared.mainMod .. " + h", hl.dsp.focus({ direction = "left" }), { repeating = true })
+hl.bind(shared.mainMod .. " + l", hl.dsp.focus({ direction = "right" }), { repeating = true })
 
-hl.bind("CTRL + SHIFT + l", hl.dsp.focus({ direction = "right" }), { repeating = true })
-
-hl.bind("CTRL + SHIFT + k", hl.dsp.focus({ direction = "up" }), { repeating = true })
-
-hl.bind("CTRL + SHIFT + j", hl.dsp.focus({ direction = "down" }), { repeating = true })
-
-hl.bind("SPACE + h", hl.dsp.layout("colresize -0.05"), { repeating = true })
-
-hl.bind("SPACE + l", hl.dsp.layout("colresize +0.05"), { repeating = true })
+-- Resize columns: SUPER + SHIFT + h/l
+hl.bind(shared.mainMod .. " + SHIFT + h", hl.dsp.layout("colresize -0.05"), { repeating = true })
+hl.bind(shared.mainMod .. " + SHIFT + l", hl.dsp.layout("colresize +0.05"), { repeating = true })
 
 -- Move/resize windows with shared.mainMod + LMB/RMB and dragging
 hl.bind(shared.mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
