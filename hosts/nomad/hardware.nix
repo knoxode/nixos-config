@@ -34,7 +34,7 @@
     #   sudo filefrag -v /var/lib/swapfile | sed -n '4p'
     resumeDevice = "/dev/disk/by-uuid/723eb7d0-f5f2-4324-b196-b755d7510174";
     kernelParams = [
-      "resume_offset=39563264"
+      "resume_offset=4143104"
     ];
     kernelModules = [
       "kvm-intel"
