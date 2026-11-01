@@ -111,8 +111,7 @@ jobs:
       - name: Push to alexos.cachix.org (main branch only)
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: |
-          nix path-info -r \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+          nix path-info -r ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
           | grep -v -E "(sops|secrets|/age-|/age$|/age/)" \
           | cachix push alexos
         env:
