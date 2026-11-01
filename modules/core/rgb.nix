@@ -1,7 +1,4 @@
-{
-  host,
-  ...
-}: let
+{host, ...}: let
   inherit (import ../../hosts/${host}/variables.nix) hostType;
 in {
   # OpenRGB's device polling (~700 wakeups/s) keeps the CPU out of deep
@@ -10,6 +7,6 @@ in {
   services.hardware.openrgb.enable = hostType == "Desktop";
   hardware.openrazer = {
     enable = true;
-    users = [ "shaiikura" ];
+    users = ["shaiikura"];
   };
 }

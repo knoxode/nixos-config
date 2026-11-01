@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Fleet-wide CachyOS BORE LTO kernel: one scheduler choice everywhere, and
   # the nvidia RTD3 patch (profiles/nvidia-laptop) targets this 7.3 series.
   boot.kernelPackages =

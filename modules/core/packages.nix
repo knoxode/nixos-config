@@ -44,6 +44,7 @@ in {
       easyeffects
       fastfetch
       (pkgs.callPackage ../packages/fiji.nix {})
+      gh
       ghostty
       gimp3
       git
@@ -73,7 +74,7 @@ in {
       ripgrep
       socat
       sshfs
-      (pkgs.callPackage ../packages/snapgene.nix { })
+      (pkgs.callPackage ../packages/snapgene.nix {})
       swappy
       syncthing
       typst
@@ -95,7 +96,7 @@ in {
         mangohud
         # Default bundles jdk25+21+17+8 (~1.6 GiB); Minecraft downloads its
         # own JRE at runtime, so keep only one for the system Java setting.
-        (prismlauncher.override { jdks = [jdk21]; })
+        (prismlauncher.override {jdks = [jdk21];})
         gamemode
         mesa
       ]
