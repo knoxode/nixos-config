@@ -1,30 +1,34 @@
 {...}: {
-  zramSwap = {
+  # Use zswap (compressed cache in front of disk swap) instead of zram.
+  # Recommended by kernel MM maintainers for systems with disk swap + hibernation.
+  # zswap integrates with kernel memory management, provides automatic tiering,
+  # handles incompressible data better, and supports hibernation.
+  boot.zswap = {
     enable = true;
-    memoryPercent = 100;
+    compressor = "zstd";      # Best compression ratio for Nix builds
+    maxPoolPercent = 25;      # 25% of RAM (4GB on 16GB systems)
+    shrinkerEnabled = true;   # Auto-reclaim under pressure
   };
 
-  # /tmp in RAM: faster temp IO (nix builds, opencode), no SSD wear. Large
-  # spill goes to zram, not disk.
+  # Disable zram (conflicts with zswap; zram doesn't support hibernation)
+  zramSwap.enable = false;
+
+  # /tmp in RAM: faster temp IO (nix builds, opencode), no SSD wear.
+  # Large spill goes to zswap-backed swap, not disk directly.
   boot.tmp.useTmpfs = true;
 
-  # The cachyos kernel enables zswap by default. It front-runs zram,
-  # compressing into its own pool and spilling pre-compressed pages into
-  # zram on writeback. Disable it so zram is the first-class backend.
-  # transparent_hugepage=always: CachyOS-style gaming default; bigger
-  # anonymous pages suit game allocations on 16 GiB machines.
+  # transparent_hugepage=always: better for gaming/workloads with large allocations.
   boot.kernelParams = [
-    "zswap.enabled=0"
     "transparent_hugepage=always"
   ];
 
-  # zram-generator upstream recommendations: swap eagerly into compressed RAM
-  # rather than holding anonymous pages until heavy pressure, and disable
-  # read-ahead (fetching extra pages into zram is wasteful). Pressure 50
-  # keeps the dentry/inode cache under pressure; stat_interval 10 trades VM
-  # stat granularity for fewer timer wakeups.
+  # Sysctl tuned for zswap + SSD:
+  # - swappiness=100: prefer swap over dropping cache on fast storage
+  # - page-cluster=0: disable readahead (no locality in compressed swap)
+  # - watermark_scale_factor=125: earlier reclaim
+  # - vfs_cache_pressure=50: keep dentry/inode cache under pressure
   boot.kernel.sysctl = {
-    "vm.swappiness" = 180;
+    "vm.swappiness" = 100;
     "vm.page-cluster" = 0;
     "vm.watermark_boost_factor" = 0;
     "vm.watermark_scale_factor" = 125;
