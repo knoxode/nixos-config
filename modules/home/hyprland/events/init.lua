@@ -24,6 +24,9 @@ local function make_context(on_AC)
     on_AC = true
   end
 
+  -- Apply battery/AC appearance optimisations
+  apply_battery_optimisations(not on_AC)
+
   return {
     monitors = hl.get_monitors(),
     on_AC = on_AC,
