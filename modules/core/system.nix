@@ -48,9 +48,9 @@
       ];
       substituters = [
         "https://hyprland.cachix.org"
+        "https://alexos.cachix.org"
         "https://winapps.cachix.org/"
         "https://noctalia.cachix.org"
-        "https://alexos.cachix.org"
         # xddxdd's CachyOS kernel binary cache. Rotated to a new URL/key on
         # 2026-10-24 after the Oct 15 server compromise; see upstream issue
         # xddxdd/nix-cachyos-kernel#110.
@@ -58,9 +58,9 @@
       ];
       trusted-public-keys = [
         "hyprland.cachix.org-1:a7pgxzMz8+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "alexos.cachix.org-1:W7rjRAEkPCOh34Jt49yRncWXlEGNQJSP2XB3s3RkZ7k="
         "winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g="
         "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-        "alexos.cachix.org-1:W7rjRAEkPCOh34Jt49yRncWXlEGNQJSP2XB3s3RkZ7k="
         "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
       ];
     };
