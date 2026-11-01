@@ -89,6 +89,13 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v23
 
+      - name: Configure Cachix (pull from alexos + declared substituters)
+        uses: cachix/cachix-action@v17
+        with:
+          name: alexos
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          skipPush: true
+
       - name: Free disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
