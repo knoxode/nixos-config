@@ -38,7 +38,7 @@ hl.config({
     prefer_hdr = 2,
   },
   cursor = {
-    no_hardware_cursors = 1,
+    no_hardware_cursors = 0,
   },
 })
 
