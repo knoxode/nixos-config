@@ -108,6 +108,14 @@ jobs:
           nix build --no-link --print-out-paths \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
 
+      - name: Push to alexos.cachix.org (main branch only)
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          cachix push alexos $(nix path-info -r \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel")
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
   build-gate:
     name: Build gate
     needs: [changes, build]
