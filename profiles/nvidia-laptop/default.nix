@@ -31,15 +31,15 @@ in {
   # "Runtime D3 status: Enabled (fine-grained)" and runtime_status
   # "suspended" at idle on the RTX 2060.
   hardware.nvidia.open = true;
-  hardware.nvidia.package =
-    let
-      base = config.boot.kernelPackages.nvidiaPackages.new_feature;
-      rtd3patch = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/CachyOS/kernel-patches/89bb22dec944d4d5b31332f2affbc740665cf0d9/7.3/misc/nvidia/0004-Open-sysfs-config-from-the-userspace-root-on-7.3.patch";
-        hash = "sha256-pruuHakb6tcDDteKFh3t0tyNONSV74evJGc2Qu8dfKk=";
-      };
-    in
-      base // {
-        open = base.open.override { patches = base.open.patches ++ [ rtd3patch ]; };
-      };
+  hardware.nvidia.package = let
+    base = config.boot.kernelPackages.nvidiaPackages.new_feature;
+    rtd3patch = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/CachyOS/kernel-patches/89bb22dec944d4d5b31332f2affbc740665cf0d9/7.3/misc/nvidia/0004-Open-sysfs-config-from-the-userspace-root-on-7.3.patch";
+      hash = "sha256-pruuHakb6tcDDteKFh3t0tyNONSV74evJGc2Qu8dfKk=";
+    };
+  in
+    base
+    // {
+      open = base.open.override {patches = base.open.patches ++ [rtd3patch];};
+    };
 }

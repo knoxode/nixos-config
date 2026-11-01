@@ -1,11 +1,10 @@
-{ host
-, pkgs
-, ...
-}:
-let
-  inherit (import ../../hosts/${host}/variables.nix) printEnable;
-in
 {
+  host,
+  pkgs,
+  ...
+}: let
+  inherit (import ../../hosts/${host}/variables.nix) printEnable;
+in {
   services = {
     printing = {
       enable = printEnable;

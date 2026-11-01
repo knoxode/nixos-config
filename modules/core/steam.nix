@@ -29,8 +29,8 @@
   # builds are unaffected.
   hardware.graphics = {
     enable32Bit = lib.mkForce false;
-    package32 = pkgs.runCommand "graphics-drivers-32-empty" { } "mkdir -p $out";
-    extraPackages32 = lib.mkForce [ ];
+    package32 = pkgs.runCommand "graphics-drivers-32-empty" {} "mkdir -p $out";
+    extraPackages32 = lib.mkForce [];
   };
   hardware.steam-hardware.enable = true;
 }
