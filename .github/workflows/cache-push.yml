@@ -2,6 +2,7 @@ name: Push to Cachix
 
 # Pushes system closure build outputs to alexos.cachix.org after successful builds.
 # Triggers on Check workflow completion (lock PRs + manual dispatches only).
+# Also manually triggerable for testing.
 # Deduplicates automatically across hosts via content-addressed store paths.
 
 on:
@@ -9,6 +10,7 @@ on:
     workflows: ["Check"]
     types: [completed]
     branches: [main]
+  workflow_dispatch:  # enables manual trigger from Actions UI / gh CLI
 
 permissions:
   contents: read
@@ -25,6 +27,12 @@ jobs:
         run: |
           EVENT="${{ github.event.workflow_run.event }}"
           CONCLUSION="${{ github.event.workflow_run.conclusion }}"
+          
+          # For manual dispatch, always push
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "push=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           
           # Push only if Check succeeded AND (lock PR or manual dispatch)
           if [ "$CONCLUSION" = "success" ] && \
