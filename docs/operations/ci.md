@@ -4,7 +4,7 @@
 
 ---
 
-## Workflow: `Check` (`.github/workflows/check.yml`)
+## Workflow: `CI — Evaluate & Build Hosts` (`.github/workflows/check.yml`)
 
 Runs on every PR and push.
 
@@ -13,8 +13,31 @@ Runs on every PR and push.
 | Job | Runs On | Proves |
 |-----|---------|--------|
 | `Evaluate <host>` ×3 | Every PR and push | Config evaluates for reuby, node, nomad |
-| `Build <host>` ×3 | `flake-lock`-labeled PRs (daily lock update) + manual dispatch | Full system closures build |
+| `Build <host>` ×3 | `flake.lock`-changing PRs (daily lock update) + manual dispatch | Full system closures build |
 | `Build gate` | Always (aggregate) | Stable required check: green on build success/skip, red on failure |
+
+Build triggers are decided by a paths-filter on `flake.lock` (not labels):
+config-only PRs skip builds and get a green gate.
+
+### Binary Cache (alexos.cachix.org)
+
+- **Consumption**: build jobs install `alexos.cachix.org` as a substituter
+  (cachix-action, pull-only) before building.
+- **Publishing**: every build step publishes to the cache regardless of the
+  build outcome (`nix path-info --all | cachix push`). Cachix skips paths
+  already present, so the full closure uploads with green and only the
+  surviving constituents when red. Retries and local machines then pull
+  the already-built parts instead of rebuilding.
+- **Safety**: the cache does not gate anything. The `Build gate` required
+  check keeps failed builds out of `main`; content addressing keeps pulls
+  correct. Pushing partial closures on a red build is therefore safe.
+
+### Nix Store Caching (GitHub Actions cache)
+
+`nix-community/cache-nix-action` snapshots the runner store in eval and
+build jobs, keyed on `hashFiles('flake.lock')` with prefix restore. Stops
+the three eval runners re-fetching the same flake inputs, and carries a
+warm store across fix-commit retries of the same lock PR.
 
 ### Required Status Checks
 
@@ -30,7 +53,9 @@ Runs on every PR and push.
 
 ## Lock Update Automation
 
-`update-flake.yml` opens a lock PR daily and arms auto-merge on it. Reuses the same PR branch — a red lock PR is not duplicated daily; it rebases and retries.
+`Maintenance — Auto-update flake.lock` (`update-flake.yml`) opens a lock PR
+daily and arms auto-merge on it. Reuses the same PR branch — a red lock PR
+is not duplicated daily; it rebases and retries.
 
 ---
 

@@ -1,4 +1,4 @@
-name: Update flake.lock
+name: Maintenance — Auto-update flake.lock
 
 # Opens a lock-file-only PR once a day and arms auto-merge on it.
 #
@@ -20,11 +20,6 @@ name: Update flake.lock
 # repo only) stored as the FLAKE_UPDATE_PAT secret. The default GITHUB_TOKEN
 # would create the PR, but pushes made with it do not trigger other
 # workflows, so Check would never run on the PR.
-#
-# Requires a fine-grained personal access token (contents: read/write on this
-# repo only) stored as the FLAKE_UPDATE_PAT secret. The default GITHUB_TOKEN
-# would create the PR, but pushes made with it do not trigger other
-# workflows, so Check would never run on the PR.
 on:
   workflow_dispatch:
   schedule:
@@ -39,12 +34,13 @@ jobs:
   update-flake-lock:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - name: Check out repository
+        uses: actions/checkout@v7
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v23
 
-      - name: Update flake.lock and open PR
+      - name: Open automated flake.lock PR
         id: update
         uses: DeterminateSystems/update-flake-lock@v29
         with:
@@ -64,7 +60,7 @@ jobs:
       # Needs "Allow auto-merge" enabled in repo Settings, and branch
       # protection on main requiring the Check workflow's jobs - otherwise
       # auto-merge fires before anything is validated.
-      - name: Enable auto-merge on the lock PR
+      - name: Arm auto-merge on lock PR
         env:
           GH_TOKEN: ${{ secrets.FLAKE_UPDATE_PAT }}
           GH_REPO: ${{ github.repository }}
