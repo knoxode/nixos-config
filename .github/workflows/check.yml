@@ -1,8 +1,20 @@
-name: Check
+name: CI — Evaluate & Build Hosts
 
-# Evaluate every host on main, on PRs, and daily.
-# Build every host when a PR changes flake.lock or on manual runs.
-# Stable gates are required checks for branch protection.
+# Phases covered by this workflow:
+#
+#   changes -> decide whether builds are needed (lock PRs / manual runs;
+#              config-only PRs skip straight to a green gate).
+#   eval    -> every host must still evaluate (cheap required gate; never builds).
+#   build   -> lock-PR / manual builds. Each build publishes to
+#              alexos.cachix.org unconditionally: the full closure on success,
+#              or just the constituents that built before a failure (cachix
+#              skips paths already in the cache). A squash merge has the same
+#              tree as its lock PR, so the cache is warm exactly when it
+#              matters and nothing rebuilds on main afterwards.
+#   gates   -> stable aggregate required checks for branch protection.
+#
+# Job names `Evaluate <host>` (x3), `Evaluate gate`, `Build <host>` (x3) and
+# `Build gate` are required status checks — do not rename them.
 
 on:
   push:
@@ -22,12 +34,12 @@ concurrency:
 
 jobs:
   changes:
-    name: Detect lock changes
+    name: Determine whether builds are needed
     runs-on: ubuntu-latest
     outputs:
       lock: ${{ steps.filter.outputs.lock }}
     steps:
-      - name: Check changed files
+      - name: Detect flake.lock changes (config-only PRs skip builds)
         if: github.event_name == 'pull_request'
         id: filter
         uses: dorny/paths-filter@v4
@@ -44,12 +56,25 @@ jobs:
       matrix:
         host: [reuby, node, nomad]
     steps:
-      - uses: actions/checkout@v7
+      - name: Check out repository
+        uses: actions/checkout@v7
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v23
 
-      - name: Evaluate ${{ matrix.host }} toplevel
+      # Restore the store instead of re-fetching the same flake inputs on
+      # all three runners. Keyed on flake.lock, so a lock bump re-primes it.
+      - name: Restore nix store (flake inputs cached per flake.lock)
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: eval-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
+          restore-prefixes-first-pass: eval-v1-
+          # Respect the 10 GB repo-wide GHA cache cap shared across all jobs.
+          gc-max-store-size: 3G
+
+      # Eval stops at the derivation path: proves the config still evaluates,
+      # realizes nothing.
+      - name: Evaluate ${{ matrix.host }} closure (derivation only, no build)
         run: |
           nix eval \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.drvPath"
@@ -60,7 +85,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Check evaluation results
+      - name: Aggregate evaluation results (required check)
         env:
           RESULT: ${{ needs.eval.result }}
         run: |
@@ -84,37 +109,57 @@ jobs:
       matrix:
         host: [reuby, node, nomad]
     steps:
-      - uses: actions/checkout@v7
+      - name: Check out repository
+        uses: actions/checkout@v7
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v23
 
-      - name: Configure Cachix (pull from alexos + declared substituters)
+      # Prior lock-PR builds warm this; the store carries across runs even
+      # when only a fix commit (not flake.lock) changed.
+      - name: Restore nix store (prior lock-PR builds warm this)
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: build-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
+          restore-prefixes-first-pass: build-v1-
+          # A full closure exceeds 10 GB, so GC keeps this entry bounded;
+          # store paths beyond the cap are covered by the cachix push below.
+          gc-max-store-size: 10G
+
+      - name: Set alexos.cachix.org as binary-cache source (pull-only)
         uses: cachix/cachix-action@v17
         with:
           name: alexos
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           skipPush: true
 
-      - name: Free disk space
+      - name: Free runner disk for closure builds
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
             /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
           sudo docker image prune --force || true
           df -h /
 
-      - name: Build ${{ matrix.host }} toplevel
-        run: |
-          nix build --no-link --print-out-paths \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
-
-      - name: Push to alexos.cachix.org (main branch only)
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: |
-          nix path-info -r ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
-          | cachix push alexos
+      - name: Build ${{ matrix.host }} system closure & publish new paths to alexos.cachix.org
         env:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        run: |
+          set +e
+          nix build --no-link \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+          status=$?
+          set -e
+
+          # Publish on success *and* salvage on failure: `nix path-info --all`
+          # offers cachix the whole runner store and cachix skips every path
+          # already in the cache. Result: the full closure uploads when green;
+          # when red, just the constituents that built — which retry builds
+          # (and any other consumer) then pull instead of rebuilding. The
+          # Build gate — not the cache — owns what reaches main.
+          nix path-info --all | cachix push alexos
+
+          # Preserve the real build result so Build gate stays honest.
+          exit $status
 
   build-gate:
     name: Build gate
@@ -122,7 +167,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Check build results
+      - name: Aggregate build results (required check)
         env:
           EVENT: ${{ github.event_name }}
           CHANGES_RESULT: ${{ needs.changes.result }}
