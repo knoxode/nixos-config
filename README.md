@@ -7,13 +7,20 @@ See `AGENTS.md` for maintenance conventions.
 
 ## CI — what verifies what
 
-Every PR runs a `Check` workflow (`.github/workflows/check.yml`):
+Every PR runs the `CI — Evaluate & Build Hosts` workflow
+(`.github/workflows/check.yml`):
 
 | Job | Runs on | Proves |
 |---|---|---|
 | `Evaluate <host>` ×3 | every PR and push | the config evaluates |
-| `Build <host>` ×3 | `flake-lock`-labeled PRs (the daily lock update) and manual dispatch | the full system closures build |
+| `Build <host>` ×3 | `flake.lock`-changing PRs (the daily lock update) and manual dispatch | the full system closures build |
 | `Build gate` | always (aggregate over the build matrix) | stable required check: green on build success or skip, red on failure |
+
+Builds are triggered by a `flake.lock` paths-filter, not labels. Each build
+step also publishes to `alexos.cachix.org` (full closure when green, only
+the parts that built when red), so local machines pull prebuilt closures
+instead of rebuilding. The `Build gate` — not the cache — keeps broken
+builds off `main`.
 
 Required status checks: the three evals plus `Build gate`. Merges are
 squash-merges and happen via auto-merge once required checks pass — broken
