@@ -60,17 +60,26 @@ is not duplicated daily; it rebases and retries.
 ---
 
 ## nixpkgs Channel Strategy
-
-`flake.nix` pins nixpkgs to:
+ 
+### Current: Follow nixos-unstable branch HEAD
+ 
+```nix
+nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"
 ```
-https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz
-```
-
-- Channel tarball URL → only resolves to **published channel revision** (Hydra built + passed tests)
-- Lock updates can never adopt a nixpkgs rev missing from <https://cache.nixos.org>
-- Cost: a few days behind branch HEAD
-- Fix: usually waiting; see "When HEAD has the fix" in troubleshooting.md
-
+ 
+**Tradeoff:** Instant access to fixes/features vs. occasional broken rev.
+ 
+**Mitigation:** Daily lock PR + build gate (3 hosts) blocks broken revs from `main`.
+On red build, failure-analysis step posts PR comment with:
+- Failed derivations + exit codes + log tails
+- Upstream nixpkgs commit range (old-lock..new-lock) with GitHub compare link
+- Ready-to-commit overlay snippet for affected host(s)
+ 
+**Fix flow:** Maintainer commits overlay to lock PR branch → gate re-runs green → auto-merge.
+When upstream fixes it, revert overlay → next daily update picks up fixed rev.
+ 
+**Pin tracking:** Weekly workflow scans for `Revert when` commits, updates tracking issue.
+ 
 ---
 
 ## Branch Protection

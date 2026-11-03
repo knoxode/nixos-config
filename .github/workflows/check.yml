@@ -140,13 +140,17 @@ jobs:
           sudo docker image prune --force || true
           df -h /
 
+      - name: Save base flake.lock for compare
+        if: github.event_name == 'pull_request'
+        run: cp flake.lock flake.lock.base
+
       - name: Build ${{ matrix.host }} system closure & publish new paths to alexos.cachix.org
         env:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
         run: |
           set +e
-          nix build --no-link \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+          nix build --keep-going --log-format internal-json --no-link \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" 2>&1 | tee build.jsonl
           status=$?
           set -e
 
@@ -160,6 +164,80 @@ jobs:
 
           # Preserve the real build result so Build gate stays honest.
           exit $status
+
+      - name: Analyze build failure & post PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const log = fs.readFileSync('build.jsonl', 'utf8');
+            
+            // Parse internal-json lines for failed derivations
+            const failures = log.split('\n')
+              .filter(line => line.trim())
+              .map(line => JSON.parse(line))
+              .filter(e => e.action === 'build' && e.status === 'failed');
+            
+            if (failures.length === 0) {
+              core.setFailed('No failed derivations found in log');
+              return;
+            }
+            
+            // Extract old/new nixpkgs revs from flake.lock (base vs HEAD)
+            const lock = JSON.parse(fs.readFileSync('flake.lock', 'utf8'));
+            const newRev = lock.nodes.nixpkgs.locked.rev;
+            let oldRev = newRev;
+            try {
+              const baseLock = JSON.parse(fs.readFileSync('flake.lock.base', 'utf8'));
+              oldRev = baseLock.nodes.nixpkgs.locked.rev;
+            } catch {}
+            
+            // Build markdown summary
+            let md = `## Build Failed: ${{ matrix.host }}\n\n`;
+            md += `**Failed derivations (${failures.length}):**\n\n`;
+            for (const f of failures) {
+              const drv = f.drvPath || 'unknown';
+              const name = drv.match(/([^\/]+)\.drv$/)?.[1] || drv;
+              const exitCode = f.exitCode || '?';
+              md += `- \`${name}\` (exit code ${exitCode})\n`;
+              md += `  - Derivation: \`${drv}\`\n`;
+              const logOutput = await exec(`nix log ${drv} 2>&1 | tail -30`);
+              md += `  - Last log lines:\n\`\`\`\n${logOutput.stdout}\n\`\`\`\n`;
+            }
+            
+            if (oldRev !== newRev) {
+              md += `**Upstream nixpkgs range:** [${oldRev.slice(0,8)}...${newRev.slice(0,8)}](https://github.com/NixOS/nixpkgs/compare/${oldRev}...${newRev})\n\n`;
+            }
+            
+            md += `**Suggested fix:** Add to \`hosts/${{ matrix.host }}/overrides.nix\`:\n`;
+            md += `\`\`\`nix\n{ pkgs, ... }:\n{ nixpkgs.overlays = [ (self: super: { } ) ]; }\n\`\`\`\n`;
+            md += `Commit with message: \`pin: <pkg> — Revert when nixpkgs#<PR> lands\`\n`;
+            
+            // Write to job summary
+            await core.summary.addRaw(md).write();
+            
+            // Post/update PR comment
+            if (context.payload.pull_request) {
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number
+              });
+              const botComment = comments.find(c => c.user.type === 'Bot' && c.body.includes('Build Failed:'));
+              if (botComment) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  comment_id: botComment.id, body: md
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number, body: md
+                });
+              }
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLAKE_UPDATE_PAT }}
 
   build-gate:
     name: Build gate
