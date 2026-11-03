@@ -42,21 +42,23 @@
         # element is fine as a plain string.
         altsubject-matches = "DNS:radius.ox.ac.uk";
 
-        # password-flags defaults to 0 (system-owned). The password comes from
-        # sops via an env file that the ensure-profiles unit envsubst's into
-        # the profile at activation. password-flags=1 (agent-owned) does NOT
-        # work here: NM consults user secret agents (nmcli/applets) for the
-        # request and activation fails ("Secrets were required, but not
-        # provided") even though nm-file-secret-agent serves the file.
-        password = "\${EDUROAM_PASSWORD}";
+        # password-flags=1: agent-owned - nm-file-secret-agent serves the
+        # sops secret file on D-Bus when NM asks for the password, so the
+        # keyfile itself holds no plaintext.
+        password-flags = 1;
       };
 
       ipv4.method = "auto";
       ipv6.method = "auto";
     };
-  };
 
-  networking.networkmanager.ensureProfiles.environmentFiles = [
-    config.sops.templates."eduroam-env".path
-  ];
+    secrets.entries = [
+      {
+        matchId = "eduroam";
+        matchSetting = "802-1x";
+        key = "password";
+        file = config.sops.secrets."eduroam/password".path;
+      }
+    ];
+  };
 }

@@ -1,5 +1,4 @@
 {
-  config,
   host,
   inputs,
   pkgs,
@@ -39,12 +38,5 @@ in {
       keyFile = "/home/shaiikura/.config/sops/age/keys.txt";
     };
     secrets = commonSecrets // hostSecrets;
-
-    # Rendered env file consumed by the ensure-profiles unit
-    # (networkProfiles/eduroam.nix) so the password never appears in the
-    # keyfile as an agent-owned secret.
-    templates."eduroam-env".content = ''
-      EDUROAM_PASSWORD=${config.sops.placeholder."eduroam/password"}
-    '';
   };
 }
