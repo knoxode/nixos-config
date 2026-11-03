@@ -95,6 +95,11 @@ in {
         ips = selfIP;
         listenPort = 1235;
         mtu = 1420;
+        # Re-resolve the peer endpoint periodically so the outer transport
+        # tracks the backhaul: AAAA where the underlay has global IPv6,
+        # otherwise the A record. Roaming hosts pick up whatever family the
+        # current network actually supports.
+        dynamicEndpointRefreshSeconds = 25;
 
         privateKeyFile =
           config.sops.secrets."wireguard/${host}/i6privatekey".path;
@@ -108,7 +113,7 @@ in {
             presharedKeyFile =
               config.sops.secrets."wireguard/presharedkey".path;
 
-            endpoint = "i6vpn.tha.haus:51821";
+            endpoint = "vpn.tha.haus:51821";
             persistentKeepalive = 25;
 
             allowedIPs =
