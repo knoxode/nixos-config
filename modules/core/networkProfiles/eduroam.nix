@@ -26,6 +26,11 @@
         # EAP-FAILURE/reason 23 on every BSSID); the real identity works, so
         # don't send one - the supplicant then reuses the inner identity as
         # the outer identity, same as the legacy eduroam profile that works.
+        # Tap the same file used for the CAT anonymously (the anonymous
+        # outer identity is tied to which CA the profile trusts: Oxford's
+        # 2025-cert RADIUS rejects __ox-2026__0723@OX.AC.UK outright), so
+        # we send only the plain identity here. If Oxford publishes an
+        # anonymous identity again for a given CA year, it belongs here.
         eap = "ttls";
         identity = "reub0524@ox.ac.uk";
         phase2-auth = "mschapv2";
