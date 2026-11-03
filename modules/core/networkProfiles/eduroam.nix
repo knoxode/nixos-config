@@ -20,11 +20,14 @@
 
       "802-1x" = {
         # Exactly Oxford's 2026 CAT installer profile: EAP-TTLS with
-        # MSCHAPv2 inner auth, anonymous outer identity, Remote Access
-        # password (NOT the SSO password).
+        # MSCHAPv2 inner auth, Remote Access password (NOT the SSO password).
+        # The CAT installer's anonymous outer identity
+        # (__ox-2026__0723@OX.AC.UK) is rejected by the live RADIUS (~1s
+        # EAP-FAILURE/reason 23 on every BSSID); the real identity works, so
+        # don't send one - the supplicant then reuses the inner identity as
+        # the outer identity, same as the legacy eduroam profile that works.
         eap = "ttls";
-        identity = "REUB0524@OX.AC.UK";
-        anonymous-identity = "__ox-2026__0723@OX.AC.UK";
+        identity = "reub0524@ox.ac.uk";
         phase2-auth = "mschapv2";
 
         # The Oxford eduroam CA is public (distributed via cat.eduroam.org);
