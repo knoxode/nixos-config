@@ -2,7 +2,7 @@
   networking.networkmanager.ensureProfiles = {
     profiles.eduroam = {
       connection = {
-        id = "Eduroam";
+        id = "eduroam";
         type = "wifi";
         autoconnect = true;
         # Beat any persisted legacy profile on this SSID (eduroam-old) in
