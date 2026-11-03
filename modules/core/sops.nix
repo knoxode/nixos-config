@@ -1,4 +1,5 @@
 {
+  config,
   host,
   inputs,
   pkgs,
@@ -20,9 +21,6 @@
       owner = "shaiikura";
       mode = "0400";
     };
-    # eduroam/cert deliberately not a secret: the CA is public and
-    # wpa_supplicant's chroot cannot see /run/secrets.d - it lives in the
-    # repo next to networkProfiles/eduroam.nix instead.
     "eduroam/password" = {};
   };
 in {
@@ -41,5 +39,12 @@ in {
       keyFile = "/home/shaiikura/.config/sops/age/keys.txt";
     };
     secrets = commonSecrets // hostSecrets;
+
+    # Rendered env file consumed by the ensure-profiles unit
+    # (networkProfiles/eduroam.nix) so the password never appears in the
+    # keyfile as an agent-owned secret.
+    templates."eduroam-env".content = ''
+      EDUROAM_PASSWORD=${config.sops.placeholder."eduroam/password"}
+    '';
   };
 }

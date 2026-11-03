@@ -5,6 +5,10 @@
         id = "Eduroam";
         type = "wifi";
         autoconnect = true;
+        # Beat any persisted legacy profile on this SSID (eduroam-old) in
+        # autoconnect arbitration: NM's most-recently-used default also keeps
+        # choosing the old profile whenever this profile's activation stalls.
+        autoconnect-priority = 10;
       };
 
       wifi = {
@@ -33,20 +37,21 @@
         # element is fine as a plain string.
         altsubject-matches = "DNS:radius.ox.ac.uk";
 
-        password-flags = 1;
+        # password-flags defaults to 0 (system-owned). The password comes from
+        # sops via an env file that the ensure-profiles unit envsubst's into
+        # the profile at activation. password-flags=1 (agent-owned) does NOT
+        # work here: NM consults user secret agents (nmcli/applets) for the
+        # request and activation fails ("Secrets were required, but not
+        # provided") even though nm-file-secret-agent serves the file.
+        password = "\${EDUROAM_PASSWORD}";
       };
 
       ipv4.method = "auto";
       ipv6.method = "auto";
     };
-    secrets.entries = [
-      {
-        matchId = "Eduroam";
-        #matchType = "wifi";
-        matchSetting = "802-1x";
-        key = "password";
-        file = config.sops.secrets."eduroam/password".path;
-      }
-    ];
   };
+
+  networking.networkmanager.ensureProfiles.environmentFiles = [
+    config.sops.templates."eduroam-env".path
+  ];
 }
