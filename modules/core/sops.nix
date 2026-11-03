@@ -20,6 +20,10 @@
       owner = "shaiikura";
       mode = "0400";
     };
+    # eduroam/cert deliberately not a secret: the CA is public and
+    # wpa_supplicant's chroot cannot see /run/secrets.d - it lives in the
+    # repo next to networkProfiles/eduroam.nix instead.
+    "eduroam/password" = {};
   };
 in {
   imports = [
