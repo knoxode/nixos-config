@@ -19,18 +19,15 @@
       wifi-security.key-mgmt = "wpa-eap";
 
       "802-1x" = {
-        # Exactly Oxford's 2026 CAT installer profile: EAP-TTLS with
-        # MSCHAPv2 inner auth, Remote Access password (NOT the SSO password).
-        # The CAT installer's anonymous outer identity
-        # (__ox-2026__0723@OX.AC.UK) is rejected by the live RADIUS (~1s
-        # EAP-FAILURE/reason 23 on every BSSID); the real identity works, so
-        # don't send one - the supplicant then reuses the inner identity as
-        # the outer identity, same as the legacy eduroam profile that works.
-        # Tap the same file used for the CAT anonymously (the anonymous
-        # outer identity is tied to which CA the profile trusts: Oxford's
-        # 2025-cert RADIUS rejects __ox-2026__0723@OX.AC.UK outright), so
-        # we send only the plain identity here. If Oxford publishes an
-        # anonymous identity again for a given CA year, it belongs here.
+        # Oxford's 2025-era CAT installer settings: EAP-TTLS with MSCHAPv2
+        # inner auth, Remote Access password (NOT the SSO password).
+        # The anonymous outer identity is CA-year specific: the 2026 tag
+        # (__ox-2026__0723@OX.AC.UK) is rejected outright by the RADIUS
+        # that serves the 2025 root (~1s EAP-FAILURE/reason 23), so this is
+        # the 2025 tag. Plain identity alone also authenticates, and
+        # Oxford may rotate to the 2026 cert exclusively later; swap the
+        # tag then (or drop it as a stopgap).
+        anonymous-identity = "__ox-2025__0613@OX.AC.UK";
         eap = "ttls";
         identity = "reub0524@ox.ac.uk";
         phase2-auth = "mschapv2";
