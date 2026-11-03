@@ -20,6 +20,7 @@
       owner = "shaiikura";
       mode = "0400";
     };
+    "eduroam/password" = {};
   };
 in {
   imports = [

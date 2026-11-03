@@ -6,6 +6,10 @@
 }: let
   inherit (import ../../hosts/${host}/variables.nix) wifiPowersave;
 in {
+  imports = [
+    ./networkProfiles/eduroam.nix
+  ];
+
   systemd.network.wait-online.enable = false;
 
   # Local DNS cache on 127.0.0.53; NM switches its dns mode automatically.
