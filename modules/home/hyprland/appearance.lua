@@ -26,25 +26,24 @@ function apply_battery_optimisations(on_battery)
   else
     hl.config({
       decoration = {
-        blur = {
-          enabled = true,
-          size = 3,
-          passes = 1,
-          vibrancy = 0.1696,
-          variant = "acrylic",
-          noise = 0.02,
-          acrylic = {
-            aberration = 0.07,
-            bulb = 72,
-            clarity = 0.65,
-            refraction = 38,
-          },
-        },
         shadow = {
           enabled = true,
-          range = 4,
+          range = 28,
           render_power = 3,
-          color = 0x88000000,
+          color = 0x890a0a0a,
+        },
+        blur = {
+          enabled = true,
+
+          brightness = 0.8,
+          contrast = 2,
+          noise = 0,
+          vibrancy = 0.35,
+          vibrancy_darkness = 0.5,
+
+          passes = 2,
+          size = 10,
+          special = false,
         },
       },
     })
@@ -79,6 +78,7 @@ hl.config({
     rounding = 20,
     rounding_power = 6,
   },
+
   animations = {
     enabled = true,
   },
