@@ -76,5 +76,7 @@
         modules = [./profiles/nvidia-laptop];
       };
     };
+
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
 }
