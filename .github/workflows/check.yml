@@ -68,7 +68,7 @@ jobs:
         uses: nix-community/cache-nix-action@v7
         with:
           primary-key: eval-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
-          restore-prefixes-first-pass: eval-v1-
+          restore-prefixes-first-match: eval-v1-
           # Respect the 10 GB repo-wide GHA cache cap shared across all jobs.
           gc-max-store-size: 3G
 
@@ -121,7 +121,7 @@ jobs:
         uses: nix-community/cache-nix-action@v7
         with:
           primary-key: build-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
-          restore-prefixes-first-pass: build-v1-
+          restore-prefixes-first-match: build-v1-
           # A full closure exceeds 10 GB, so GC keeps this entry bounded;
           # store paths beyond the cap are covered by the cachix push below.
           gc-max-store-size: 10G
