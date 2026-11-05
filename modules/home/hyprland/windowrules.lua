@@ -509,7 +509,7 @@ hl.window_rule({
     tag = "terminal",
   },
 
-  opacity = "0.8 override 0.7 override 0.8 override",
+  -- opacity = "0.8 override 0.7 override 0.8 override",
 })
 
 hl.window_rule({
