@@ -2,10 +2,10 @@
   description = "Alex's NixOS flake";
 
   inputs = {
-    # Channel tarball: only ever resolves to a published (fully Hydra-built)
-    # rev, so lock updates can't outrun cache.nixos.org. See update-flake.yml
-    # and README.md.
-    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    # Follow nixos-unstable branch HEAD directly. Daily lock PR + build gate
+    # catch broken revs; failure analysis posts actionable PR comment with
+    # overlay snippet. See docs/operations/ci.md "nixpkgs Channel Strategy".
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     firefox = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
