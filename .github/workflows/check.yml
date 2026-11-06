@@ -148,7 +148,7 @@ jobs:
         env:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
         run: |
-          set +e
+          set +e -o pipefail
           nix build --keep-going --log-format internal-json --no-link \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" 2>&1 | tee build.jsonl
           status=$?
@@ -171,14 +171,41 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const log = fs.readFileSync('build.jsonl', 'utf8');
-            
-            // Parse internal-json lines for failed derivations
-            const failures = log.split('\n')
-              .filter(line => line.trim())
-              .map(line => JSON.parse(line))
-              .filter(e => e.action === 'build' && e.status === 'failed');
-            
+            const readline = require('readline');
+            const { execSync } = require('child_process');
+
+            // Stream the log instead of reading it whole: internal-json embeds
+            // every builder's output, so the file can exceed Node's max string
+            // size (~512 MB) and a plain readFileSync crashes the step.
+            const failures = [];
+            const readline_ = readline.createInterface({
+              input: fs.createReadStream('build.jsonl'),
+              crlfDelay: Infinity,
+            });
+            for await (const line of readline_) {
+              if (!line.startsWith('@nix ')) continue;
+              let e;
+              try { e = JSON.parse(line.slice(5)); } catch { continue; }
+
+              // Build failures surface as level-0 (error) msg events.
+              if (e.action === 'msg' && e.level === 0) {
+                // Strip ANSI colour codes nix emits.
+                const msg = String(e.msg).replace(/\x1b\[[0-9;]*m/g, '');
+                // Collect failed drv paths mentioned in the error text.
+                for (const m of msg.matchAll(/\/nix\/store\/[a-z0-9]+-([^\s'"/]+)\.drv/g)) {
+                  const path = m[0];
+                  if (!failures.some((f) => f.path === path)) {
+                    const tail = (() => {
+                      try {
+                        return execSync(`nix log ${path}`, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+                          .split('\n').slice(-30).join('\n');
+                      } catch { return '(log unavailable)'; }
+                    })();
+                    failures.push({ name: m[1] || 'unknown', path, msg, tail });
+                  }
+                }
+              }
+            }
             if (failures.length === 0) {
               core.setFailed('No failed derivations found in log');
               return;
@@ -197,13 +224,10 @@ jobs:
             let md = `## Build Failed: ${{ matrix.host }}\n\n`;
             md += `**Failed derivations (${failures.length}):**\n\n`;
             for (const f of failures) {
-              const drv = f.drvPath || 'unknown';
-              const name = drv.match(/([^\/]+)\.drv$/)?.[1] || drv;
-              const exitCode = f.exitCode || '?';
-              md += `- \`${name}\` (exit code ${exitCode})\n`;
-              md += `  - Derivation: \`${drv}\`\n`;
-              const logOutput = await exec(`nix log ${drv} 2>&1 | tail -30`);
-              md += `  - Last log lines:\n\`\`\`\n${logOutput.stdout}\n\`\`\`\n`;
+              md += `- \`${f.name}\`\n`;
+              md += `  - Derivation: \`${f.path}\`\n`;
+              md += `  - Error: \`${f.msg.slice(0, 500)}\`\n`;
+              md += `  - Last log lines:\n\`\`\`\n${f.tail}\n\`\`\`\n`;
             }
             
             if (oldRev !== newRev) {
@@ -213,6 +237,11 @@ jobs:
             md += `**Suggested fix:** Add to \`hosts/${{ matrix.host }}/overrides.nix\`:\n`;
             md += `\`\`\`nix\n{ pkgs, ... }:\n{ nixpkgs.overlays = [ (self: super: { } ) ]; }\n\`\`\`\n`;
             md += `Commit with message: \`pin: <pkg> — Revert when nixpkgs#<PR> lands\`\n`;
+            
+            // PR comments cap at 64 KiB; truncate defensively.
+            if (md.length > 50000) {
+              md = md.slice(0, 50000) + '\n\n... (truncated)';
+            }
             
             // Write to job summary
             await core.summary.addRaw(md).write();
