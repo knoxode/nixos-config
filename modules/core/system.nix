@@ -68,6 +68,11 @@
   nixpkgs.overlays = [
     inputs.nix-cachyos-kernel.overlays.pinned
     inputs.nur.overlays.default
+    # TEMPORARY: opencode hash fix (upstream c399e1b7); remove with
+    # modules/packages/opencode.nix once nixos-unstable has it. See its header.
+    (final: prev: {
+      opencode = final.callPackage ../packages/opencode.nix { };
+    })
   ];
   # The graphical-desktop module enables the speech-dispatcher *service* by
   # default (mkDefault true), which drags espeak-ng + mbrola-voices + flite
