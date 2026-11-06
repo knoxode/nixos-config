@@ -26,7 +26,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
 
 concurrency:
   group: check-${{ github.ref }}
@@ -266,7 +266,10 @@ jobs:
               }
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.FLAKE_UPDATE_PAT }}
+          # FLAKE_UPDATE_PAT lacks the fine-grained Issues permission that
+          # POST /issues/{n}/comments requires, so use the workflow token
+          # (pull-requests: write covers commenting on PRs).
+          GITHUB_TOKEN: ${{ github.token }}
 
   build-gate:
     name: Build gate
