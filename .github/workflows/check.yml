@@ -100,6 +100,7 @@ jobs:
     needs: [changes]
     if: >-
       github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
       (github.event_name == 'pull_request' &&
        needs.changes.result == 'success' &&
        needs.changes.outputs.lock == 'true')
@@ -291,8 +292,11 @@ jobs:
             exit 1
           fi
 
-          # Builds are mandatory for lock PRs and manual runs.
+          # Builds are mandatory for lock PRs, manual runs, and main pushes
+          # (main builds populate main's branch cache scope — PR caches don't
+          # transfer on merge — so later lock PRs can prefix-restore).
           if [ "$EVENT" = "workflow_dispatch" ] ||
+             [ "$EVENT" = "push" ] ||
              { [ "$EVENT" = "pull_request" ] &&
                [ "$LOCK_CHANGED" = "true" ]; }; then
             if [ "$BUILD_RESULT" != "success" ]; then
