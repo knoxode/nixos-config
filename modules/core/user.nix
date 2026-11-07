@@ -60,6 +60,7 @@ in {
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBZ3gqvZ1XNqBKICDp4q3ILJjDbYqEbYteEHK+9wB1FW powerskater3@gmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOK15SDpqlZl1jB6flTYJpTzOam4mavCmxKGhmwDZTIm powerskater3@gmail.com"
         ];
       };
       kuchikopi = {
@@ -72,6 +73,7 @@ in {
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBZ3gqvZ1XNqBKICDp4q3ILJjDbYqEbYteEHK+9wB1FW powerskater3@gmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOK15SDpqlZl1jB6flTYJpTzOam4mavCmxKGhmwDZTIm powerskater3@gmail.com"
         ];
       };
       root = {
