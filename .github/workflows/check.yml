@@ -274,7 +274,7 @@ jobs:
               md += `**Upstream nixpkgs range:** [${oldRev.slice(0,8)}...${newRev.slice(0,8)}](https://github.com/NixOS/nixpkgs/compare/${oldRev}...${newRev})\n\n`;
             }
             
-            md += `**Suggested fix:** Add the temporary overlay in \`modules/core/system.nix\` (see \`modules/packages/opencode.nix\` for the current pin pattern), or pin the offending input in \`flake.nix\`.\n`;
+            md += `**Suggested fix:** Add a temporary overlay in \`modules/core/system.nix\` (vendor the package under \`modules/packages/\` if needed), or pin the offending input in \`flake.nix\`.\n`;
             md += `Commit with message: \`pin: <pkg> — Revert when nixpkgs#<PR> lands\`\n`;
             
             // PR comments cap at 64 KiB; truncate defensively.

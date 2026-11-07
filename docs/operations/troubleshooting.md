@@ -51,7 +51,7 @@ firefox.url = "github:nix-community/flake-firefox-nightly/7a44b6c";  # temporari
  
 **For nixpkgs HEAD failures:** Add a temporary overlay in
 `modules/core/system.nix` (vendor the package under `modules/packages/` if
-needed, as done for `opencode`):
+needed):
 
 ```nix
 nixpkgs.overlays = [(final: prev: {broken-pkg = prev.broken-pkg_lastGood;})];
