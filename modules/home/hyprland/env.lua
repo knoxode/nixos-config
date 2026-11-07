@@ -17,3 +17,5 @@ hl.env("XDG_SESSION_TYPE", "wayland")
 -- NVIDIA GPU break without this; it disables forcing linear modifiers on
 -- cross-GPU buffers (may cost some performance on the HDMI output).
 hl.env("AQ_FORCE_LINEAR_BLIT", "0")
+hl.env("ELECTRON_OZONE_PLATFORM_HINT", "1")
+hl.env("ELECTRON_OZONE_PLATFORM", "wayland")

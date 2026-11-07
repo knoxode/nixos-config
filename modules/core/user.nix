@@ -6,7 +6,19 @@
   username,
   profile,
   ...
-}: {
+}: let
+  sharedExtraGroups = [
+    "docker"
+    "gamemode"
+    "i2c"
+    "video"
+    "libvirtd"
+    "lp"
+    "networkmanager"
+    "scanner"
+    "wireshark"
+  ];
+in {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
     sharedModules = [
@@ -42,19 +54,8 @@
         hashedPassword = "$6$14MwOQmWC/c0B5Uf$asW2FXs8oG8imtSPs9nLaXnZk1VKduLYz5l6TGBqLS8H64sWmONDOhUlTpHZ8HEl/UsKjD1SoGPyUECAju55z0";
         isNormalUser = true;
         description = "Alex Ryder";
-        extraGroups = [
-          "docker"
-          "gamemode"
-          "i2c"
-          "video"
-          "libvirtd"
-          "lp"
-          "networkmanager"
-          "scanner"
-          "wheel"
-          "wireshark"
-        ];
         shell = pkgs.zsh;
+        extraGroups = sharedExtraGroups ++ ["wheel"];
         ignoreShellProgramCheck = true;
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
@@ -65,17 +66,7 @@
         hashedPassword = "$6$VmLAW3ghkUab0nTH$PTKoixhdumNZV6zdZ0T8A7iwpfpanzwdF4fs2Ey08VPtViL/91hlfIIz2c7REKS9Zu09J6r7S1Wgqi8izDfcz.";
         isNormalUser = true;
         description = "Hajrah Shafique";
-        extraGroups = [
-          "docker"
-          "gamemode"
-          "i2c"
-          "video"
-          "libvirtd"
-          "lp"
-          "networkmanager"
-          "scanner"
-          "wheel"
-        ];
+        extraGroups = sharedExtraGroups;
         shell = pkgs.zsh;
         ignoreShellProgramCheck = true;
         openssh.authorizedKeys.keys = [
