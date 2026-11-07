@@ -20,5 +20,13 @@
     ./stylix.nix
     ./systemd.nix
   ];
+
+  # NixOS defaults EDITOR to nano. Override per user so sops (and other
+  # EDITOR users) open the configured editor instead.
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   xdg.userDirs.createDirectories = true;
 }
