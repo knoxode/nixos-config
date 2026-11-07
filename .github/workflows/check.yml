@@ -64,11 +64,13 @@ jobs:
 
       # Restore the store instead of re-fetching the same flake inputs on
       # all three runners. Keyed on flake.lock, so a lock bump re-primes it.
+      # all-matches searches main/PR refs; first-match only finds caches on
+      # the current ref (which misses for a fresh lock PR).
       - name: Restore nix store (flake inputs cached per flake.lock)
         uses: nix-community/cache-nix-action@v7
         with:
           primary-key: eval-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
-          restore-prefixes-first-match: eval-v1-
+          restore-prefixes-all-matches: eval-${{ matrix.host }}-v1-
           # Respect the 10 GB repo-wide GHA cache cap shared across all jobs.
           gc-max-store-size: 3G
 
@@ -115,17 +117,25 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v23
+        with:
+          # Mirror the hosts' substituters. The CachyOS kernel is not in
+          # cache.nixos.org; without lantian, every run rebuilds it from
+          # source (~2h per host). See docs/operations/ci.md.
+          extra-conf: |
+            extra-substituters = https://hyprland.cachix.org https://winapps.cachix.org https://noctalia.cachix.org https://cache.lantian.pub/lantian
+            extra-trusted-public-keys = hyprland.cachix.org-1:a7pgxzMz8+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= winapps.cachix.org-1:HI82jWrXZsQRar/PChgIx1unmuEsiQMQq+zt05CD36g= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=
 
-      # Prior lock-PR builds warm this; the store carries across runs even
-      # when only a fix commit (not flake.lock) changed.
+      # Prior lock-PR/main builds warm this; the store carries across runs
+      # even when only a fix commit (not flake.lock) changed. all-matches is
+      # required to see main/other-ref caches for a fresh lock PR.
       - name: Restore nix store (prior lock-PR builds warm this)
         uses: nix-community/cache-nix-action@v7
         with:
           primary-key: build-${{ matrix.host }}-v1-${{ hashFiles('flake.lock') }}
-          restore-prefixes-first-match: build-v1-
-          # A full closure exceeds 10 GB, so GC keeps this entry bounded;
-          # store paths beyond the cap are covered by the cachix push below.
-          gc-max-store-size: 10G
+          restore-prefixes-all-matches: build-${{ matrix.host }}-v1-
+          # Bound each entry so three host caches fit inside the 10 GB
+          # repo-wide GHA cache; paths beyond the cap are covered by cachix.
+          gc-max-store-size: 3G
 
       - name: Set alexos.cachix.org as binary-cache source (pull-only)
         uses: cachix/cachix-action@v17
@@ -150,8 +160,11 @@ jobs:
           CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
         run: |
           set +e -o pipefail
-          nix build --keep-going --log-format internal-json --no-link \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" 2>&1 | tee build.jsonl
+          # raw-with-logs keeps the Actions log human-readable and small;
+          # internal-json was ~1 GB per job. The full log still lands in
+          # build.log for the failure-analysis step below.
+          nix build --keep-going --log-format raw-with-logs --no-link \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" 2>&1 | tee build.log
           status=$?
           set -e
 
@@ -160,8 +173,9 @@ jobs:
           # already in the cache. Result: the full closure uploads when green;
           # when red, just the constituents that built — which retry builds
           # (and any other consumer) then pull instead of rebuilding. The
-          # Build gate — not the cache — owns what reaches main.
-          nix path-info --all | cachix push alexos
+          # Build gate — not the cache — owns what reaches main, so a push
+          # failure must not mask a successful build.
+          nix path-info --all | cachix push alexos || echo "::warning::cachix push failed"
 
           # Preserve the real build result so Build gate stays honest.
           exit $status
@@ -175,56 +189,81 @@ jobs:
             const readline = require('readline');
             const { execSync } = require('child_process');
 
-            // Stream the log instead of reading it whole: internal-json embeds
-            // every builder's output, so the file can exceed Node's max string
-            // size (~512 MB) and a plain readFileSync crashes the step.
-            const failures = [];
-            const readline_ = readline.createInterface({
-              input: fs.createReadStream('build.jsonl'),
+            if (!fs.existsSync('build.log')) {
+              core.setFailed('build.log not found; build step did not run');
+              return;
+            }
+
+            // raw-with-logs is small enough to stream, but stream anyway so
+            // a pathological failing build cannot exhaust the Node heap.
+            const DRV = /\/nix\/store\/[a-z0-9]+-([^\s'"/]+)\.drv/g;
+            const FAILURE = /error: (?:Cannot build|builder for|hash mismatch in fixed-output derivation)/;
+            const failures = new Map();
+            let current = null;
+
+            const rl = readline.createInterface({
+              input: fs.createReadStream('build.log'),
               crlfDelay: Infinity,
             });
-            for await (const line of readline_) {
-              if (!line.startsWith('@nix ')) continue;
-              let e;
-              try { e = JSON.parse(line.slice(5)); } catch { continue; }
-
-              // Build failures surface as level-0 (error) msg events.
-              if (e.action === 'msg' && e.level === 0) {
-                // Strip ANSI colour codes nix emits.
-                const msg = String(e.msg).replace(/\x1b\[[0-9;]*m/g, '');
-                // Collect failed drv paths mentioned in the error text.
-                for (const m of msg.matchAll(/\/nix\/store\/[a-z0-9]+-([^\s'"/]+)\.drv/g)) {
-                  const path = m[0];
-                  if (!failures.some((f) => f.path === path)) {
-                    const tail = (() => {
-                      try {
-                        return execSync(`nix log ${path}`, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
-                          .split('\n').slice(-30).join('\n');
-                      } catch { return '(log unavailable)'; }
-                    })();
-                    failures.push({ name: m[1] || 'unknown', path, msg, tail });
+            for await (const raw of rl) {
+              // Strip ANSI colour codes nix emits.
+              const line = raw.replace(/\x1b\[[0-9;]*m/g, '');
+              if (FAILURE.test(line)) {
+                const paths = [...line.matchAll(DRV)];
+                if (paths.length) {
+                  current = { lines: [line.trim()] };
+                  for (const m of paths) {
+                    const path = m[0];
+                    if (!failures.has(path)) {
+                      failures.set(path, { name: m[1] || 'unknown', path, lines: current.lines });
+                    }
                   }
+                  continue;
                 }
               }
+              // Nix indents the reason/specified/got continuations.
+              if (current && /^\s+\S/.test(line)) {
+                current.lines.push(line.trim());
+              } else if (line.trim() !== '') {
+                current = null;
+              }
             }
-            if (failures.length === 0) {
+
+            if (failures.size === 0) {
               core.setFailed('No failed derivations found in log');
               return;
             }
+
+            const failureList = [...failures.values()].map((f) => {
+              const tail = (() => {
+                try {
+                  return execSync(`nix log ${f.path}`, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+                    .split('\n').slice(-30).join('\n');
+                } catch { return '(log unavailable)'; }
+              })();
+              return { ...f, msg: f.lines.join('\n'), tail };
+            });
             
-            // Extract old/new nixpkgs revs from flake.lock (base vs HEAD)
+            // Extract old/new nixpkgs revs from flake.lock (base vs HEAD).
+            // Resolve root.inputs.nixpkgs instead of assuming a node named
+            // "nixpkgs": here that node is nix-cachyos-kernel's
+            // nixos-unstable-small, not the system nixpkgs.
+            const rootNixpkgsRev = (lockfile) => {
+              const name = lockfile.nodes?.root?.inputs?.nixpkgs;
+              const node = Array.isArray(name) ? undefined : lockfile.nodes?.[name];
+              return (node ?? lockfile.nodes?.nixpkgs)?.locked?.rev;
+            };
             const lock = JSON.parse(fs.readFileSync('flake.lock', 'utf8'));
-            const newRev = lock.nodes.nixpkgs.locked.rev;
+            const newRev = rootNixpkgsRev(lock);
             let oldRev = newRev;
             try {
-              const baseLock = JSON.parse(fs.readFileSync('flake.lock.base', 'utf8'));
-              oldRev = baseLock.nodes.nixpkgs.locked.rev;
+              oldRev = rootNixpkgsRev(JSON.parse(fs.readFileSync('flake.lock.base', 'utf8'))) ?? newRev;
             } catch {}
             
             // Build markdown summary
             let md = `## Build Failed: ${{ matrix.host }}\n\n`;
-            md += `**Failed derivations (${failures.length}):**\n\n`;
-            for (const f of failures) {
+            md += `**Failed derivations (${failureList.length}):**\n\n`;
+            for (const f of failureList) {
               md += `- \`${f.name}\`\n`;
               md += `  - Derivation: \`${f.path}\`\n`;
               md += `  - Error: \`${f.msg.slice(0, 500)}\`\n`;
@@ -235,8 +274,7 @@ jobs:
               md += `**Upstream nixpkgs range:** [${oldRev.slice(0,8)}...${newRev.slice(0,8)}](https://github.com/NixOS/nixpkgs/compare/${oldRev}...${newRev})\n\n`;
             }
             
-            md += `**Suggested fix:** Add to \`hosts/${{ matrix.host }}/overrides.nix\`:\n`;
-            md += `\`\`\`nix\n{ pkgs, ... }:\n{ nixpkgs.overlays = [ (self: super: { } ) ]; }\n\`\`\`\n`;
+            md += `**Suggested fix:** Add a temporary overlay in \`modules/core/system.nix\` (vendor the package under \`modules/packages/\` if needed), or pin the offending input in \`flake.nix\`.\n`;
             md += `Commit with message: \`pin: <pkg> — Revert when nixpkgs#<PR> lands\`\n`;
             
             // PR comments cap at 64 KiB; truncate defensively.

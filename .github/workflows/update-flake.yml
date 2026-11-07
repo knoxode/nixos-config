@@ -2,15 +2,13 @@ name: Maintenance — Auto-update flake.lock
 
 # Opens a lock-file-only PR once a day and arms auto-merge on it.
 #
-# nixpkgs comes from a channel tarball (flake.nix):
-#   https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz
-# That URL only ever resolves to a published channel revision - one Hydra
-# has fully built and tested - so this updater can never adopt a nixpkgs
-# rev that is missing from cache.nixos.org. With the old github: branch
-# ref, updates routinely outran the cache and lock PRs failed on
-# fetch/build errors (see PR #16). If a lock PR fails, check whether the
-# channel simply has not advanced: https://channels.nixos.org/nixos-unstable
-# and https://hydra.nixos.org/jobset/nixpkgs/unstable
+# nixpkgs follows github:NixOS/nixpkgs/nixos-unstable directly (flake.nix),
+# so a lock update can adopt a revision whose packages are not yet in
+# cache.nixos.org. The build jobs add the same third-party substituters the
+# hosts use, including xddxdd's CachyOS kernel cache, so expensive inputs
+# substitute instead of rebuilding from source (see docs/operations/ci.md).
+# If a build still fails on missing upstream cache entries, pin the input or
+# wait for Hydra/cache.nixos.org to catch up.
 #
 # When a non-nixpkgs input breaks the closure build, pin it to its
 # last-known-good rev in flake.nix (the nixpkgs-snapgene pattern), regenerate
