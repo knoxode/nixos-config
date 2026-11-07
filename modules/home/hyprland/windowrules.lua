@@ -115,8 +115,10 @@ hl.window_rule({
   },
 
   no_initial_focus = true,
-  suppress_event = "fullscreen, maximize, activate, activatefocus, fullscreenoutput",
-  workspace = "special:apps",
+  suppress_event = "fullscreen maximize activatefocus fullscreenoutput",
+  -- Keep the special workspace hidden even when an app forks and the
+  -- exec-time rule cannot follow it.
+  workspace = "special:apps silent",
   opacity = "0.7 override 0.7 override 0.7 override",
 })
 

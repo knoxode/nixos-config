@@ -1,6 +1,5 @@
 require("workspaces")
 require("binds")
-require("exec")
 require("appearance")
 require("windowrules")
 require("devices")
@@ -22,8 +21,21 @@ Notify.configure({
 
 Events.register()
 
+-- Start applications after the startup workspace assignment has run.
+require("exec")
+
 -- Machine-specific policy and declarative monitor rules.
-require("machine_specific")
+local machine = require("machine_specific")
+
+-- Node-specific stale-workspace repair also disables apps restoring a stale
+-- initial workspace.
+if machine.policy.repair_stale then
+  hl.config({
+    misc = {
+      initial_workspace_tracking = 0,
+    },
+  })
+end
 
 hl.config({
   render = {
