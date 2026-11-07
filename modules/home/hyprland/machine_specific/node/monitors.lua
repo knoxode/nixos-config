@@ -5,11 +5,15 @@
 -- hotplugged outputs, unlike runtime hl.monitor() calls that depend on
 -- hl.get_monitors() state and enumeration order.
 --
--- The Acer is matched by description prefix (stable across ports),
--- not by serial number or connector name.
+-- The Acer is matched by its full EDID description string (port-independent).
+-- Hyprland matches `desc:` exactly, not as a prefix: a shorter
+-- "desc:Acer Technologies XB273U GX" silently matches nothing, leaving the
+-- output on SDR (XRGB8888/srgb) and all cm/bitdepth/supports_hdr fields unused.
+-- Verify with: hyprctl monitors all -j | jq '.[] | {currentFormat, colorManagementPreset}'
+-- expected: XBGR2101010 / "hdr".
 
 hl.monitor({
-  output = "desc:Acer Technologies XB273U GX",
+  output = "desc:Acer Technologies XB273U GX 3052185574200",
   mode = "highrr",
   position = "auto",
   scale = 1,
