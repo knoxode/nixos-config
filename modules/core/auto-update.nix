@@ -52,8 +52,25 @@
       fi
 
       changed="$(runuser -u ${username} -- git diff --name-only HEAD origin/main)"
+      needs_merge=false
       if [ "$changed" = "" ]; then
-        exit 0
+        # The repo may already be current because it was fetched manually
+        # while the running system is still old. Compare to what is running
+        # instead of assuming "no git diff" means "nothing to do".
+        current_system="$(readlink -f /run/current-system)"
+        if ! desired_system="$(runuser -u ${username} -- \
+          env HOME="/home/${username}" NH_FLAKE="$repo" \
+          nix eval --raw ".#nixosConfigurations.${host}.config.system.build.toplevel")"; then
+          echo "auto-update: could not evaluate the desired system, skipping"
+          exit 0
+        fi
+        if [ "$current_system" = "$desired_system" ]; then
+          echo "auto-update: already running $desired_system, skipping"
+          exit 0
+        fi
+        echo "auto-update: repo is current but system is $current_system; activating $desired_system"
+      else
+        needs_merge=true
       fi
 
       head_sha="$(runuser -u ${username} -- git rev-parse origin/main)"
@@ -159,7 +176,9 @@
       fi
 
       echo "auto-update: applying CI-validated update $head_sha (run $run_id)"
-      runuser -u ${username} -- git merge --ff-only origin/main
+      if [ "$needs_merge" = true ]; then
+        runuser -u ${username} -- git merge --ff-only origin/main
+      fi
 
       # nh must run as a regular user; it escalates privileges internally.
       # Supply the user's environment explicitly for unattended execution.
