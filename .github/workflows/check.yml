@@ -244,13 +244,20 @@ jobs:
               return { ...f, msg: f.lines.join('\n'), tail };
             });
             
-            // Extract old/new nixpkgs revs from flake.lock (base vs HEAD)
+            // Extract old/new nixpkgs revs from flake.lock (base vs HEAD).
+            // Resolve root.inputs.nixpkgs instead of assuming a node named
+            // "nixpkgs": here that node is nix-cachyos-kernel's
+            // nixos-unstable-small, not the system nixpkgs.
+            const rootNixpkgsRev = (lockfile) => {
+              const name = lockfile.nodes?.root?.inputs?.nixpkgs;
+              const node = Array.isArray(name) ? undefined : lockfile.nodes?.[name];
+              return (node ?? lockfile.nodes?.nixpkgs)?.locked?.rev;
+            };
             const lock = JSON.parse(fs.readFileSync('flake.lock', 'utf8'));
-            const newRev = lock.nodes.nixpkgs.locked.rev;
+            const newRev = rootNixpkgsRev(lock);
             let oldRev = newRev;
             try {
-              const baseLock = JSON.parse(fs.readFileSync('flake.lock.base', 'utf8'));
-              oldRev = baseLock.nodes.nixpkgs.locked.rev;
+              oldRev = rootNixpkgsRev(JSON.parse(fs.readFileSync('flake.lock.base', 'utf8'))) ?? newRev;
             } catch {}
             
             // Build markdown summary

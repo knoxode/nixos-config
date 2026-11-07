@@ -34,9 +34,10 @@ nix build --no-link --out-link old-result ".#..." --reference-lock-file flake.lo
 nix build --no-link --out-link new-result ".#..."
 nix store diff-closures ./old-result ./new-result
  
-# 3. Upstream commit range
-OLD_REV=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock.old)
-NEW_REV=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)
+# 3. Upstream commit range (resolve the root input: a node literally
+#    named "nixpkgs" may be a transitive input such as the kernel's)
+OLD_REV=$(jq -r '(.nodes.root.inputs.nixpkgs) as $n | .nodes[$n].locked.rev' flake.lock.old)
+NEW_REV=$(jq -r '(.nodes.root.inputs.nixpkgs) as $n | .nodes[$n].locked.rev' flake.lock)
 # https://github.com/NixOS/nixpkgs/compare/OLD_REV...NEW_REV
 ```
  
