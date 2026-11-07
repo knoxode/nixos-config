@@ -2,6 +2,7 @@
   host,
   lib,
   config,
+  pkgs,
   ...
 }: let
   # WireGuard addresses assigned to each host
@@ -60,17 +61,117 @@
   );
 
   vpnConnectionName = "${host}_split";
+
+  peerPublicKey = "DGMiYEvjkaG37zQfxbAisvjAnKGkT5D7p8YqdcN/xn4=";
+  endpointHost = "vpn.tha.haus";
+  endpointPort = 51821;
+  fwMark = 51820;
+  ipBin = "${pkgs.iproute2}/bin/ip";
+
+  peerAllowedIPs =
+    gatewayIPs
+    ++ peerIPs
+    ++ lanIPs
+    ++ additionalIPs;
+
+  # The IPv6 default belongs in the policy-routing table, not main: the
+  # native default must stay intact so WireGuard's own (marked) outer
+  # packets can reach an IPv6 endpoint.
+  nonDefaultAllowedIPs = builtins.filter (ip: ip != "::/0") peerAllowedIPs;
+
+  routeLine = ip:
+    if lib.hasInfix ":" ip
+    then ''${ipBin} -6 route replace "${ip}" dev wg0 table main''
+    else ''${ipBin} route replace "${ip}" dev wg0 table main'';
+
+  endpointSelector = pkgs.writeShellApplication {
+    name = "wg-endpoint-select";
+
+    runtimeInputs = with pkgs; [
+      coreutils
+      gawk
+      getent
+      gnugrep
+      iproute2
+      iputils
+      util-linux
+      wireguard-tools
+    ];
+
+    runtimeEnv = {
+      WG_IFACE = "wg0";
+      WG_PEER = peerPublicKey;
+      WG_HOSTNAME = endpointHost;
+      WG_PORT = toString endpointPort;
+      WG_FW_MARK = toString fwMark;
+      WG_PSK_FILE = config.sops.secrets."wireguard/presharedkey".path;
+      WG_ALLOWED_IPS = lib.concatStringsSep "," peerAllowedIPs;
+      WG_KEEPALIVE = "25";
+      # The inner gateway; used only to generate tunnel traffic so the
+      # candidate endpoint's handshake can be verified.
+      WG_PROBE_IP = "10.8.0.2";
+      WG_STATE_DIR = "/run/wireguard-endpoint";
+      WG_HANDSHAKE_MAX_AGE = "240";
+      WG_V6_HOLD_SECONDS = "600";
+    };
+
+    text = builtins.readFile ./wireguard-endpoint.sh;
+  };
+
+  dispatcher = pkgs.writeShellScript "wg-endpoint-dispatcher" ''
+    case "$2" in
+      up|connectivity-change|dhcp4-change|dhcp6-change|reapply)
+        case "$1" in
+          lo|wg0) exit 0 ;;
+        esac
+        ${pkgs.coreutils}/bin/mkdir -p /run/wireguard-endpoint
+        if [ "$2" = up ]; then
+          ${pkgs.coreutils}/bin/touch /run/wireguard-endpoint/reset-hold
+        fi
+        ${config.systemd.package}/bin/systemctl start --no-block wg-endpoint-select.service
+        ;;
+    esac
+    exit 0
+  '';
 in {
   systemd.services = {
     "wireguard-wg0-peer-${vpnConnectionName}_i6" = {
       # Wait for network-online: NetworkManager-wait-online makes
-      # network-online.target track real connectivity, so the FQDN endpoint
-      # resolves on the first attempt. The retry policy only covers a
-      # resolvectl that starts slower than the wifi association.
+      # network-online.target track real connectivity before the selector
+      # tries the first endpoint.
       serviceConfig = {
         Restart = "on-failure";
         RestartSec = 5;
+        # The endpoint is owned by the selector. Run it synchronously after
+        # the peer unit has installed the peer, so the first keepalive uses
+        # the family the current link can actually carry.
+        ExecStartPost = ["-${lib.getExe endpointSelector} --reset-hold"];
       };
+    };
+
+    # Periodic safety net for a blackholed path whose route still exists.
+    # NetworkManager dispatcher events cover link/address/connectivity
+    # changes; this only acts when the current handshake has gone stale.
+    wg-endpoint-select = {
+      description = "Select the WireGuard endpoint family from the live underlay";
+      after = ["wireguard-wg0.service" "network-online.target"];
+      wants = ["network-online.target"];
+      unitConfig = {
+        StartLimitIntervalSec = 0;
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = lib.getExe endpointSelector;
+      };
+    };
+  };
+
+  systemd.timers.wg-endpoint-select = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "60s";
+      OnUnitActiveSec = "60s";
+      AccuracySec = "10s";
     };
   };
 
@@ -87,6 +188,11 @@ in {
     };
   };
 
+  environment.etc."NetworkManager/dispatcher.d/30-wg-endpoint" = {
+    source = dispatcher;
+    mode = "0555";
+  };
+
   networking = {
     wireguard.enable = true;
 
@@ -95,32 +201,44 @@ in {
         ips = selfIP;
         listenPort = 1235;
         mtu = 1420;
-        # Re-resolve the peer endpoint periodically so the outer transport
-        # tracks the backhaul: AAAA where the underlay has global IPv6,
-        # otherwise the A record. Roaming hosts pick up whatever family the
-        # current network actually supports.
-        dynamicEndpointRefreshSeconds = 25;
+        fwMark = toString fwMark;
+
+        # The interface routes are installed below so ::/0 can go into its
+        # own table. Main keeps only the specific peer/LAN routes.
+        allowedIPsAsRoutes = false;
 
         privateKeyFile =
           config.sops.secrets."wireguard/${host}/i6privatekey".path;
+
+        postSetup = ''
+          ${lib.concatMapStringsSep "\n" routeLine nonDefaultAllowedIPs}
+          ${ipBin} -6 route replace "::/0" dev wg0 table ${toString fwMark}
+          ${ipBin} -6 rule del pref 32764 2>/dev/null || true
+          ${ipBin} -6 rule del pref 32765 2>/dev/null || true
+          ${ipBin} -6 rule add pref 32764 table main suppress_prefixlength 0
+          ${ipBin} -6 rule add pref 32765 not fwmark ${toString fwMark} table ${toString fwMark}
+        '';
+
+        preShutdown = ''
+          ${ipBin} -6 rule del pref 32764 2>/dev/null || true
+          ${ipBin} -6 rule del pref 32765 2>/dev/null || true
+        '';
 
         peers = [
           {
             name = "${vpnConnectionName}_i6";
 
-            publicKey = "DGMiYEvjkaG37zQfxbAisvjAnKGkT5D7p8YqdcN/xn4=";
+            publicKey = peerPublicKey;
 
             presharedKeyFile =
               config.sops.secrets."wireguard/presharedkey".path;
 
-            endpoint = "vpn.tha.haus:51821";
+            # Endpoint is set by wg-endpoint-select: NixOS/wg resolves a
+            # hostname only once and takes the first getaddrinfo result, which
+            # cannot express an IPv6 preference with IPv4 fallback.
             persistentKeepalive = 25;
 
-            allowedIPs =
-              gatewayIPs
-              ++ peerIPs
-              ++ lanIPs
-              ++ additionalIPs;
+            allowedIPs = peerAllowedIPs;
           }
         ];
       };
