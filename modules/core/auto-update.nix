@@ -10,17 +10,17 @@
   flakeDir = "/home/${username}/alexos";
 
   # Applies origin/main automatically, but only when all conditions hold:
-  #   1. the working tree is clean (tracked files) - never clobber local work,
-  #   2. the update is a fast-forward, and
-  #   3. the latest push CI run for the commit succeeded, including evaluation
+  #   1. the checkout is on main,
+  #   2. tracked local edits are moved to a WIP branch, then restored after
+  #      activation (never discarded),
+  #   3. the update is a fast-forward, and
+  #   4. the latest push CI run for the commit succeeded, including evaluation
   #      of every host and the aggregate build gate.
-  #
-  # Full builds of flake.lock updates are enforced separately by the PR
-  # workflow and branch protection; push runs on main are evaluation-only.
   updateScript = pkgs.writeShellApplication {
     name = "alexos-auto-update";
 
     runtimeInputs = with pkgs; [
+      coreutils
       curl
       git
       jq
@@ -35,11 +35,6 @@
       repo="${flakeDir}"
       cd "$repo"
 
-      if [ -n "$(runuser -u ${username} -- git status --porcelain --untracked-files=no)" ]; then
-        echo "auto-update: tracked local changes present, skipping"
-        exit 0
-      fi
-
       # Fetch over HTTPS: the repo is public, so a root service needs no SSH
       # agent. The insteadOf mapping is per-invocation and never touches the
       # user's git config; pushes keep using their SSH key.
@@ -47,6 +42,12 @@
 
       if ! runuser -u ${username} -- git merge-base --is-ancestor HEAD origin/main; then
         echo "auto-update: origin/main is not a fast-forward of HEAD, skipping"
+        exit 0
+      fi
+
+      branch="$(runuser -u ${username} -- git branch --show-current)"
+      if [ "$branch" != "main" ]; then
+        echo "auto-update: current branch is '$branch', not main; skipping"
         exit 0
       fi
 
@@ -125,14 +126,67 @@
         exit 0
       fi
 
+      # Only move local edits once there is a validated update to apply, so a
+      # no-op run never touches the worktree. Never touch an in-progress
+      # merge/rebase/cherry-pick.
+      wip_branch=""
+      if [ -n "$(runuser -u ${username} -- git status --porcelain --untracked-files=no)" ]; then
+        for marker in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
+          if [ -e "$repo/.git/$marker" ]; then
+            echo "auto-update: git operation in progress ($marker), skipping"
+            exit 0
+          fi
+        done
+        if [ -d "$repo/.git/rebase-merge" ] || [ -d "$repo/.git/rebase-apply" ]; then
+          echo "auto-update: rebase in progress, skipping"
+          exit 0
+        fi
+
+        wip_branch="auto-update-wip-$(date -u +%Y%m%d-%H%M%S)"
+        echo "auto-update: moving tracked local changes to $wip_branch"
+        runuser -u ${username} -- git switch -c "$wip_branch"
+        runuser -u ${username} -- git add -u
+        if ! runuser -u ${username} -- git commit \
+          -m "auto-update: preserve local changes before applying $(runuser -u ${username} -- git rev-parse --short origin/main)"; then
+          echo "auto-update: could not commit local changes; leaving them on $wip_branch, skipping"
+          exit 0
+        fi
+        if ! runuser -u ${username} -- git switch main; then
+          echo "auto-update: could not switch back to main; local changes are preserved on $wip_branch, skipping"
+          exit 0
+        fi
+        echo "auto-update: local changes preserved on $wip_branch"
+      fi
+
       echo "auto-update: applying CI-validated update $head_sha (run $run_id)"
       runuser -u ${username} -- git merge --ff-only origin/main
 
       # nh must run as a regular user; it escalates privileges internally.
       # Supply the user's environment explicitly for unattended execution.
-      exec runuser -u ${username} -- \
+      # Do not exec: the local edits still need to be put back afterwards.
+      set +e
+      runuser -u ${username} -- \
         env HOME="/home/${username}" NH_FLAKE="$repo" \
         nh os switch --hostname ${host} --elevation-strategy /run/wrappers/bin/sudo
+      update_status=$?
+      set -e
+
+      # Put the tracked edits back on main after the update. If they no longer
+      # apply cleanly, leave them committed on the WIP branch instead.
+      if [ -n "$wip_branch" ]; then
+        if runuser -u ${username} -- git cherry-pick --no-commit "$wip_branch"; then
+          runuser -u ${username} -- git reset >/dev/null
+          runuser -u ${username} -- git branch -D "$wip_branch" >/dev/null || true
+          echo "auto-update: restored local changes on main"
+        else
+          runuser -u ${username} -- git cherry-pick --abort >/dev/null 2>&1 || true
+          runuser -u ${username} -- git reset --hard >/dev/null
+          runuser -u ${username} -- git switch "$wip_branch" || true
+          echo "auto-update: could not reapply local changes to main; they remain on $wip_branch"
+        fi
+      fi
+
+      exit "$update_status"
     '';
   };
 in {
