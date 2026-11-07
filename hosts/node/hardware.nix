@@ -55,15 +55,20 @@
     options = ["fmask=0077" "dmask=0077"];
   };
 
+  # NTFS is journaled and ntfsck is not a substitute for Windows chkdsk.
+  # Skipping the boot-time consistency scan keeps local-fs off the slow path;
+  # run `fsck.ntfs -a` manually when unmounted, or use chkdsk from Windows.
   fileSystems."/mnt/windows" = {
     device = "/dev/disk/by-uuid/943AB5D03AB5B01A";
     fsType = "ntfs";
+    noCheck = true;
   };
 
   fileSystems."/mnt/games" = {
     device = "/dev/disk/by-uuid/F69C7E789C7E336B";
     fsType = "ntfs";
     options = ["rw" "windows_names"];
+    noCheck = true;
   };
 
   fileSystems."/home/shaiikura/externalUbisoft" = {
