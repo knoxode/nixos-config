@@ -59,25 +59,23 @@ Use actual host/user names. Add `--json` for structured values.
 ## Git Workflow
 1. **Branch & commit** changes on a feature branch
 2. **Push** to origin
-3. **Open PR** (auto-merge armed via GraphQL)
+3. **Open PR** with `gh` and arm auto-merge
 4. **Let gates decide** — required checks: 3 evals + Build gate
 
 ```sh
 # Push branch
 git push -u origin <branch>
 
-# Open PR + arm auto-merge
-TOKEN=$(cat /run/secrets/github/token)
-PRID=$(curl -s -H "Authorization: Bearer $TOKEN" \
-  https://api.github.com/repos/knoxode/nixos-config/pulls/<n> | jq -r '.node_id')
-curl -s -H "Authorization: Bearer $TOKEN" -X POST https://api.github.com/graphql \
-  -d "{\"query\":\"mutation(\$id: ID!){enablePullRequestAutoMerge(input:{pullRequestId:\$id,mergeMethod:SQUASH}){pullRequest{number}}}\",\"variables\":{\"id\":\"$PRID\"}}"
+# Open PR and arm squash auto-merge (gh uses GraphQL internally)
+gh pr create --fill
+gh pr merge --auto --squash
 ```
 
 **Merge notes:**
-- Sync merge: **PUT** `/pulls/<n>/merge` (only when checks green)
+- Use `gh` for interactive PR work; it is authenticated as `knoxode` via `~/.config/gh/hosts.yml`.
+- Sync merge only when checks are green: `gh pr merge --squash`
 - Skipped checks (config PRs) = satisfied; cancelled/failed ≠ satisfied
-- Token: fine-grained PAT (Contents RW + PRs RW, no admin), at `/run/secrets/github/token` (0400). Read per-call, never export/print/commit. Rotate on 401 via `sops secrets/secrets.yaml` + rebuild.
+- Token: fine-grained PAT (Contents RW + PRs RW, no admin), at `/run/secrets/github/token` (0400). CI/scripts that cannot use the `gh` login can pass it per call (`GH_TOKEN=$(cat /run/secrets/github/token) gh ...`); never export/print/commit it. Rotate on 401 via `sops secrets/secrets.yaml` + rebuild.
 
 ## Completion
 - Stop once change is implemented and validated

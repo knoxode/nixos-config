@@ -25,24 +25,25 @@ builds off `main`.
 Required status checks: the three evals plus `Build gate`. Merges are
 squash-merges and happen via auto-merge once required checks pass — broken
 locks cannot reach `main` unverified. Config PRs merge in ~2 minutes
-(builds skip for them); lock PRs wait for full builds (~hours).
+(builds skip for them); lock PRs wait for full builds (usually minutes when
+upstream caches are warm, longer when a kernel or other input must build).
 
 `update-flake.yml` opens a lock PR daily and arms auto-merge on it. It
 reuses the same PR branch, so a red lock PR is not duplicated daily — it
 rebases and retries.
 
-## nixpkgs follows the channel, not the branch
+## nixpkgs follows nixos-unstable HEAD
 
-`flake.nix` pins nixpkgs to
-<https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz> — a channel
-tarball URL that only ever resolves to a **published channel revision**:
-one Hydra has fully built *and* passed its test suite. Lock updates can
-therefore never adopt a nixpkgs rev that is missing from
-<https://cache.nixos.org>, which is what historically made lock PRs fail
-on fetch/build errors (see PR #16).
+`flake.nix` points nixpkgs at `github:NixOS/nixpkgs/nixos-unstable`, so a
+lock update can adopt a revision before Hydra has published it to
+<https://cache.nixos.org>. The daily build gate (three hosts) is what stops
+a broken rev from merging. CI also consumes the hosts' upstream
+substituters, including xddxdd's CachyOS kernel cache, so a lock bump
+substitutes expensive inputs instead of rebuilding them from source.
 
-The cost: we are a few days behind branch HEAD. The fix for that is
-usually waiting; see "When HEAD has the fix" below.
+The tradeoff: instant access to fixes and features versus an occasional
+cache miss. If HEAD outruns the cache, wait for Hydra or pin the offending
+input; see "When something breaks" below.
 
 ### Watching the channel in a browser
 
@@ -58,14 +59,15 @@ usually waiting; see "When HEAD has the fix" below.
 - <https://nixpk.gs/pr-tracker.html?branch=nixos-unstable> — track an
   nixpkgs PR through merge → channel → release.
 
-The lock PR diff is self-reporting: if it contains no `nixpkgs` lines,
-the channel has not advanced since our last update.
+The lock PR diff is self-reporting: if it contains no `nixpkgs` lines, the
+nixpkgs input did not move that day.
 
 ## When something breaks
 
 A red lock PR means one of the moved inputs broke the closure build.
-`nixpkgs` is almost never the culprit (channel revs are pre-verified) —
-suspect whichever other inputs moved in the diff.
+Because nixpkgs follows HEAD, the new nixpkgs rev is a candidate; so is any
+other input that moved in the diff. The failure comment lists the failed
+derivations and the nixpkgs compare range.
 
 To unblock everything while upstream fixes itself, pin the broken input
 to its last-known-good rev in `flake.nix`:
@@ -80,18 +82,16 @@ the pinned state still builds and the remaining updates merge. Remove the
 pin once upstream lands a fixed rev — the next daily update will pick it
 up.
 
-For a one-machine emergency (fix exists on branch HEAD, channel has not
-caught up), rebuild locally with an override and touch nothing:
+For a one-machine emergency where the daily lock has not picked up a fix
+yet, rebuild locally with a fresh nixpkgs input and touch nothing:
 
 ```sh
 nixos-rebuild switch --flake .#reuby \
   --override-input nixpkgs github:NixOS/nixpkgs/nixos-unstable
 ```
 
-If all hosts genuinely need HEAD now, temporarily point `nixpkgs.url` at
-`github:NixOS/nixpkgs/nixos-unstable` in a PR — the build gate then
-verifies HEAD before it can merge — and revert once the channel catches
-up.
+To get the same rev through the gate, run `nix flake update nixpkgs`, open
+a PR, and let the build gate verify it.
 
 ## Secrets
 
