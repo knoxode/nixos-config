@@ -1,9 +1,12 @@
 name: Maintenance — Track Pinned Packages
 
-# Weekly scan for overlay commits with "Revert when" in message.
-# Posts summary to a tracking issue so pinned packages don't drift silently.
+# Opens an issue for each "pin: <pkg> — Revert when ..." commit in the last
+# 30 days. Runs on every push to main, weekly, and on demand. Close the issue
+# when the pin is removed. See docs/operations/ci.md.
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: "0 9 * * 1"  # Monday 09:00 UTC
   workflow_dispatch:
@@ -19,91 +22,89 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0  # need full history for log search
+          fetch-depth: 0  # need history for the commit scan
 
-      - name: Search for active pins in recent commits
-        id: search
-        run: |
-          git log --oneline --since="30 days ago" --grep="Revert when" --all > pins.txt || true
-          
-          if [ ! -s pins.txt ]; then
-            echo "pins_found=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          echo "pins_found=true" >> $GITHUB_OUTPUT
-          echo "pins_log<<EOF" >> $GITHUB_OUTPUT
-          cat pins.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          cat pins.txt
-
-      - name: Create or update tracking issue
-        if: steps.search.outputs.pins_found == 'true'
+      - name: Open or update a pin issue
         uses: actions/github-script@v7
         with:
           script: |
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'pinned-packages',
-              per_page: 10
-            });
-            
-            const trackingIssue = issues.find(i => i.title === 'Tracking: Pinned packages awaiting upstream fix');
-            const body = `## Active Pinned Packages (last 30 days)\n\n` +
-              `Automated weekly scan — commits with "Revert when" in message:\n\n` +
-              `\`\`\`\n${process.env.PINS_LOG}\n\`\`\`\n\n` +
-              `---\n` +
-              `**Action needed:** For each pin, check the linked nixpkgs PR/commit range. ` +
-              `When fixed, revert the overlay commit and push to main.\n` +
-              `*Last scan: ${new Date().toISOString().split('T')[0]}*`;
-            
-            if (trackingIssue) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: trackingIssue.number,
-                body: body
-              });
-              core.info(`Updated tracking issue #${trackingIssue.number}`);
-            } else {
-              const { data: issue } = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: 'Tracking: Pinned packages awaiting upstream fix',
-                body: body,
-                labels: ['pinned-packages', 'maintenance']
-              });
-              core.info(`Created tracking issue #${issue.number}`);
+            const { execFileSync } = require('child_process');
+
+            // Rescan a rolling window on every run. Idempotent: issues are
+            // matched by title, so daily lock merges do not duplicate them.
+            const args = ['log', '--format=%H%x09%s', '--since=30 days ago'];
+            // Commit subjects use the convention "pin: <pkg> — Revert when ...".
+            // Match the subject prefix, not any "Revert when" text in a body
+            // (failure-analysis docs mention the phrase too).
+            args.push('--grep=^pin:');
+
+            let output = '';
+            try {
+              output = execFileSync('git', args, { encoding: 'utf8' }).trim();
+            } catch {}
+
+            const commits = output
+              .split('\n')
+              .filter(Boolean)
+              .map((line) => {
+                const [sha, ...subject] = line.split('\t');
+                return { sha, subject: subject.join('\t') };
+              })
+              .filter((c) => /^pin:/i.test(c.subject));
+
+            if (commits.length === 0) {
+              core.info('No pin commits to track.');
+              return;
             }
-        env:
-          PINS_LOG: ${{ steps.search.outputs.pins_log }}
 
-      - name: Close tracking issue if no pins
-        if: steps.search.outputs.pins_found == 'false'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: issues } = await github.rest.issues.listForRepo({
+            // Existing workflow-created issues, keyed by title.
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'pinned-packages',
-              per_page: 10
+              labels: 'automated',
+              per_page: 100,
             });
-            
-            const trackingIssue = issues.find(i => i.title === 'Tracking: Pinned packages awaiting upstream fix');
-            if (trackingIssue) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: trackingIssue.number,
-                state: 'closed',
-                state_reason: 'completed'
-              });
-              core.info(`Closed tracking issue #${trackingIssue.number} — no active pins`);
-            } else {
-              core.info('No tracking issue to close');
+            const byTitle = new Map(
+              issues.filter((i) => !i.pull_request).map((i) => [i.title, i]),
+            );
+
+            for (const commit of commits) {
+              const match = commit.subject.match(/^pin:\s*(.+?)(?:\s+[—-]\s+|$)/i);
+              const pkg = (match?.[1] || commit.subject).trim();
+              const title = `Pinned: ${pkg}`;
+              const body =
+                `## Pinned package: \`${pkg}\`\n\n` +
+                `Commit: [\`${commit.sha.slice(0, 8)}\`](${context.serverUrl}/` +
+                `${context.repo.owner}/${context.repo.repo}/commit/${commit.sha}) — ` +
+                `${commit.subject}\n\n` +
+                `This package is pinned pending an upstream fix; the commit ` +
+                `records the removal criterion. Close this issue when the pin ` +
+                `is removed.\n\n` +
+                `*Opened automatically by the pin tracker.*`;
+
+              const existing = byTitle.get(title);
+              if (existing) {
+                if (existing.body === body) {
+                  core.info(`Up to date: #${existing.number} ${title}`);
+                } else {
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: existing.number,
+                    body,
+                  });
+                  core.info(`Updated #${existing.number}: ${title}`);
+                }
+              } else {
+                const { data: issue } = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title,
+                  body,
+                  labels: ['automated'],
+                });
+                byTitle.set(title, issue);
+                core.info(`Created #${issue.number}: ${title}`);
+              }
             }

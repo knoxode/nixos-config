@@ -57,7 +57,7 @@ needed, as done for `opencode`):
 nixpkgs.overlays = [(final: prev: {broken-pkg = prev.broken-pkg_lastGood;})];
 ```
  
-Commit with message: `pin: <pkg> — Revert when nixpkgs#<PR> lands`. The weekly pin tracker will surface it. Revert when fixed.
+Commit with message: `pin: <pkg> — Revert when nixpkgs#<PR> lands`. The pin tracker opens an issue for it when the commit lands on `main`. Close the issue when you remove the pin.
  
 This is the same pattern as the long-standing `nixpkgs-snapgene` pin.
  
