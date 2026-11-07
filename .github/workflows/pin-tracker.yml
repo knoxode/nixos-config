@@ -1,8 +1,8 @@
 name: Maintenance — Track Pinned Packages
 
 # Opens an issue for each "pin: <pkg> — Revert when ..." commit in the last
-# 30 days. Runs on every push to main, weekly, and on demand. Close the issue
-# when the pin is removed. See docs/operations/ci.md.
+# 30 days, and closes it when a later "unpin: <pkg> ..." commit lands. Runs on
+# every push to main, weekly, and on demand. See docs/operations/ci.md.
 
 on:
   push:
@@ -32,29 +32,41 @@ jobs:
 
             // Rescan a rolling window on every run. Idempotent: issues are
             // matched by title, so daily lock merges do not duplicate them.
-            const args = ['log', '--format=%H%x09%s', '--since=30 days ago'];
-            // Commit subjects use the convention "pin: <pkg> — Revert when ...".
-            // Match the subject prefix, not any "Revert when" text in a body
-            // (failure-analysis docs mention the phrase too).
-            args.push('--grep=^pin:');
+            const args = [
+              'log',
+              '--format=%H%x09%s',
+              '--since=30 days ago',
+              '--grep=^pin:',
+              '--grep=^unpin:',
+            ];
 
             let output = '';
             try {
               output = execFileSync('git', args, { encoding: 'utf8' }).trim();
             } catch {}
 
-            const commits = output
+            const events = output
               .split('\n')
               .filter(Boolean)
               .map((line) => {
                 const [sha, ...subject] = line.split('\t');
-                return { sha, subject: subject.join('\t') };
+                const message = subject.join('\t');
+                const match = message.match(/^(pin|unpin):\s*(.+?)(?:\s+[—-]\s+|$)/i);
+                return match
+                  ? { sha, subject: message, type: match[1].toLowerCase(), pkg: match[2].trim() }
+                  : null;
               })
-              .filter((c) => /^pin:/i.test(c.subject));
+              .filter(Boolean);
 
-            if (commits.length === 0) {
-              core.info('No pin commits to track.');
+            if (events.length === 0) {
+              core.info('No pin/unpin commits to track.');
               return;
+            }
+
+            // git log is newest-first: the first event per package wins.
+            const latest = new Map();
+            for (const event of events) {
+              if (!latest.has(event.pkg)) latest.set(event.pkg, event);
             }
 
             // Existing workflow-created issues, keyed by title.
@@ -69,21 +81,39 @@ jobs:
               issues.filter((i) => !i.pull_request).map((i) => [i.title, i]),
             );
 
-            for (const commit of commits) {
-              const match = commit.subject.match(/^pin:\s*(.+?)(?:\s+[—-]\s+|$)/i);
-              const pkg = (match?.[1] || commit.subject).trim();
+            for (const event of latest.values()) {
+              const { pkg, type } = event;
               const title = `Pinned: ${pkg}`;
+              const existing = byTitle.get(title);
+
+              if (type === 'unpin') {
+                if (existing) {
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: existing.number,
+                    state: 'closed',
+                    state_reason: 'completed',
+                  });
+                  byTitle.delete(title);
+                  core.info(`Closed #${existing.number}: ${title}`);
+                } else {
+                  core.info(`No open issue to close for ${pkg}.`);
+                }
+                continue;
+              }
+
               const body =
                 `## Pinned package: \`${pkg}\`\n\n` +
-                `Commit: [\`${commit.sha.slice(0, 8)}\`](${context.serverUrl}/` +
-                `${context.repo.owner}/${context.repo.repo}/commit/${commit.sha}) — ` +
-                `${commit.subject}\n\n` +
+                `Commit: [\`${event.sha.slice(0, 8)}\`](${context.serverUrl}/` +
+                `${context.repo.owner}/${context.repo.repo}/commit/${event.sha}) — ` +
+                `${event.subject}\n\n` +
                 `This package is pinned pending an upstream fix; the commit ` +
-                `records the removal criterion. Close this issue when the pin ` +
-                `is removed.\n\n` +
+                `records the removal criterion. Remove the pin with an ` +
+                `\`unpin: ${pkg} — ...\` commit to close this issue ` +
+                `automatically.\n\n` +
                 `*Opened automatically by the pin tracker.*`;
 
-              const existing = byTitle.get(title);
               if (existing) {
                 if (existing.body === body) {
                   core.info(`Up to date: #${existing.number} ${title}`);

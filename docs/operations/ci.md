@@ -113,7 +113,7 @@ When upstream fixes it, revert overlay → next daily update picks up fixed rev.
  
 **Pin tracking:** `pin-tracker.yml` scans the last 30 days for
 `pin: <pkg> — Revert when ...` commits on every push to `main` (plus weekly)
-and opens one issue per pin. Close the issue when the pin is removed.
+and opens one issue per pin. A later `unpin: <pkg> — ...` commit closes it.
  
 ---
 
