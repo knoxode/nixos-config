@@ -25,10 +25,16 @@
     };
     initrd = {
       availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
-      kernelModules = ["kvm-amd"];
+      kernelModules = ["kvm-amd" "dm-snapshot"];
     };
+    # Hibernation: resume from the /var/lib/swapfile (see swapDevices below).
+    # resumeDevice is the partition holding it; resume_offset is its first
+    # 4K block. If the swapfile is ever deleted+recreated, recompute with:
+    #   sudo filefrag -v /var/lib/swapfile | sed -n '4p'
+    resumeDevice = "/dev/disk/by-uuid/7d53fa8e-e0ca-46b0-982b-6e75f2b5e35b";
     kernelParams = [
       "acpi_enforce_resources=lax"
+      "resume_offset=1923072"
     ];
     kernelModules = [
       "k10temp"
