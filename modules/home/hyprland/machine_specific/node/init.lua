@@ -7,12 +7,14 @@ local policies = {
     dynamic_monitors = false,
     automatic_brightness = true,
     primary_desc = "Acer Technologies XB273U GX",
+    repair_stale = true,
   },
 
   default = {
     dynamic_monitors = true,
     automatic_brightness = true,
     primary_desc = nil,
+    repair_stale = false,
   },
 }
 

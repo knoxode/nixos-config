@@ -38,6 +38,7 @@ function M.operations.monitorChange()
 
   workspace_helpers.assign(ctx.monitors, machine.policy)
   workspace_helpers.bind_focus(ctx.monitors)
+  workspace_helpers.repair_stale(ctx.monitors, machine.policy)
 
   if machine.policy.dynamic_monitors then
     display.configure_display_environment(ctx)
@@ -67,6 +68,20 @@ function M.operations.startup()
 
   workspace_helpers.assign(ctx.monitors, machine.policy)
   workspace_helpers.bind_focus(ctx.monitors)
+  workspace_helpers.repair_stale(ctx.monitors, machine.policy)
+
+  -- Catch monitors that appear after the first startup pass.
+  if machine.policy.repair_stale then
+    hl.timer(function()
+      local monitors = hl.get_monitors()
+      workspace_helpers.assign(monitors, machine.policy)
+      workspace_helpers.repair_stale(monitors, machine.policy)
+    end, {
+      timeout = 2000,
+      type = "oneshot",
+    })
+  end
+
   display.configure_display_environment(ctx)
   display.update_brightness(ctx)
   power.configure(ctx)
