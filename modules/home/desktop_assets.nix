@@ -1,39 +1,18 @@
 {
-  lib,
-  pkgs,
   config,
+  pkgs,
   ...
 }: let
-  username = config.home.username;
-  # map each username to the sha256s for the assets they need
-  profileFileExt =
-    if username == "shaiikura"
-    then "jpg"
-    else "png";
-  userHashes = {
-    shaiikura = {
-      wallpapers = "1crgh0rmraj0jysshxw51v39982yh9qw2ynylvjvhnk65yg235bm";
-      profile = "0kxjiyn0yh6fsijc0m6mscwy1vivi8pv7pixsbjx2idwwss6l30z";
-    };
-    kuchikopi = {
-      wallpapers = "169r4zscncx3sb7nhxwj1rn5hd4jsinc9g0kpp2zy6bvkrdvmadl";
-      profile = "17p5rzmisflr1vfc91ysaacikxr00g31n0laaal261901k8cq8k7";
-    };
-  };
-  # choose the hashes for this username (or fallback/throw)
-  hashes =
-    if builtins.hasAttr username userHashes
-    then userHashes.${username}
-    else builtins.throw "No asset hashes configured for user: ${username}";
+  user = config.alexos.user;
 
   mainUrl = "https://pub-5091b3de9360409687d69cad055e35dc.r2.dev";
   wallpapers = pkgs.fetchurl {
-    url = "${mainUrl}/${username}/DesktopBackground.tar.gz";
-    sha256 = hashes.wallpapers;
+    url = "${mainUrl}/${config.home.username}/DesktopBackground.tar.gz";
+    sha256 = user.assets.wallpapers;
   };
   profilePic = pkgs.fetchurl {
-    url = "${mainUrl}/${username}/profile.${profileFileExt}";
-    sha256 = hashes.profile;
+    url = "${mainUrl}/${config.home.username}/profile.${user.profilePicture}";
+    sha256 = user.assets.profile;
   };
 in {
   home.file."Pictures/DesktopBackground".source = pkgs.runCommand "extractWallpapers" {} ''
