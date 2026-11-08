@@ -35,10 +35,10 @@ diagnostics/            Flat registry of debug options for hyprland.lua
 
 | File | Source | Notes |
 |------|--------|-------|
-| `host.lua` | `hosts/<host>/variables.nix` | Hostname, sun coordinates, keyboard layouts |
-| `devices.lua` | `hosts/<host>/variables.nix` | Input device assignments |
+| `host.lua` | `hosts/<host>/default.nix` (`alexos.host.hyprland`) | Hostname, sun coordinates, keyboard layouts |
+| `devices.lua` | `hosts/<host>/default.nix` (`alexos.host.hyprland`) | Input device assignments |
 
-> **Edit `variables.nix` and rebuild** to change these — they are store paths, not repo symlinks.
+> **Edit the host's `alexos.host.hyprland` and rebuild** to change these — they are store paths, not repo symlinks.
 
 ---
 

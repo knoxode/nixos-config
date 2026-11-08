@@ -1,10 +1,4 @@
-{
-  host,
-  lib,
-  ...
-}: let
-  variables = import ../../hosts/${host}/variables.nix;
-in {
+{lib, ...}: {
   options.alexos.host = {
     formFactor = lib.mkOption {
       type = lib.types.enum ["desktop" "laptop"];
@@ -132,31 +126,5 @@ in {
       default = {};
       description = "Host data used to generate Hyprland's host.lua and devices.lua.";
     };
-  };
-
-  # Migration bridge: variables.nix remains the data source until the
-  # conditional imports in modules/core/default.nix are replaced.
-  config.alexos.host = {
-    formFactor =
-      if variables.hostType == "Desktop"
-      then "desktop"
-      else "laptop";
-    gaming = variables.forGaming;
-    razer = variables.hasRazer;
-    openrgb = variables.hasRazer && variables.hostType == "Desktop";
-    coolercontrol = variables.hostType == "Desktop";
-    nvidiaOc = variables.hostType == "Desktop";
-    nvidiaContainerToolkit = variables.hostType == "Desktop";
-    hotplugMonitor = variables.hostType != "Desktop";
-    suspendOnIdle = variables.hostType != "Desktop";
-    wifiPowersave = variables.wifiPowersave;
-    printing = variables.printEnable;
-    autoUpdate = variables.autoUpdate;
-    gpuDevices = variables.gpuDevices;
-    gpuBusIds = {
-      intel = variables.intelID or "PCI:0:2:0";
-      nvidia = variables.nvidiaID or "PCI:1:0:0";
-    };
-    hyprland = variables.hyprland;
   };
 }
