@@ -1,6 +1,5 @@
 # Hyprland Architecture
 
-**Source**: `modules/home/hyprland/README.md`  
 **Config format**: Lua (Hyprland 0.55+), deployed as out-of-store symlinks to `~/.config/hypr/`
 
 ---

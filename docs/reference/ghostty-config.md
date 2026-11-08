@@ -1,7 +1,8 @@
 # Ghostty Config Reference
 
-**Source**: `modules/home/ghostty.nix`  
-**Full settings dump** — for lookup, not daily use.
+**Source of truth**: `modules/home/ghostty.nix`
+
+**Snapshot**: full settings dump, updated manually — for lookup, not daily use.
 
 ---
 
