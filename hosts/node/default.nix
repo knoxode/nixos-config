@@ -1,8 +1,7 @@
-{...}: {
+{config, ...}: {
   imports = [
     ./hardware.nix
   ];
-
   alexos.host = {
     formFactor = "desktop";
     gpu = "nvidia";
