@@ -1,6 +1,7 @@
 {...}: {
   imports = [
     ./hardware.nix
-    ./host-packages.nix
   ];
+
+  alexos.host.gpu = "nvidia-prime";
 }

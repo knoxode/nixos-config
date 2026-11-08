@@ -1,15 +1,15 @@
 {
   config,
   host,
+  hostConfig,
   lib,
   pkgs,
+  repoRoot,
   ...
 }: let
-  variables = import ../../../hosts/${host}/variables.nix;
+  hyprland = hostConfig.hyprland;
 
-  hyprland = variables.hyprland;
-
-  hyprDir = "/home/shaiikura/alexos/modules/home/hyprland";
+  hyprDir = "${repoRoot}/modules/home/hyprland";
 
   files = [
     "helpers"

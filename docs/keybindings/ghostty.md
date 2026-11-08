@@ -44,7 +44,6 @@
 |-----|--------|
 | `CTRL+SHIFT + t` | New tab (`new_tab`) |
 | `CTRL+Q` | Close tab (`close_tab`) |
-| `CTRL+SHIFT + f` | Move tab to position 1 (`move_tab:1`) |
 | `CTRL+SHIFT + b` | Move tab to position -1 (`move_tab:-1`) |
 | `CTRL+N` | Prompt tab title (`prompt_tab_title`) |
 
@@ -88,7 +87,7 @@
 | `CTRL+SHIFT+O` | New split right | Replaced by `CTRL+ALT+v` |
 | `CTRL+SHIFT+E` | New split down | Replaced by `CTRL+ALT+s` |
 | `CTRL+ALT+Arrow` | Split navigation | Replaced by `CTRL+SHIFT+h/j/k/l` |
-| `CTRL+SHIFT+F` | Start search | Rebound to `move_tab:1` then `start_search` |
+| `CTRL+SHIFT+F` | Start search | Explicitly bound to `start_search` |
 | `CTRL+SHIFT+W` | Close surface | Using `CTRL+Q` for close tab |
 
 ---

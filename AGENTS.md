@@ -60,7 +60,7 @@ Use actual host/user names. Add `--json` for structured values.
 1. **Branch & commit** changes on a feature branch
 2. **Push** to origin
 3. **Open PR** with `gh` and arm auto-merge
-4. **Let gates decide** — required checks: 3 evals + Build gate
+4. **Let gates decide** — required checks: `Evaluate gate`; `Build gate` for lock updates
 
 ```sh
 # Push branch

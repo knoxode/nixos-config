@@ -13,20 +13,23 @@ Every PR runs the `CI — Evaluate & Build Hosts` workflow
 | Job | Runs on | Proves |
 |---|---|---|
 | `Evaluate <host>` ×3 | every PR and push | the config evaluates |
+| `Evaluate gate` | always (aggregate over the eval matrix) | required check for config changes and merges |
 | `Build <host>` ×3 | `flake.lock`-changing PRs (the daily lock update) and manual dispatch | the full system closures build |
-| `Build gate` | always (aggregate over the build matrix) | stable required check: green on build success or skip, red on failure |
+| `Build gate` | always (aggregate over the build matrix) | required only when `flake.lock` changes; green on build success or skip |
 
 Builds are triggered by a `flake.lock` paths-filter, not labels. Each build
 step also publishes to `alexos.cachix.org` (full closure when green, only
 the parts that built when red), so local machines pull prebuilt closures
-instead of rebuilding. The `Build gate` — not the cache — keeps broken
-builds off `main`.
+instead of rebuilding. The required gates — not the cache — keep broken
+configs and lock updates off `main`.
 
-Required status checks: the three evals plus `Build gate`. Merges are
-squash-merges and happen via auto-merge once required checks pass — broken
-locks cannot reach `main` unverified. Config PRs merge in ~2 minutes
-(builds skip for them); lock PRs wait for full builds (usually minutes when
-upstream caches are warm, longer when a kernel or other input must build).
+Required status checks: `Evaluate gate` for config changes and merges;
+`Build gate` only when `flake.lock` changes (for config-only PRs it is green
+because builds are skipped). Merges are squash-merges and happen via
+auto-merge once required checks pass — broken locks cannot reach `main`
+unverified. Config PRs merge in ~2 minutes (builds skip for them); lock PRs
+wait for full builds (usually minutes when upstream caches are warm, longer
+when a kernel or other input must build).
 
 `update-flake.yml` opens a lock PR daily and arms auto-merge on it. It
 reuses the same PR branch, so a red lock PR is not duplicated daily — it

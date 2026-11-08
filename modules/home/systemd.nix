@@ -1,14 +1,12 @@
 {
   lib,
-  host,
+  hostConfig,
   config,
   ...
 }: let
-  inherit (import ./../../hosts/${host}/variables.nix) hostType;
   displayHotPlugMonitor =
-    if hostType == "Desktop"
-    then {}
-    else {
+    if hostConfig.hotplugMonitor
+    then {
       display_hotplug_monitor = {
         Unit = {
           Description = "A self-made display hotplugging monitor script";
@@ -24,7 +22,8 @@
           WantedBy = ["hyprland-session.target"];
         };
       };
-    };
+    }
+    else {};
 in {
   systemd.user.services = displayHotPlugMonitor;
 }

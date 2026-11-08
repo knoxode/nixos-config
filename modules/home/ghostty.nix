@@ -1,4 +1,20 @@
 {
+  lib,
+  pkgs,
+  ...
+}: let
+  fallbackTheme = ./ghostty-noctalia-theme;
+in {
+  # Ghostty validates `theme = "noctalia"` during the onFilesChange activation
+  # hook, but Noctalia only generates the theme file once a user session runs.
+  # Seed a valid fallback so activation does not fail for users who have not
+  # started Noctalia yet; Noctalia can overwrite it later.
+  home.activation.ensureGhosttyNoctaliaTheme = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    if [ ! -e "$HOME/.config/ghostty/themes/noctalia" ]; then
+      ${pkgs.coreutils}/bin/install -Dm644 ${fallbackTheme} "$HOME/.config/ghostty/themes/noctalia"
+    fi
+  '';
+
   programs.ghostty = {
     enable = true;
 
@@ -85,7 +101,6 @@
         "ctrl+n=prompt_tab_title"
 
         # Moving tabs
-        "ctrl+shift+f=move_tab:1"
         "ctrl+shift+b=move_tab:-1"
 
         # Resize splits

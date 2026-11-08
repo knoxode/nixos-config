@@ -13,8 +13,10 @@ name: CI — Evaluate & Build Hosts
 #              matters and nothing rebuilds on main afterwards.
 #   gates   -> stable aggregate required checks for branch protection.
 #
-# Job names `Evaluate <host>` (x3), `Evaluate gate`, `Build <host>` (x3) and
-# `Build gate` are required status checks — do not rename them.
+# Required checks: `Evaluate gate` for config changes and merges; `Build gate`
+# only when `flake.lock` changes (it is green when builds are skipped). Keep
+# the job names stable: the docs and modules/core/auto-update.sh refer to
+# these gate names.
 
 on:
   push:

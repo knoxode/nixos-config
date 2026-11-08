@@ -2,6 +2,7 @@
   host,
   lib,
   inputs,
+  username,
   ...
 }: {
   console.keyMap = "uk";
@@ -41,7 +42,7 @@
       # Explicitly list trusted users; do not rely on the module default
       # ["root"] merging in. Trusted users may pass --option substituters /
       # trusted-public-keys from non-root clients (nh refuses to run as root).
-      trusted-users = lib.mkForce ["root" "shaiikura"];
+      trusted-users = lib.mkForce ["root" username];
       experimental-features = [
         "nix-command"
         "flakes"

@@ -3,7 +3,6 @@
     enable = true;
     inherit (import ./yazi.nix) settings;
     inherit (import ./keymap.nix) keymap;
-    #inherit (import ./theme.nix) theme;
     shellWrapperName = "y";
     plugins = with pkgs.yaziPlugins; {
       lazygit.package = lazygit;

@@ -43,35 +43,30 @@
   outputs = {nixpkgs, ...} @ inputs: let
     system = "x86_64-linux";
     username = "shaiikura";
+    repoRoot = "/home/${username}/alexos";
   in {
     nixosConfigurations = {
       reuby = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs;
-          inherit username;
+          inherit inputs username repoRoot;
           host = "reuby";
-          profile = "intel";
         };
         modules = [./profiles/intel];
       };
       node = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs;
-          inherit username;
+          inherit inputs username repoRoot;
           host = "node";
-          profile = "nvidia";
         };
         modules = [./profiles/nvidia];
       };
       nomad = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs;
-          inherit username;
+          inherit inputs username repoRoot;
           host = "nomad";
-          profile = "nvidia-laptop";
         };
         modules = [./profiles/nvidia-laptop];
       };

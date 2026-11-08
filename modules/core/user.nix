@@ -1,10 +1,11 @@
 {
+  config,
   host,
   lib,
   pkgs,
   inputs,
   username,
-  profile,
+  repoRoot,
   ...
 }: let
   sharedExtraGroups = [
@@ -28,14 +29,17 @@ in {
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = {inherit inputs username profile host;};
-    users.shaiikura = {
+    extraSpecialArgs = {
+      inherit inputs username host repoRoot;
+      hostConfig = config.alexos.host;
+    };
+    users.${username} = {
       home = {
-        username = "shaiikura";
-        homeDirectory = "/home/shaiikura";
+        username = username;
+        homeDirectory = "/home/${username}";
         stateVersion = "23.11";
       };
-      imports = [./../home/users/shaiikura];
+      imports = [(./../home/users + "/${username}")];
     };
     users.kuchikopi = {
       home = {
@@ -50,7 +54,7 @@ in {
   users = {
     mutableUsers = false;
     users = {
-      shaiikura = {
+      ${username} = {
         hashedPassword = "$6$14MwOQmWC/c0B5Uf$asW2FXs8oG8imtSPs9nLaXnZk1VKduLYz5l6TGBqLS8H64sWmONDOhUlTpHZ8HEl/UsKjD1SoGPyUECAju55z0";
         isNormalUser = true;
         description = "Alex Ryder";
@@ -83,5 +87,5 @@ in {
       };
     };
   };
-  nix.settings.allowed-users = ["shaiikura" "kuchikopi"];
+  nix.settings.allowed-users = [username "kuchikopi"];
 }

@@ -3,9 +3,7 @@
   pkgs,
   config,
   ...
-}: let
-  inherit (import ../../hosts/${host}/variables.nix) intelID nvidiaID;
-in {
+}: {
   imports = [
     ../../hosts/${host}
     ../../modules/drivers
@@ -15,8 +13,8 @@ in {
   # PRIME render offload: iGPU renders the session, dGPU runs on demand.
   drivers.nvidia-prime = {
     enable = true;
-    intelBusID = intelID;
-    nvidiaBusID = nvidiaID;
+    intelBusID = config.alexos.host.gpuBusIds.intel;
+    nvidiaBusID = config.alexos.host.gpuBusIds.nvidia;
   };
   # Turing needs fine-grained runtime D3 explicitly: the driver default (0x03)
   # disables RTD3 on pre-Ampere GPUs. Lets the dGPU suspend when unused.

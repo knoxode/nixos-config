@@ -1,10 +1,9 @@
 {
-  host,
+  config,
   lib,
   ...
 }: let
-  inherit (import ../../hosts/${host}/variables.nix) hostType;
-  isDesktop = hostType == "Desktop";
+  isDesktop = config.alexos.host.formFactor == "desktop";
   isLaptop = !isDesktop;
 in {
   # Only force governor on desktop

@@ -1,6 +1,7 @@
 # Cross-Layer Keybinding Conflicts
 
-**Last updated**: 2026-11-01  
+**Last updated**: 2026-11-08
+
 **Generated from**: `modules/home/hyprland/binds.lua`, `modules/home/ghostty.nix`, `modules/home/nvf/vim/keymaps.nix`, `modules/home/tmux/tmux.nix`, `modules/home/yazi/keymap.nix`, `modules/home/noctalia/main.nix`
 
 ---
@@ -12,7 +13,6 @@
 | `CTRL+h/j/k/l` | Ghostty vs Neovim (smart-splits) | **High** | Mitigated by modifier difference |
 | `ALT+h/j/k/l` | Ghostty vs Neovim (smart-splits) | Low | Ghostty unbound |
 | `SUPER+j/k` | Hyprland defaults vs scrolling layout | **Fixed** | Explicitly unbound |
-| `CTRL+SHIFT+f` | Ghostty (search + move_tab) | Medium | Dual-bound, last wins |
 
 ---
 
@@ -64,19 +64,6 @@ hl.unbind("SUPER + k")
 ```
 
 **Status**: ✅ Fixed
-
----
-
-### 4. `CTRL+SHIFT+f` — Ghostty dual binding
-
-| Binding | Action | Note |
-|---------|--------|------|
-| `CTRL+SHIFT+f` | `move_tab:1` | First in keybind array |
-| `CTRL+SHIFT+f` | `start_search` | Later in array, **wins** |
-
-**Resolution**: Last bind wins in Ghostty. `start_search` is the effective action.
-
-**Recommendation**: Remove the `move_tab:1` bind or use a different key.
 
 ---
 

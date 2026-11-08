@@ -19,7 +19,7 @@
           workspaces = [
             {
               name = "second_brain";
-              path = "/home/shaiikura/Documents/syncthing/obsidian/second_brain/";
+              path = "${config.home.homeDirectory}/Documents/syncthing/obsidian/second_brain/";
             }
           ];
         };

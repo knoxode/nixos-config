@@ -19,10 +19,6 @@
       wallpapers = "169r4zscncx3sb7nhxwj1rn5hd4jsinc9g0kpp2zy6bvkrdvmadl";
       profile = "17p5rzmisflr1vfc91ysaacikxr00g31n0laaal261901k8cq8k7";
     };
-    # default / fallback entry optional
-    default = {
-      wallpapers = "0000000000000000000000000000000000000000000000000000";
-    };
   };
   # choose the hashes for this username (or fallback/throw)
   hashes =

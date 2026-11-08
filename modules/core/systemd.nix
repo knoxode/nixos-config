@@ -1,9 +1,7 @@
-{host, ...}: let
-  inherit (import ../../hosts/${host}/variables.nix) hostType;
-in {
+{config, ...}: {
   systemd.services = {
     nvidia_oc =
-      if hostType == "Desktop"
+      if config.alexos.host.nvidiaOc
       then {
         description = "NVIDIA Overclocking Service";
         after = ["network.target"];

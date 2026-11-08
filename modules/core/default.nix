@@ -8,6 +8,7 @@
 in {
   imports =
     [
+      ./host.nix
       ./avahi.nix
       ./auto-update.nix
       ./bluetooth.nix
