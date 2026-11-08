@@ -4,10 +4,6 @@
   username,
   ...
 }: let
-  nodePartners = ["sync-home" "reuby" "nomad"];
-  nomadPartners = ["sync-home" "reuby" "node"];
-  reubyPartners = ["sync-home" "node" "nomad"];
-
   allDevices = {
     "sync-home" = {
       id = "PVXSOYM-HYHTATF-LOSJWGS-D56LCFN-6UY5RSV-IF3LXUB-F77RLLL-S4DNDAU";
@@ -27,16 +23,8 @@
     };
   };
 
-  partners =
-    if host == "node"
-    then nodePartners
-    else if host == "nomad"
-    then nomadPartners
-    else if host == "reuby"
-    then reubyPartners
-    else ["sync-home"];
-
-  selectedDevices = lib.genAttrs partners (name: allDevices.${name});
+  selectedDevices = removeAttrs allDevices [host];
+  partners = builtins.attrNames selectedDevices;
 in {
   services.syncthing = lib.mkDefault {
     enable = true;
