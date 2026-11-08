@@ -10,15 +10,28 @@
 }: let
   sharedExtraGroups = [
     "docker"
-    "gamemode"
     "i2c"
     "video"
-    "libvirtd"
     "lp"
     "networkmanager"
     "scanner"
     "wireshark"
   ];
+
+  sharedAuthorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBZ3gqvZ1XNqBKICDp4q3ILJjDbYqEbYteEHK+9wB1FW powerskater3@gmail.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOK15SDpqlZl1jB6flTYJpTzOam4mavCmxKGhmwDZTIm powerskater3@gmail.com"
+  ];
+
+  primaryExtraGroups =
+    sharedExtraGroups
+    ++ ["wheel"]
+    ++ lib.optionals config.alexos.host.gaming ["gamemode"];
+
+  secondaryExtraGroups =
+    sharedExtraGroups
+    ++ lib.optionals config.alexos.host.gaming ["gamemode"];
 in {
   imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
@@ -59,26 +72,18 @@ in {
         isNormalUser = true;
         description = "Alex Ryder";
         shell = pkgs.zsh;
-        extraGroups = sharedExtraGroups ++ ["wheel"];
+        extraGroups = primaryExtraGroups;
         ignoreShellProgramCheck = true;
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBZ3gqvZ1XNqBKICDp4q3ILJjDbYqEbYteEHK+9wB1FW powerskater3@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOK15SDpqlZl1jB6flTYJpTzOam4mavCmxKGhmwDZTIm powerskater3@gmail.com"
-        ];
+        openssh.authorizedKeys.keys = sharedAuthorizedKeys;
       };
       kuchikopi = {
         hashedPassword = "$6$VmLAW3ghkUab0nTH$PTKoixhdumNZV6zdZ0T8A7iwpfpanzwdF4fs2Ey08VPtViL/91hlfIIz2c7REKS9Zu09J6r7S1Wgqi8izDfcz.";
         isNormalUser = true;
         description = "Hajrah Shafique";
-        extraGroups = sharedExtraGroups;
+        extraGroups = secondaryExtraGroups;
         shell = pkgs.zsh;
         ignoreShellProgramCheck = true;
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILvGiyiyLH76R6eCLm+9+aRJOrhhpog2d5JncPtcd/1v powerskater3@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBZ3gqvZ1XNqBKICDp4q3ILJjDbYqEbYteEHK+9wB1FW powerskater3@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOK15SDpqlZl1jB6flTYJpTzOam4mavCmxKGhmwDZTIm powerskater3@gmail.com"
-        ];
+        openssh.authorizedKeys.keys = sharedAuthorizedKeys;
       };
       root = {
         shell = pkgs.zsh;
