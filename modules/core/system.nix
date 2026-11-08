@@ -20,23 +20,21 @@
   };
   networking.hostName = host;
   nix = {
-    # Keep direnv devshell outputs and derivations alive across GC; without
-    # these, nix-direnv shells rebuild every time nh-clean runs (weekly).
-    settings = {
-      keep-outputs = true;
-      keep-derivations = true;
-    };
-
     # The NixOS default writes /etc/nix/registry.json with `to.type = "path"`
     # pointing at the system nixpkgs, embedding the full nixpkgs source
-    # (~1.5 GiB) in the system closure. Point the registry at the same channel
-    # tarball URL the flake input uses instead; consumers (`nix search
-    # nixpkgs`, `nix run nixpkgs#...`) fetch it over the network on first use.
+    # (~1.5 GiB) in the system closure. Point the registry at the exact locked
+    # revision instead; consumers (`nix search nixpkgs`, `nix run nixpkgs#...`)
+    # fetch it over the network on first use.
     registry.nixpkgs.to = {
       type = "tarball";
-      url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+      url = "https://github.com/NixOS/nixpkgs/archive/${inputs.nixpkgs.rev}.tar.gz";
     };
     settings = {
+      # Keep direnv devshell outputs and derivations alive across GC; without
+      # these, nix-direnv shells rebuild every time nh-clean runs (weekly).
+      keep-outputs = true;
+      keep-derivations = true;
+
       auto-optimise-store = true;
       download-buffer-size = 524288000;
       # Explicitly list trusted users; do not rely on the module default

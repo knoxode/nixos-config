@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  options,
   ...
 }: {
   imports = [
@@ -22,10 +21,6 @@
     # No WWAN modem on any fleet host; NM's default enable only ships the
     # ModemManager stack and an inactive service.
     modemmanager.enable = false;
-
-    timeServers =
-      options.networking.timeServers.default
-      ++ ["pool.ntp.org"];
 
     firewall = {
       enable = true;
