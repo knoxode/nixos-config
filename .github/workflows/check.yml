@@ -73,6 +73,9 @@ jobs:
             modules/core/wireguard-endpoint.sh \
             modules/home/harper-shared-dict.sh
 
+      - name: Check for unused bindings
+        run: nix run nixpkgs#deadnix -- --fail .
+
   eval:
     name: Evaluate ${{ matrix.host }}
     runs-on: ubuntu-latest
