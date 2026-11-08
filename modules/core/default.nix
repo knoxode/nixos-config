@@ -19,6 +19,7 @@
     ./audio.nix
     ./power-settings.nix
     ./printing.nix
+    ./programs.nix
     ./rgb.nix
     ./security.nix
     ./sops.nix

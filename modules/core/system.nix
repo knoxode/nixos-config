@@ -64,10 +64,13 @@
       ];
     };
   };
-  nixpkgs.overlays = [
-    inputs.nix-cachyos-kernel.overlays.pinned
-    inputs.nur.overlays.default
-  ];
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [
+      inputs.nix-cachyos-kernel.overlays.pinned
+      inputs.nur.overlays.default
+    ];
+  };
   # The graphical-desktop module enables the speech-dispatcher *service* by
   # default (mkDefault true), which drags espeak-ng + mbrola-voices + flite
   # (~700 MiB) into the closure for a screen reader that isn't installed.

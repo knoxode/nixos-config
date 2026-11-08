@@ -4,15 +4,6 @@
   pkgs,
   ...
 }: {
-  programs = {
-    direnv.enable = true;
-    direnv.nix-direnv.enable = true;
-    hyprland = {
-      enable = true;
-      withUWSM = true;
-    };
-  };
-
   fonts.packages = with pkgs; [
     #Fonts
     corefonts
@@ -93,5 +84,4 @@
       heroic
     ]
     ++ lib.optionals config.alexos.host.nvidiaOc [nvidia_oc];
-  nixpkgs.config.allowUnfree = true;
 }
