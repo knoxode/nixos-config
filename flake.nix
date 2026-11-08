@@ -44,33 +44,23 @@
     system = "x86_64-linux";
     username = "shaiikura";
     repoRoot = "/home/${username}/alexos";
-  in {
-    nixosConfigurations = {
-      reuby = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs username repoRoot;
-          host = "reuby";
-        };
-        modules = [./profiles/intel];
-      };
-      node = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs username repoRoot;
-          host = "node";
-        };
-        modules = [./profiles/nvidia];
-      };
-      nomad = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs username repoRoot;
-          host = "nomad";
-        };
-        modules = [./profiles/nvidia-laptop];
-      };
+
+    hosts = {
+      reuby = ./profiles;
+      node = ./profiles;
+      nomad = ./profiles/nvidia-laptop;
     };
+
+    mkHost = host: profile:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs username repoRoot host;
+        };
+        modules = [profile];
+      };
+  in {
+    nixosConfigurations = nixpkgs.lib.mapAttrs mkHost hosts;
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
