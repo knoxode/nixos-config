@@ -1,6 +1,6 @@
 # CI / GitHub Actions
 
-**Source**: `README.md` + `.github/workflows/check.yml` + `.github/workflows/update-flake.yml`
+**See also**: `README.md` for the overview; this file is the detailed reference for `.github/workflows/check.yml` and `.github/workflows/update-flake.yml`.
 
 ---
 
@@ -12,6 +12,7 @@ Runs on every PR and push.
 
 | Job | Runs On | Proves |
 |-----|---------|--------|
+| `Lint` | Every PR and push | Alejandra, shellcheck, and deadnix |
 | `Evaluate <host>` ×3 | Every PR and push | Config evaluates for reuby, node, nomad |
 | `Evaluate gate` | Always (aggregate) | Required check for config changes and merges |
 | `Build <host>` ×3 | `flake.lock`-changing PRs (daily lock update) + manual dispatch | Full system closures build |
@@ -65,6 +66,7 @@ stores.
 
 - `Evaluate gate` (aggregate over the three host evals) — config changes and merges
 - `Build gate` (aggregate) — only required when `flake.lock` changes; green when builds are skipped
+- `Lint` — formatting, shellcheck, and deadnix; not required by default, add it to branch protection if desired
 
 **Merges**: Squash-merges via auto-merge once required checks pass. Broken locks cannot reach `main` unverified.
 
@@ -120,6 +122,7 @@ and opens one issue per pin. A later `unpin: <pkg> — ...` commit closes it.
 ## Branch Protection
 
 - Required checks: `Evaluate gate`; `Build gate` only for `flake.lock` updates
+- Optional: `Lint` (formatting, shellcheck, deadnix)
 - Auto-merge enabled via `gh pr merge --auto --squash` (GraphQL under the hood)
 - Fine-grained PAT for CI: repo-scoped, Contents RW + Pull requests RW, no admin
 - Token stored via sops-nix as `github/token` → materialized at `/run/secrets/github/token` (mode 0400)

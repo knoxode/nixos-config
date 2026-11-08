@@ -1,3 +1,5 @@
+# Settings dump exported from Noctalia. The runtime source of truth is this
+# attrset; docs/reference/noctalia-config.md is a manual snapshot.
 {
   config,
   hostConfig,
