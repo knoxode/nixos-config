@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Select the WireGuard outer-transport endpoint.
 #
 # Preference order is IPv6, then IPv4. A candidate is only used when the
