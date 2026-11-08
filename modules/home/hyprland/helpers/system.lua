@@ -1,6 +1,6 @@
 local M = {}
 
--- Hostname comes from the Nix-generated host.lua (hosts/<host>/variables.nix),
+-- Hostname comes from the Nix-generated host.lua (hosts/<host>/default.nix),
 -- so no subprocess is needed at config load time.
 M.hostname = require("host").hostname
 

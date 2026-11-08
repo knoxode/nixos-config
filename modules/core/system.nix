@@ -2,6 +2,7 @@
   host,
   lib,
   inputs,
+  username,
   ...
 }: {
   console.keyMap = "uk";
@@ -19,29 +20,27 @@
   };
   networking.hostName = host;
   nix = {
-    # Keep direnv devshell outputs and derivations alive across GC; without
-    # these, nix-direnv shells rebuild every time nh-clean runs (weekly).
-    settings = {
-      keep-outputs = true;
-      keep-derivations = true;
-    };
-
     # The NixOS default writes /etc/nix/registry.json with `to.type = "path"`
     # pointing at the system nixpkgs, embedding the full nixpkgs source
-    # (~1.5 GiB) in the system closure. Point the registry at the same channel
-    # tarball URL the flake input uses instead; consumers (`nix search
-    # nixpkgs`, `nix run nixpkgs#...`) fetch it over the network on first use.
+    # (~1.5 GiB) in the system closure. Point the registry at the exact locked
+    # revision instead; consumers (`nix search nixpkgs`, `nix run nixpkgs#...`)
+    # fetch it over the network on first use.
     registry.nixpkgs.to = {
       type = "tarball";
-      url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+      url = "https://github.com/NixOS/nixpkgs/archive/${inputs.nixpkgs.rev}.tar.gz";
     };
     settings = {
+      # Keep direnv devshell outputs and derivations alive across GC; without
+      # these, nix-direnv shells rebuild every time nh-clean runs (weekly).
+      keep-outputs = true;
+      keep-derivations = true;
+
       auto-optimise-store = true;
       download-buffer-size = 524288000;
       # Explicitly list trusted users; do not rely on the module default
       # ["root"] merging in. Trusted users may pass --option substituters /
       # trusted-public-keys from non-root clients (nh refuses to run as root).
-      trusted-users = lib.mkForce ["root" "shaiikura"];
+      trusted-users = lib.mkForce ["root" username];
       experimental-features = [
         "nix-command"
         "flakes"
@@ -65,10 +64,13 @@
       ];
     };
   };
-  nixpkgs.overlays = [
-    inputs.nix-cachyos-kernel.overlays.pinned
-    inputs.nur.overlays.default
-  ];
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [
+      inputs.nix-cachyos-kernel.overlays.pinned
+      inputs.nur.overlays.default
+    ];
+  };
   # The graphical-desktop module enables the speech-dispatcher *service* by
   # default (mkDefault true), which drags espeak-ng + mbrola-voices + flite
   # (~700 MiB) into the closure for a screen reader that isn't installed.

@@ -5,9 +5,9 @@
   # handles incompressible data better, and supports hibernation.
   boot.zswap = {
     enable = true;
-    compressor = "zstd";      # Best compression ratio for Nix builds
-    maxPoolPercent = 25;      # 25% of RAM (4GB on 16GB systems)
-    shrinkerEnabled = true;   # Auto-reclaim under pressure
+    compressor = "zstd"; # Best compression ratio for Nix builds
+    maxPoolPercent = 25; # 25% of RAM (4GB on 16GB systems)
+    shrinkerEnabled = true; # Auto-reclaim under pressure
   };
 
   # Disable zram (conflicts with zswap; zram doesn't support hibernation)

@@ -19,6 +19,7 @@
     ./shellAliases.nix
     ./stylix.nix
     ./systemd.nix
+    ./userData.nix
   ];
 
   # NixOS defaults EDITOR to nano. Override per user so sops (and other

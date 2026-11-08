@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{...}: {
   programs.nvf = {
     settings.vim = {
       clipboard = {

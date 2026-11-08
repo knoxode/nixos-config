@@ -1,7 +1,8 @@
 # Noctalia Config Reference
 
-**Source**: `modules/home/noctalia/main.nix`  
-**Full settings dump** — for lookup, not daily use.
+**Source of truth**: `modules/home/noctalia/main.nix`
+
+**Snapshot**: full settings dump, updated manually — for lookup, not daily use.
 
 ---
 

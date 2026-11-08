@@ -1,12 +1,12 @@
+# Settings dump exported from Noctalia. The runtime source of truth is this
+# attrset; docs/reference/noctalia-config.md is a manual snapshot.
 {
-  host,
-  username,
+  config,
+  hostConfig,
   lib,
   ...
 }: let
-  inherit (import ../../../hosts/${host}/variables.nix) hostType;
-
-  suspendOnIdle = hostType != "Desktop";
+  suspendOnIdle = hostConfig.suspendOnIdle;
 in {
   programs.noctalia = {
     enable = true;
@@ -451,7 +451,7 @@ in {
       };
       shell = {
         app_icon_colorize = false;
-        avatar_path = "/home/${username}/.face";
+        avatar_path = "${config.home.homeDirectory}/.face";
         clipboard_auto_paste = "auto";
         clipboard_confirm_clear_history = true;
         clipboard_enabled = true;
@@ -619,7 +619,7 @@ in {
         };
       };
       wallpaper = {
-        directory = "/home/${username}/Pictures/DesktopBackground";
+        directory = "${config.home.homeDirectory}/Pictures/DesktopBackground";
         directory_dark = "";
         directory_light = "";
         edge_smoothness = 0.30000001192092896;

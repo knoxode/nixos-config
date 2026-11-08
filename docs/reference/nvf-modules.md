@@ -1,6 +1,9 @@
 # nvf Modules Enabled
 
-**Source**: `modules/home/nvf/vim/*.nix`  
+**Source of truth**: `modules/home/nvf/vim/*.nix`
+
+**Snapshot**: module list, updated manually — for lookup, not daily use.
+
 **Framework**: nvf (Neovim on Nix) + mnw wrapper
 
 ---

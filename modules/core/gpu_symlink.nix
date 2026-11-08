@@ -1,9 +1,9 @@
 {
-  host,
+  config,
   lib,
   ...
 }: let
-  inherit (import ../../hosts/${host}/variables.nix) gpuDevices;
+  inherit (config.alexos.host) gpuDevices;
 
   gpuRules = builtins.concatStringsSep "\n" (
     lib.mapAttrsToList (name: attrs: ''

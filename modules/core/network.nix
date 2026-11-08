@@ -1,11 +1,8 @@
 {
-  host,
+  config,
   pkgs,
-  options,
   ...
-}: let
-  inherit (import ../../hosts/${host}/variables.nix) wifiPowersave;
-in {
+}: {
   imports = [
     ./networkProfiles/eduroam.nix
   ];
@@ -19,15 +16,11 @@ in {
     networkmanager = {
       enable = true;
       # Per-host: battery (roaming laptops) vs latency (desktop).
-      wifi.powersave = wifiPowersave;
+      wifi.powersave = config.alexos.host.wifiPowersave;
     };
     # No WWAN modem on any fleet host; NM's default enable only ships the
     # ModemManager stack and an inactive service.
     modemmanager.enable = false;
-
-    timeServers =
-      options.networking.timeServers.default
-      ++ ["pool.ntp.org"];
 
     firewall = {
       enable = true;

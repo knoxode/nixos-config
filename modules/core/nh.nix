@@ -1,6 +1,6 @@
 {
   pkgs,
-  username,
+  repoRoot,
   ...
 }: {
   programs.nh = {
@@ -9,7 +9,7 @@
       enable = true;
       extraArgs = "--keep-since 4d --keep 3";
     };
-    flake = "/home/${username}/alexos";
+    flake = repoRoot;
   };
 
   environment.systemPackages = with pkgs; [

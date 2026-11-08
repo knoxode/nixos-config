@@ -31,7 +31,7 @@
 ### `reconcileMonitors.sh`
 - Runs on startup and monitor reconnect
 - Queries current monitors via `hyprctl monitors -j`
-- Matches against configured rules in `hosts/<host>/variables.nix`
+- Matches against the per-host rules in `modules/home/hyprland/machine_specific/`
 - Applies `hl.monitor` rules for each output
 
 ### `handle_monitor_disconnect.sh`
@@ -44,16 +44,18 @@
 
 ## Configuration
 
-Monitor rules defined in `hosts/<host>/variables.nix`:
+Monitor rules live next to the machine policy. Node uses declarative
+`hl.monitor` rules in `machine_specific/node/monitors.lua`:
 
-```nix
-{ ... }: {
-  monitors = [
-    { name = "eDP-1"; ... }
-    { name = "HDMI-A-1"; ... }
-  ];
-}
+```lua
+hl.monitor({
+  output = "desc:Acer Technologies XB273U GX 3052185574200",
+  mode = "highrr",
+  -- ...
+})
 ```
+
+Generic machines use the dynamic policy in `machine_specific/init.lua`.
 
 ---
 

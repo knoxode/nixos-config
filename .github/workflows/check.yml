@@ -4,6 +4,8 @@ name: CI — Evaluate & Build Hosts
 #
 #   changes -> decide whether builds are needed (lock PRs / manual runs;
 #              config-only PRs skip straight to a green gate).
+#   lint    -> Nix formatting and shellcheck (not gating unless added to
+#              branch protection).
 #   eval    -> every host must still evaluate (cheap required gate; never builds).
 #   build   -> lock-PR / manual builds. Each build publishes to
 #              alexos.cachix.org unconditionally: the full closure on success,
@@ -13,8 +15,10 @@ name: CI — Evaluate & Build Hosts
 #              matters and nothing rebuilds on main afterwards.
 #   gates   -> stable aggregate required checks for branch protection.
 #
-# Job names `Evaluate <host>` (x3), `Evaluate gate`, `Build <host>` (x3) and
-# `Build gate` are required status checks — do not rename them.
+# Required checks: `Evaluate gate` for config changes and merges; `Build gate`
+# only when `flake.lock` changes (it is green when builds are skipped). Keep
+# the job names stable: the docs and modules/core/auto-update.sh refer to
+# these gate names.
 
 on:
   push:
@@ -48,13 +52,37 @@ jobs:
             lock:
               - 'flake.lock'
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v23
+
+      - name: Check Nix formatting
+        run: nix fmt -- --check $(git ls-files '*.nix')
+
+      - name: Shellcheck scripts
+        run: |
+          nix run nixpkgs#shellcheck -- \
+            modules/core/auto-update.sh \
+            modules/core/wireguard-dispatcher.sh \
+            modules/core/wireguard-endpoint.sh \
+            modules/home/harper-shared-dict.sh
+
+      - name: Check for unused bindings
+        run: nix run nixpkgs#deadnix -- --fail .
+
   eval:
     name: Evaluate ${{ matrix.host }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        host: [reuby, node, nomad]
+        host: &hosts [reuby, node, nomad]
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -110,7 +138,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        host: [reuby, node, nomad]
+        host: *hosts
     steps:
       - name: Check out repository
         uses: actions/checkout@v7

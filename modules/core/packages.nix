@@ -1,24 +1,9 @@
 {
-  host,
+  config,
+  lib,
   pkgs,
   ...
-}: let
-  inherit
-    (import ../../hosts/${host}/variables.nix)
-    hasRazer
-    forGaming
-    hostType
-    ;
-in {
-  programs = {
-    direnv.enable = true;
-    direnv.nix-direnv.enable = true;
-    hyprland = {
-      enable = true;
-      withUWSM = true;
-    };
-  };
-
+}: {
   fonts.packages = with pkgs; [
     #Fonts
     corefonts
@@ -85,27 +70,18 @@ in {
       wl-clipboard
       zoom-us
     ]
-    ++ (
-      if hasRazer
-      then [polychromatic]
-      else []
-    )
-    ++ (
-      if forGaming
-      then [
-        mangohud
-        # Default bundles jdk25+21+17+8 (~1.6 GiB); Minecraft downloads its
-        # own JRE at runtime, so keep only one for the system Java setting.
-        (prismlauncher.override {jdks = [jdk21];})
-        gamemode
-        mesa
-      ]
-      else []
-    )
-    ++ (
-      if hostType == "Desktop"
-      then [coolercontrol.coolercontrol-gui heroic nvidia_oc]
-      else []
-    );
-  nixpkgs.config.allowUnfree = true;
+    ++ lib.optionals config.alexos.host.razer [polychromatic]
+    ++ lib.optionals config.alexos.host.gaming [
+      mangohud
+      # Default bundles jdk25+21+17+8 (~1.6 GiB); Minecraft downloads its
+      # own JRE at runtime, so keep only one for the system Java setting.
+      (prismlauncher.override {jdks = [jdk21];})
+      gamemode
+      mesa
+    ]
+    ++ lib.optionals (config.alexos.host.formFactor == "desktop") [
+      coolercontrol.coolercontrol-gui
+      heroic
+    ]
+    ++ lib.optionals config.alexos.host.nvidiaOc [nvidia_oc];
 }

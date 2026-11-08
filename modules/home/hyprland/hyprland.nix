@@ -1,14 +1,8 @@
 {
-  host,
   lib,
   pkgs,
   ...
-}: let
-  inherit
-    (import ../../../hosts/${host}/variables.nix)
-    hostType
-    ;
-in {
+}: {
   home.packages = with pkgs; [
     awww
     grim

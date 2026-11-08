@@ -1,6 +1,4 @@
 {
-  config,
-  pkgs,
   lib,
   modulesPath,
   ...
@@ -56,22 +54,9 @@
     options = ["fmask=0022" "dmask=0022"];
   };
 
-  # # For mount.cifs, required unless domain name resolution is not needed.
-  # fileSystems."/mnt/geldoc" = {
-  #   device = "//10.200.62.89/Share";
-  #   fsType = "cifs";
-  #   options =
-  #     let
-  #       # this line prevents hanging on network split
-  #       automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-  #
-  #     in
-  #     [ "${automount_opts},credentials=/run/secrets/geldoc" ];
-  # };
-
   swapDevices = [{device = "/dev/vg/swap";}];
 
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode = true;
 }

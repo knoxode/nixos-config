@@ -1,12 +1,9 @@
 {
   host,
   lib,
+  username,
   ...
 }: let
-  nodePartners = ["sync-home" "reuby" "nomad"];
-  nomadPartners = ["sync-home" "reuby" "node"];
-  reubyPartners = ["sync-home" "node" "nomad"];
-
   allDevices = {
     "sync-home" = {
       id = "PVXSOYM-HYHTATF-LOSJWGS-D56LCFN-6UY5RSV-IF3LXUB-F77RLLL-S4DNDAU";
@@ -26,48 +23,40 @@
     };
   };
 
-  partners =
-    if host == "node"
-    then nodePartners
-    else if host == "nomad"
-    then nomadPartners
-    else if host == "reuby"
-    then reubyPartners
-    else ["sync-home"];
-
-  selectedDevices = lib.genAttrs partners (name: allDevices.${name});
+  selectedDevices = removeAttrs allDevices [host];
+  partners = builtins.attrNames selectedDevices;
 in {
   services.syncthing = lib.mkDefault {
     enable = true;
-    dataDir = "/home/shaiikura";
-    user = "shaiikura";
+    dataDir = "/home/${username}";
+    user = username;
     key = "/run/secrets/syncthing/${host}/key";
     cert = "/run/secrets/syncthing/${host}/cert";
     settings = {
       gui = {
-        user = "shaiikura";
+        user = username;
         password = "$2b$10$vLxAG0mJNZ//pQ4o.MaQlO5bZVqsDGZCM.wnsSdKdxy/ohd1upkBK";
       };
       devices = selectedDevices;
       folders = {
         "Alex's Shared Resources" = {
           id = "axar4-mmmgm";
-          path = "/home/shaiikura/Documents/syncthing/asr";
+          path = "/home/${username}/Documents/syncthing/asr";
           devices = partners;
         };
         "Family Photos" = {
           id = "nazam-5czbx";
-          path = "/home/shaiikura/Documents/syncthing/fp";
+          path = "/home/${username}/Documents/syncthing/fp";
           devices = partners;
         };
         "Whole House Sharing" = {
           id = "x4hhk-olcfd";
-          path = "/home/shaiikura/Documents/syncthing/whs";
+          path = "/home/${username}/Documents/syncthing/whs";
           devices = partners;
         };
         "Obsidian" = {
           id = "esuad-snwkk";
-          path = "/home/shaiikura/Documents/syncthing/obsidian";
+          path = "/home/${username}/Documents/syncthing/obsidian";
           devices = partners;
         };
       };

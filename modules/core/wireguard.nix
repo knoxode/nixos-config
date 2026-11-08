@@ -118,21 +118,14 @@
     text = builtins.readFile ./wireguard-endpoint.sh;
   };
 
-  dispatcher = pkgs.writeShellScript "wg-endpoint-dispatcher" ''
-    case "$2" in
-      up|connectivity-change|dhcp4-change|dhcp6-change|reapply)
-        case "$1" in
-          lo|wg0) exit 0 ;;
-        esac
-        ${pkgs.coreutils}/bin/mkdir -p /run/wireguard-endpoint
-        if [ "$2" = up ]; then
-          ${pkgs.coreutils}/bin/touch /run/wireguard-endpoint/reset-hold
-        fi
-        ${config.systemd.package}/bin/systemctl start --no-block wg-endpoint-select.service
-        ;;
-    esac
-    exit 0
-  '';
+  dispatcher = pkgs.writeShellApplication {
+    name = "wg-endpoint-dispatcher";
+    runtimeInputs = [
+      pkgs.coreutils
+      config.systemd.package
+    ];
+    text = builtins.readFile ./wireguard-dispatcher.sh;
+  };
 in {
   systemd.services = {
     "wireguard-wg0-peer-${vpnConnectionName}_i6" = {

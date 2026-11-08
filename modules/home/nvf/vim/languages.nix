@@ -1,6 +1,6 @@
 {
-  inputs,
   pkgs,
+  repoRoot,
   ...
 }: {
   programs.nvf = {
@@ -56,7 +56,7 @@
                 runtime.version = "Lua 5.4";
                 workspace.library = [
                   "${pkgs.hyprland}/share/hypr/stubs"
-                  "/home/shaiikura/alexos/modules/home/hyprland"
+                  "${repoRoot}/modules/home/hyprland"
                 ];
                 diagnostics = {
                   globals = [

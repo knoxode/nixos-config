@@ -5,32 +5,14 @@ Wayland, and Neovim via nvf/mnw.
 
 See `AGENTS.md` for maintenance conventions.
 
-## CI — what verifies what
+## CI
 
 Every PR runs the `CI — Evaluate & Build Hosts` workflow
-(`.github/workflows/check.yml`):
-
-| Job | Runs on | Proves |
-|---|---|---|
-| `Evaluate <host>` ×3 | every PR and push | the config evaluates |
-| `Build <host>` ×3 | `flake.lock`-changing PRs (the daily lock update) and manual dispatch | the full system closures build |
-| `Build gate` | always (aggregate over the build matrix) | stable required check: green on build success or skip, red on failure |
-
-Builds are triggered by a `flake.lock` paths-filter, not labels. Each build
-step also publishes to `alexos.cachix.org` (full closure when green, only
-the parts that built when red), so local machines pull prebuilt closures
-instead of rebuilding. The `Build gate` — not the cache — keeps broken
-builds off `main`.
-
-Required status checks: the three evals plus `Build gate`. Merges are
-squash-merges and happen via auto-merge once required checks pass — broken
-locks cannot reach `main` unverified. Config PRs merge in ~2 minutes
-(builds skip for them); lock PRs wait for full builds (usually minutes when
-upstream caches are warm, longer when a kernel or other input must build).
-
-`update-flake.yml` opens a lock PR daily and arms auto-merge on it. It
-reuses the same PR branch, so a red lock PR is not duplicated daily — it
-rebases and retries.
+(`.github/workflows/check.yml`). Required gates are `Evaluate gate` for
+config changes and merges, and `Build gate` when `flake.lock` changes.
+Builds publish to `alexos.cachix.org`, and `update-flake.yml` opens a lock
+PR daily. See `docs/operations/ci.md` for the job table, cache, failure
+handling, and channel strategy.
 
 ## nixpkgs follows nixos-unstable HEAD
 
