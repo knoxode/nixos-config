@@ -1,0 +1,92 @@
+--- a/libnixt/lib/Value.cpp
++++ b/libnixt/lib/Value.cpp
+@@ -118,6 +118,22 @@
+   return checkField(State, Type, "name", "submodule");
+ }
+ 
++/// \brief Check if \p Type is a type that wraps a submodule.
++///
++/// `nullOr (submodule ...)`, `either (submodule ...) str`, `oneOf` and
++/// `coercedTo` are not named "submodule", but they forward `getSubOptions` to
++/// the type they wrap.  Collection types (`attrsOf`, `listOf`, ...) forward it
++/// as well, but expect one more path component (an attribute name or a list
++/// index), so they are handled separately in `selectOptions`.
++bool isTypeSubmoduleWrapper(nix::EvalState &State, nix::Value &Type) {
++  if (!checkField(State, Type, "name", "nullOr") &&
++      !checkField(State, Type, "name", "either") &&
++      !checkField(State, Type, "name", "oneOf") &&
++      !checkField(State, Type, "name", "coercedTo"))
++    return false;
++  return getField(State, Type, "getSubOptions").has_value();
++}
++
+ nix::Value *trySelectAttr(nix::EvalState &State, nix::Value &V, nix::Symbol S) {
+   try {
+     nix::Value &Type = selectAttr(State, V, nix::EvalState::s.type);
+@@ -132,13 +148,6 @@
+   return nullptr;
+ }
+ 
+-/// \brief Get the type of an option.
+-nix::Value *tryGetSubmoduleType(nix::EvalState &State, nix::Value &V) {
+-  if (nix::Value *Type = trySelectAttr(State, V, nix::EvalState::s.type))
+-    return isTypeSubmodule(State, *Type) ? Type : nullptr;
+-  return nullptr;
+-}
+-
+ /// \brief Do proper operations to get options declaration on submodule type.
+ nix::Value getSubOptions(nix::EvalState &State, nix::Value &Type) {
+   // For example, programs.nixvim has all options nested into this attrpath.
+@@ -154,15 +163,49 @@
+   return VResult;
+ }
+ 
++/// \brief Check if \p Options is an option set with at least one option.
++bool hasOptionFields(nix::EvalState &State, nix::Value &Options) {
++  State.forceValue(Options, nix::noPos);
++  if (Options.type() != nix::ValueType::nAttrs)
++    return false;
++  for (const auto *Attr : Options.attrs()->lexicographicOrder(State.symbols))
++    if (State.symbols[Attr->name] != "_module")
++      return true;
++  return false;
++}
++
++/// \brief Replace \p V with the option set of the submodule it declares, if it
++/// declares one.
++void mangleSubOptions(nix::EvalState &State, nix::Value &V) {
++  nix::Value *Type = trySelectAttr(State, V, nix::EvalState::s.type);
++  if (!Type)
++    return;
++
++  const bool IsSubmodule = isTypeSubmodule(State, *Type);
++  if (!IsSubmodule && !isTypeSubmoduleWrapper(State, *Type))
++    return;
++
++  try {
++    nix::Value Options = getSubOptions(State, *Type);
++    // Wrappers over plain types (`nullOr str`, `either str int`, ...) expose an
++    // empty option set.  Keep the option itself in that case, so hover can
++    // still describe it.
++    if (!IsSubmodule && !hasOptionFields(State, Options))
++      return;
++    V = Options;
++  } catch (std::exception &) {
++    // The type advertises sub-options but cannot provide them without
++    // arguments; keep the value as it is.
++  }
++}
++
+ } // namespace
+ 
+ nix::Value nixt::selectOptions(nix::EvalState &State, nix::Value &V,
+                                std::vector<nix::Symbol>::const_iterator Begin,
+                                std::vector<nix::Symbol>::const_iterator End) {
+   // Always try to mangle the value if it is a submodule
+-  if (nix::Value *SubType = tryGetSubmoduleType(State, V))
+-    // Invoke getSubOptions on that type, and reset the value to it.
+-    V = getSubOptions(State, *SubType);
++  mangleSubOptions(State, V);
+ 
+   if (Begin == End)
+     return V;

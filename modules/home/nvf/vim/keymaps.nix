@@ -29,18 +29,9 @@
           action = ":Navbuddy<CR>";
           desc = "Open Navbuddy";
         }
-        {
-          key = "<leader>ff";
-          mode = ["n"];
-          action = "<cmd>Telescope find_files<cr>";
-          desc = "Search files by name";
-        }
-        {
-          key = "<leader>lg";
-          mode = ["n"];
-          action = "<cmd>Telescope live_grep<cr>";
-          desc = "Search files by contents";
-        }
+        # <leader>ff (find files) and <leader>fg (live grep) come from nvf's
+        # telescope defaults. Do not reuse <leader>l*: nvf reserves it for LSP
+        # (<leader>lgd, <leader>lgr, ...).
         {
           key = "<leader>fe";
           mode = ["n"];
@@ -74,19 +65,19 @@
         {
           key = "<leader>dj";
           mode = ["n"];
-          action = "<cmd>Lspsaga diagnostic_jump_next<CR>";
+          action = "<cmd>NixDiagNext<CR>";
           desc = "Go to next diagnostic";
         }
         {
           key = "<leader>dk";
           mode = ["n"];
-          action = "<cmd>Lspsaga diagnostic_jump_prev<CR>";
+          action = "<cmd>NixDiagPrev<CR>";
           desc = "Go to previous diagnostic";
         }
         {
           key = "<leader>dl";
           mode = ["n"];
-          action = "<cmd>Lspsaga show_line_diagnostics<CR>";
+          action = "<cmd>NixDiagFloat<CR>";
           desc = "Show diagnostic details";
         }
         {
@@ -94,6 +85,14 @@
           mode = ["n"];
           action = "<cmd>Trouble diagnostics toggle<cr>";
           desc = "Toggle diagnostics list";
+        }
+        # nixd only offers a quickfix when the requested range overlaps the
+        # diagnostic; the default <leader>la sends just the cursor position.
+        {
+          key = "<leader>lA";
+          mode = ["n"];
+          action = "<cmd>CodeActionLine<CR>";
+          desc = "Code actions for the whole line";
         }
       ];
     };

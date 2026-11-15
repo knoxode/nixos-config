@@ -44,7 +44,19 @@
         lspkind.enable = false;
         lightbulb.enable = true;
         lspsaga.enable = false;
-        trouble.enable = true;
+        trouble = {
+          enable = true;
+          # A centred float hides the buffer you are jumping into. Use a
+          # right-hand vertical split instead: the code stays visible and
+          # q/<esc> closes it, <cr> jumps, <c-s>/<c-v> jump into a split.
+          setupOpts.win = {
+            type = "split";
+            position = "right";
+            # Fraction of the editor width, so it adapts to monitor size
+            # (~60 columns on a 200-column terminal).
+            size = 0.3;
+          };
+        };
         lspSignature.enable = false; # conflicts with blink in maximal
         otter-nvim.enable = true;
         nvim-docs-view.enable = true;
@@ -57,6 +69,9 @@
                 workspace.library = [
                   "${pkgs.hyprland}/share/hypr/stubs"
                   "${repoRoot}/modules/home/hyprland"
+                  # Neovim `vim.*` API stubs, for the Lua in modules/home/nvf/lua.
+                  "${pkgs.neovim-unwrapped}/share/nvim/runtime/lua"
+                  "${repoRoot}/modules/home/nvf/lua"
                 ];
                 diagnostics = {
                   globals = [

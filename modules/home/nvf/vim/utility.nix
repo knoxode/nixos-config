@@ -16,7 +16,9 @@
         nvim-biscuits.enable = false;
 
         motion = {
-          hop.enable = true;
+          # hop's default <leader>h collides with gitsigns' <leader>h* prefix;
+          # leap covers the same use case without stealing a leader group.
+          hop.enable = false;
           leap.enable = true;
           precognition.enable = true;
         };
