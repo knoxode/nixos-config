@@ -4,7 +4,7 @@
   options,
   ...
 }: let
-  inherit (lib) attrByPath concatStringsSep filter hasInfix hasPrefix length take;
+  inherit (lib) attrByPath concatStringsSep hasInfix hasPrefix length take;
 
   vim = config.programs.nvf.settings.vim;
   optTree = (options.programs.nvf.settings.type.getSubOptions []).vim;

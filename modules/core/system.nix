@@ -74,7 +74,7 @@
       # niri's `programs.niri.settings`, ...) never completes. Patch libnixt to
       # follow `getSubOptions` through those wrappers.
       # Upstream: https://github.com/nix-community/nixd/issues/738
-      (final: prev: {
+      (_: prev: {
         nixd = prev.nixd.override {
           nixt = prev.nixt.overrideAttrs (_: {
             src = prev.applyPatches {
