@@ -69,6 +69,24 @@
     overlays = [
       inputs.nix-cachyos-kernel.overlays.pinned
       inputs.nur.overlays.default
+      # nixd only mangles options whose type is literally `types.submodule`, so
+      # anything wrapped in `nullOr`/`either`/`oneOf` (nvf's `*.setupOpts`,
+      # niri's `programs.niri.settings`, ...) never completes. Patch libnixt to
+      # follow `getSubOptions` through those wrappers.
+      # Upstream: https://github.com/nix-community/nixd/issues/738
+      (final: prev: {
+        nixd = prev.nixd.override {
+          nixt = prev.nixt.overrideAttrs (_: {
+            src = prev.applyPatches {
+              name = "source";
+              src = prev.nixd.src;
+              patches = [
+                ../packages/nixd/0001-libnixt-unwrap-wrapper-submodule-options.patch
+              ];
+            };
+          });
+        };
+      })
     ];
   };
   # The graphical-desktop module enables the speech-dispatcher *service* by

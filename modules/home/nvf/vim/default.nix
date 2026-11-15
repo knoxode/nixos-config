@@ -7,12 +7,15 @@
     ./dashboard.nix
     ./diagnostics.nix
     ./extendedNixdOpts.nix
+    ./floating.nix
     ./git.nix
     ./harperSpellCheck.nix
     ./keymaps.nix
+    ./keymapGuard.nix
     ./languages.nix
     ./minimap.nix
     ./neotree.nix
+    ./nixFix.nix
     ./notes.nix
     ./notify.nix
     ./plugins.nix

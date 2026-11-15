@@ -23,9 +23,26 @@
                 name = "telescope.nvim";
               };
 
-              completion = {
-                blink.cmp = true;
+              # New notes are created in the directory of the note being edited,
+              # so creating one while in DPhil/Seminars/ keeps it there.
+              # (`notes_subdir` would flatten everything into one directory; it
+              # is only consulted when this is "notes_subdir".)
+              new_notes_location = "current_dir";
+              # Readable title-based filenames instead of the default zettel IDs
+              # (e.g. 1770032067-USPT.md). This is a reference to an
+              # obsidian.nvim function, not inline logic: setupOpts only accepts
+              # a Lua value here, so it cannot live in modules/home/nvf/lua.
+              note_id_func = lib.generators.mkLuaInline ''require("obsidian.builtin").title_id'';
+
+              daily_notes = {
+                folder = "Daily Notes";
+                date_format = "%Y-%m-%d";
               };
+              templates.folder = "Templates";
+              attachments.folder = "attachments";
+
+              # Completion comes from obsidian.nvim's built-in obsidian-ls LSP
+              # server since v3; `completion.blink` was removed upstream.
               workspaces = [
                 {
                   name = "second_brain";
@@ -38,6 +55,8 @@
     }
 
     (lib.mkIf config.alexos.user.obsidian.enable {
+      programs.nvf.settings.vim.extraLuaFiles = [../lua/obsidian.lua];
+
       programs.nvf.settings.vim.keymaps = [
         {
           key = "<leader>oo";
@@ -60,8 +79,14 @@
         {
           key = "<leader>on";
           mode = ["n"];
+          action = "<cmd>ObsidianNewInFolder<cr>";
+          desc = "New Obsidian note in a chosen folder";
+        }
+        {
+          key = "<leader>oc";
+          mode = ["n"];
           action = "<cmd>Obsidian new<cr>";
-          desc = "New Obsidian note";
+          desc = "New Obsidian note in the current directory";
         }
         {
           key = "<leader>ob";
