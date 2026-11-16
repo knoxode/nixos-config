@@ -29,6 +29,10 @@
     resumeDevice = "/dev/disk/by-uuid/723eb7d0-f5f2-4324-b196-b755d7510174";
     kernelParams = [
       "resume_offset=4143104"
+      # Razer firmware does not deliver a lid-open event on resume, so logind
+      # keeps the lid marked closed and re-suspends after HoldoffTimeoutSec.
+      # Report the lid as open on resume instead.
+      "button.lid_init_state=open"
     ];
     kernelModules = [
       "kvm-intel"
